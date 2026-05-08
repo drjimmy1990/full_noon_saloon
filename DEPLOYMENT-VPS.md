@@ -46,12 +46,12 @@ git clone https://github.com/drjimmy1990/saloon-mostafa.git gardenia-website -b 
 
 ## 3. Setup Environment Variables
 
-Both projects require `.env.local` files to connect to Supabase, the Evolution API, and other services.
+Both projects require `.env` files to connect to Supabase, the Evolution API, and other services.
 
 ### Dashboard (`saloon-mostafa`)
 ```bash
 cd /www/wwwroot/saloooon/saloon-mostafa
-nano .env.local
+nano .env
 ```
 Add your production variables:
 ```env
@@ -69,7 +69,7 @@ EVOLUTION_API_KEY=your_evolution_api_key
 ### Website (`gardenia-website`)
 ```bash
 cd /www/wwwroot/saloooon/gardenia-website
-nano .env.local
+nano .env
 ```
 Add your production variables for the website:
 ```env
