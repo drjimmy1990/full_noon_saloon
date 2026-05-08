@@ -1,6 +1,6 @@
 # Linux VPS Deployment Guide (Noon Salon System)
 
-This guide covers deploying the two Next.js applications (`saloon-mostafa` and `gardenia-website`) to a Linux VPS (Ubuntu/Debian) using **PM2** as the process manager and **Nginx** as the reverse proxy.
+This guide covers deploying the unified Monorepo (`saloon-mostafa` and `gardenia-website`) to a Linux VPS (Ubuntu/Debian) using **PM2** as the process manager and **Nginx** as the reverse proxy.
 
 ## 1. Prerequisites
 
@@ -29,17 +29,18 @@ sudo npm install -g pm2
 
 ## 2. Clone the Repository
 
-Navigate to your web directory and clone the project repositories. Since they are currently in two different Git repositories (or branches), you will clone them individually.
+Navigate to your web directory and clone the unified monorepo. Since all projects are now in a single repository on the `main` branch, you only need to clone it once.
 
 ```bash
-mkdir -p /www/wwwroot/saloooon
-cd /www/wwwroot/saloooon
+mkdir -p /www/wwwroot
+cd /www/wwwroot
 
-# Clone the Dashboard (CRM)
-git clone https://github.com/drjimmy1990/saloon-mostafa.git saloon-mostafa
+# Clone the unified monorepo
+git clone https://github.com/drjimmy1990/full_noon_saloon.git saloooon
 
-# Clone the Website (Storefront) - using the website branch
-git clone https://github.com/drjimmy1990/saloon-mostafa.git gardenia-website -b website 
+# The structure will now be:
+# /www/wwwroot/saloooon/saloon-mostafa (Dashboard)
+# /www/wwwroot/saloooon/gardenia-website (Storefront)
 ```
 
 ---
