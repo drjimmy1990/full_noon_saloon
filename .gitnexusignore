@@ -1,0 +1,13 @@
+# GitNexus's own server files (not part of salon project)
+api.js
+mcp-http.js
+serve.js
+index.js
+
+# Config and docs that aren't code
+GitNexus-Docker-Guide.md
+docker-compose*.yml
+CLAUDE.md
+
+# Skills (GitNexus internal)
+.claude/

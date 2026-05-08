@@ -200,3 +200,6 @@ Here is the exhaustive list of all commands available in GitNexus and what they 
 
 ---
 *For the most up-to-date documentation, always check the [official GitNexus GitHub repository](https://github.com/abhigyanpatwari/GitNexus).*
+
+
+docker exec gitnexus-server node /app/gitnexus/dist/cli/index.js wiki /workspace --base-url http://host.docker.internal:11434/v1 --model gemma4:31b-cloud --api-key ollama --force

@@ -1,13 +1,13 @@
 {
   "repoPath": "/workspace",
-  "lastCommit": "",
-  "indexedAt": "2026-05-08T05:02:35.512Z",
+  "lastCommit": "0cc5547b1fdb8e47bf1f8d9a99c4356f27f0a801",
+  "indexedAt": "2026-05-08T17:25:53.495Z",
   "stats": {
     "files": 262,
-    "nodes": 2566,
-    "edges": 4491,
-    "communities": 49,
-    "processes": 98,
+    "nodes": 2394,
+    "edges": 4178,
+    "communities": 46,
+    "processes": 93,
     "embeddings": 0
   }
 }
