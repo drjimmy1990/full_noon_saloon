@@ -32,8 +32,8 @@ sudo npm install -g pm2
 Navigate to your web directory and clone the project repositories. Since they are currently in two different Git repositories (or branches), you will clone them individually.
 
 ```bash
-mkdir -p /var/www/saloooon
-cd /var/www/saloooon
+mkdir -p /www/wwwroot/saloooon
+cd /www/wwwroot/saloooon
 
 # Clone the Dashboard (CRM)
 git clone https://github.com/drjimmy1990/saloon-mostafa.git saloon-mostafa
@@ -50,7 +50,7 @@ Both projects require `.env.local` files to connect to Supabase, the Evolution A
 
 ### Dashboard (`saloon-mostafa`)
 ```bash
-cd /var/www/saloooon/saloon-mostafa
+cd /www/wwwroot/saloooon/saloon-mostafa
 nano .env.local
 ```
 Add your production variables:
@@ -68,7 +68,7 @@ EVOLUTION_API_KEY=your_evolution_api_key
 
 ### Website (`gardenia-website`)
 ```bash
-cd /var/www/saloooon/gardenia-website
+cd /www/wwwroot/saloooon/gardenia-website
 nano .env.local
 ```
 Add your production variables for the website:
@@ -86,14 +86,14 @@ You must install dependencies and compile the Next.js apps for production.
 
 ### Build the Dashboard
 ```bash
-cd /var/www/saloooon/saloon-mostafa
+cd /www/wwwroot/saloooon/saloon-mostafa
 npm install
 npm run build
 ```
 
 ### Build the Website
 ```bash
-cd /var/www/saloooon/gardenia-website
+cd /www/wwwroot/saloooon/gardenia-website
 npm install
 npm run build
 ```
@@ -106,11 +106,11 @@ PM2 will keep your Next.js apps running in the background and restart them if th
 
 ```bash
 # Start the Dashboard on a specific port (e.g., 3000)
-cd /var/www/saloooon/saloon-mostafa
+cd /www/wwwroot/saloooon/saloon-mostafa
 pm2 start npm --name "salon-dashboard" -- start -- -p 3000
 
 # Start the Website on a different port (e.g., 3001)
-cd /var/www/saloooon/gardenia-website
+cd /www/wwwroot/saloooon/gardenia-website
 pm2 start npm --name "salon-website" -- start -- -p 3001
 
 # Save the PM2 list so it restarts on server reboot
