@@ -1,13 +1,30 @@
 {
-  "repoPath": "/workspace",
-  "lastCommit": "0cc5547b1fdb8e47bf1f8d9a99c4356f27f0a801",
-  "indexedAt": "2026-05-08T17:25:53.495Z",
+  "repoPath": "C:\\Users\\LOQ\\Desktop\\CLI\\emirates mostafa\\saloooon",
+  "lastCommit": "45f6e1812c4bc9816871e71f2edff17d3fb9d427",
+  "indexedAt": "2026-05-11T20:51:49.086Z",
+  "remoteUrl": "https://github.com/drjimmy1990/full_noon_saloon",
   "stats": {
-    "files": 262,
-    "nodes": 2394,
-    "edges": 4178,
-    "communities": 46,
-    "processes": 93,
-    "embeddings": 0
+    "files": 264,
+    "nodes": 2684,
+    "edges": 5528,
+    "communities": 51,
+    "processes": 220,
+    "embeddings": 2012
+  },
+  "capabilities": {
+    "graph": {
+      "provider": "ladybugdb",
+      "status": "available"
+    },
+    "fts": {
+      "provider": "ladybugdb-fts",
+      "status": "available"
+    },
+    "vectorSearch": {
+      "provider": "exact-scan",
+      "status": "exact-scan",
+      "exactScanLimit": 10000,
+      "reason": "LadybugDB VECTOR is disabled on this platform; semantic search uses exact scan when embeddings exist."
+    }
   }
 }

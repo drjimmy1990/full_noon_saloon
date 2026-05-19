@@ -156,7 +156,7 @@ Because GitNexus is running inside Docker, it cannot use `localhost` to talk to 
 
 Run this command to generate the Wiki using Ollama:
 ```bash
-docker exec gitnexus-server sh -c "cd /workspace && node /app/gitnexus/dist/cli/index.js wiki . --base-url http://host.docker.internal:11434/v1 --model llama3 --api-key ollama"
+docker exec -u node gitnexus-server sh -c "cd /workspace && node /app/gitnexus/dist/cli/index.js wiki . --base-url http://host.docker.internal:11434/v1 --model llama3 --api-key ollama"
 ```
 *(If you are using a different model like `mistral`, change `--model llama3` to `--model mistral`)*.
 
@@ -165,7 +165,7 @@ docker exec gitnexus-server sh -c "cd /workspace && node /app/gitnexus/dist/cli/
 ## 📚 Complete Command Reference
 
 Because you are running GitNexus in Docker, **every command must be prefixed with:**
-`docker exec gitnexus-server node /app/gitnexus/dist/cli/index.js`
+`docker exec -u node gitnexus-server node /app/gitnexus/dist/cli/index.js`
 
 Here is the exhaustive list of all commands available in GitNexus and what they do. Just append these to the prefix above!
 

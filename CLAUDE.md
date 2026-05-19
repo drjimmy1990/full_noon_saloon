@@ -1,7 +1,7 @@
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **workspace** (2394 symbols, 4178 relationships, 93 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **full_noon_saloon** (2684 symbols, 5528 relationships, 220 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
@@ -24,10 +24,10 @@ This project is indexed by GitNexus as **workspace** (2394 symbols, 4178 relatio
 
 | Resource | Use for |
 |----------|---------|
-| `gitnexus://repo/workspace/context` | Codebase overview, check index freshness |
-| `gitnexus://repo/workspace/clusters` | All functional areas |
-| `gitnexus://repo/workspace/processes` | All execution flows |
-| `gitnexus://repo/workspace/process/{name}` | Step-by-step execution trace |
+| `gitnexus://repo/full_noon_saloon/context` | Codebase overview, check index freshness |
+| `gitnexus://repo/full_noon_saloon/clusters` | All functional areas |
+| `gitnexus://repo/full_noon_saloon/processes` | All execution flows |
+| `gitnexus://repo/full_noon_saloon/process/{name}` | Step-by-step execution trace |
 
 ## CLI
 
