@@ -1,4 +1,4 @@
-# Gardenia n8n Workflow — Code Nodes & Setup Guide
+# Gardenia n8n Workflow — Code Nodes & Setup Guide (v4 — Production)
 
 ## Table of Contents
 1. [Webhook Data Extraction](#1-webhook-data-extraction)
@@ -7,17 +7,15 @@
 4. [Typing Delay Calculator](#4-typing-delay)
 5. [AI Agent JSON Parser](#5-ai-json-parser)
 6. [Intent Router (Switch)](#6-intent-router)
-7. [Booking Creator Code](#7-booking-creator)
-8. [Order Creator Code](#8-order-creator)
-9. [Product Image Resolver](#9-product-image-resolver)
-10. [Admin Notification Formatter](#10-admin-notification)
-11. [Agent Reply Flow](#11-agent-reply-flow)
+7. [Booking & Order Post-Confirmation Flow](#7-booking-order-post-confirmation-flow)
+8. [AI Agent Tools Configuration](#8-ai-agent-tools-configuration)
+9. [Admin Notification Formatter](#9-admin-notification)
 
 ---
 
 ## 1. Webhook Data Extraction
 
-**Node**: `Edit Fields` (Set node)
+**Node**: `Edit Fields` (Set node)  
 **Purpose**: Normalize the raw Evolution API webhook payload.
 
 ```javascript
@@ -26,7 +24,7 @@
 // Instance name
 Instance = {{ $json.body.instance }}
 
-// Sender JID (strip @s.whatsapp.net for storage, keep for API calls)
+// Sender JID
 SenderJid = {{ $json.body.data.key.remoteJid }}
 
 // Sender Name (push name from WhatsApp)
@@ -50,34 +48,135 @@ Key = {{ $('Execute a SQL query').first().json.credentials?.[0]?.value || '' }}
 
 // Image sets (from channel)
 image_sets = {{ JSON.stringify($('Execute a SQL query').first().json.imageSets || []) }}
+
+// Active Branches, Staff, Assignments, Offers, Categories (Stringified JSONs to prevent [object Object] errors in prompt)
+active_branches = {{ JSON.stringify($('Execute a SQL query').first().json.active_branches || []) }}
+active_staff = {{ JSON.stringify($('Execute a SQL query').first().json.active_staff || []) }}
+staff_services = {{ JSON.stringify($('Execute a SQL query').first().json.staff_services || []) }}
+bot_offers = {{ JSON.stringify($('Execute a SQL query').first().json.bot_offers || []) }}
+categories = {{ JSON.stringify($('Execute a SQL query').first().json.categories || []) }}
 ```
 
 ---
 
 ## 2. SQL Query
 
-**Node**: `Execute a SQL query` (Postgres node)
-**Purpose**: Get channel info, active products, and system settings in one query.
+**Node**: `Execute a SQL query` (Postgres node)  
+**Purpose**: Loads channel settings, branches, active staff, services assignments, bot offers, categories, and image sets in one query.
 
 ```sql
 SELECT 
   c.*,
+
+  -- Active Products with full details
   (
     SELECT json_agg(
       json_build_object(
         'id', p.id,
         'name', p.name,
         'price', p.price,
-        'images', p.images
+        'images', p.images,
+        'notes', p.notes,
+        'type', p.type,
+        'availableAtHome', p."availableAtHome",
+        'availableAtSalon', p."availableAtSalon",
+        'durationMinutes', p."durationMinutes",
+        'durationMode', p."durationMode",
+        'maxSlots', p."maxSlots",
+        'depositAmount', p."depositAmount",
+        'branchId', p."branchId",
+        'category', p.category
       )
     )
     FROM public."Product" p
     WHERE p."isAvailable" = true
+      AND (p."publishAt" IS NULL OR p."publishAt" <= NOW())
   ) as active_products,
+
+  -- System Settings
   (
     SELECT json_object_agg(key, value)
     FROM public."SystemSetting"
-  ) as system_settings
+  ) as system_settings,
+
+  -- Active Branches
+  (
+    SELECT json_agg(
+      json_build_object(
+        'id', b.id,
+        'name', b.name,
+        'nameAr', b."nameAr",
+        'address', b.address,
+        'phone', b.phone,
+        'whatsapp', b.whatsapp
+      )
+    )
+    FROM public."Branch" b
+    WHERE b."isActive" = true
+  ) as active_branches,
+
+  -- Active Staff
+  (
+    SELECT json_agg(
+      json_build_object(
+        'id', s.id,
+        'name', s.name,
+        'role', s.role,
+        'branchId', s."branchId"
+      )
+    )
+    FROM public."Staff" s
+    WHERE s."isActive" = true
+  ) as active_staff,
+
+  -- Staff ↔ Service assignments
+  (
+    SELECT json_agg(
+      json_build_object(
+        'staff_id', ss.staff_id,
+        'product_id', ss.product_id
+      )
+    )
+    FROM public."StaffService" ss
+    INNER JOIN public."Staff" s ON s.id = ss.staff_id
+    WHERE s."isActive" = true
+  ) as staff_services,
+
+  -- Bot-specific offers
+  (
+    SELECT json_agg(
+      json_build_object(
+        'id', o.id,
+        'product_id', o.product_id,
+        'discountType', o."discountType",
+        'discountValue', o."discountValue",
+        'channel', o.channel,
+        'productName', p.name,
+        'originalPrice', p.price
+      )
+    )
+    FROM public."Offer" o
+    INNER JOIN public."Product" p ON p.id = o.product_id
+    WHERE o."isActive" = true
+      AND (o.channel IS NULL OR o.channel IN ('bot', 'both'))
+      AND (o."startDate" IS NULL OR o."startDate" <= CURRENT_DATE)
+      AND (o."endDate" IS NULL OR o."endDate" >= CURRENT_DATE)
+  ) as bot_offers,
+
+  -- Image sets for testimonials (stored directly in Channel.imageSets JSONB)
+  c."imageSets" as image_sets,
+
+  -- Categories
+  (
+    SELECT json_agg(
+      json_build_object(
+        'id', cat.id,
+        'label', cat.label
+      )
+    )
+    FROM public."Category" cat
+  ) as categories
+
 FROM public."Channel" c
 WHERE c.name = '{{ $json.Instance || $('Edit Fields').first().json.Instance }}'
 LIMIT 1;
@@ -85,40 +184,33 @@ LIMIT 1;
 
 ---
 
-## 3. Client Upsert
+## 3. Client Upsert Logic
 
-**Node**: `Get a row` (Supabase GET) + `If` + `Create a row` (Supabase INSERT)
+**Node**: `find contact` (Supabase GET) + `If19` + `Supabase20` (Supabase INSERT)
 
-### Step 1: Check if client exists
-```
-Table: Client
-Filter: platform_user_id = {{ $('Edit Fields').item.json.SenderJid }}
-Filter: channel_id = {{ $('Execute a SQL query').first().json.id }}
-```
-
-### Step 2: If no client found, create one
-```
-Table: Client
-Fields:
-  name = {{ $('Edit Fields').item.json.SenderName }}
-  phone = {{ $('Edit Fields').item.json.SenderJid.replace('@s.whatsapp.net', '') }}
-  platform = "whatsapp"
-  platform_user_id = {{ $('Edit Fields').item.json.SenderJid }}
-  channel_id = {{ $('Execute a SQL query').first().json.id }}
-```
-
-### Step 3: Store client ID for downstream use
-**Node**: `Edit Fields13` (Set node)
-```
-id = {{ $json.id }}  // client UUID from GET or INSERT result
-```
+*   **Step 1: Check if client exists**
+    ```
+    Table: Client
+    Filter: platform_user_id = {{ $json.SenderJid }}
+    Filter: channel_id = {{ $('Execute a SQL query').first().json.id }}
+    ```
+*   **Step 2: If no client found, create one (`Supabase20`)**
+    ```
+    Table: Client
+    Fields:
+      name = {{ $('Edit Fields').first().json.SenderName }}
+      phone = {{ $('Edit Fields').first().json.phonenumber }}
+      platform = "whatsapp"
+      platform_user_id = {{ $('Edit Fields').first().json.SenderJid }}
+      channel_id = {{ $('Execute a SQL query').first().json.id }}
+    ```
 
 ---
 
 ## 4. Typing Delay Calculator
 
-**Node**: `Code` (JavaScript)
-**Purpose**: Simulate human typing speed for natural-feeling responses.
+**Node**: `Code` / `Code1` / `Code3` / `Code4` (JavaScript)  
+**Purpose**: Simulate typing delays for natural response delivery.
 
 ```javascript
 const minTimePerChar = 20;
@@ -130,8 +222,7 @@ for (const item of items) {
   let totalTypingTime = 0;
 
   for (let i = 0; i < characterCount; i++) {
-    const randomTimeForChar = Math.random() * (maxTimePerChar - minTimePerChar) + minTimePerChar;
-    totalTypingTime += randomTimeForChar;
+    totalTypingTime += Math.random() * (maxTimePerChar - minTimePerChar) + minTimePerChar;
   }
 
   item.json.typingAnalysis = {
@@ -148,36 +239,28 @@ return items;
 
 ## 5. AI JSON Parser
 
-**Node**: `Code in JavaScript2` (JavaScript)
-**Purpose**: Extract JSON from AI agent output (handles markdown fences and raw JSON).
+**Node**: `Code in JavaScript2` (JavaScript)  
+**Purpose**: Parses raw JSON responses output by the LLM agent, resolving unescaped newlines.
 
 ```javascript
 const rawOutputString = $input.first().json.output;
-
 if (!rawOutputString || typeof rawOutputString !== 'string') {
   return [{ json: { error: "Input 'output' is missing or not a string." } }];
 }
 
 let jsonString = null;
-
-// STRATEGY 1: Markdown code fence
 const markdownRegex = /`{3,}(?:json)?\s*([\s\S]*?)\s*`{3,}/;
 const markdownMatch = rawOutputString.match(markdownRegex);
 if (markdownMatch && markdownMatch[1]) {
   jsonString = markdownMatch[1].trim();
 }
 
-// STRATEGY 2: First '{' to last '}'
 if (!jsonString) {
   const startIndex = rawOutputString.indexOf('{');
   const endIndex = rawOutputString.lastIndexOf('}');
   if (startIndex > -1 && endIndex > -1 && endIndex > startIndex) {
     jsonString = rawOutputString.substring(startIndex, endIndex + 1).trim();
   }
-}
-
-if (!jsonString) {
-  return [{ json: { error: "No JSON found", originalOutput: rawOutputString } }];
 }
 
 try {
@@ -187,7 +270,7 @@ try {
     const fixed = jsonString.replace(/\n/g, '\\n');
     return [{ json: JSON.parse(fixed) }];
   } catch (retryError) {
-    return [{ json: { error: "JSON parse failed", stringThatFailed: jsonString, errorMessage: retryError.message } }];
+    return [{ json: { error: "JSON parse failed", errorMessage: retryError.message } }];
   }
 }
 ```
@@ -196,221 +279,80 @@ try {
 
 ## 6. Intent Router
 
-**Node**: `Switch2` (Switch node)
-**Purpose**: Route based on parsed `intent` field.
+**Node**: `Switch2` (Switch node)  
+**Purpose**: Routes based on the parsed `intent` field.
 
-| Output | Condition |
-|---|---|
-| `conversation` | `{{ $json.intent }}` equals `conversation` |
-| `booking` | `{{ $json.intent }}` equals `create booking` |
-| `order` | `{{ $json.intent }}` equals `create order` |
-| `product images` | `{{ $json.intent }}` equals `product images` |
-| `testimonials` | `{{ $json.intent }}` equals `testimonials` |
-
----
-
-## 7. Booking Creator
-
-**After** the `create booking` branch:
-
-### 7a. Send confirmation text (HTTP Request → Evolution API)
-```json
-{
-  "number": "{{ $('Edit Fields').item.json.SenderJid }}",
-  "text": "{{ JSON.stringify($json.response).slice(1, -1) }}",
-  "delay": {{ $json.typingAnalysis.calculatedTimeMs }}
-}
-```
-
-### 7b. Create Booking row (Supabase INSERT)
-```
-Table: Booking
-Fields:
-  serviceSummary = {{ $json.bookingDetails.service }}
-  channelType = "whatsapp"
-  bookingDate = {{ $json.bookingDetails.date }} {{ $json.bookingDetails.time }}
-  client_id = {{ $('Edit Fields13').item.json.id }}
-  status = "pending"
-```
-
-### 7c. Update Client name/address (Supabase PATCH)
-```
-Table: Client
-Filter: id = {{ $('Edit Fields13').item.json.id }}
-Fields:
-  address = {{ $json.bookingDetails.area }}
-  name = {{ $json.bookingDetails.name }}
-```
-
----
-
-## 8. Order Creator
-
-**After** the `create order` branch — **NEW NODE SETUP**:
-
-### 8a. Code Node — Build Order Payload
-```javascript
-const order = $input.first().json.orderDetails;
-const deliveryFee = parseFloat(
-  $('Execute a SQL query').first().json.system_settings.delivery_fee || '2'
-);
-
-const subtotal = order.items.reduce((sum, item) => {
-  return sum + (parseFloat(item.price) * (item.quantity || 1));
-}, 0);
-
-return [{
-  json: {
-    client_id: $('Edit Fields13').item.json.id,
-    customerName: order.name,
-    customerPhone: order.phone,
-    customerAddress: order.address,
-    items: order.items,
-    subtotal: subtotal,
-    deliveryFee: deliveryFee,
-    total: subtotal + deliveryFee,
-    paymentMethod: order.paymentMethod || 'cash',
-    paymentStatus: 'unpaid',
-    status: 'pending',
-    notes: ''
-  }
-}];
-```
-
-### 8b. Supabase INSERT → Order table
-```
-Table: Order
-Fields: (all from the code node output above)
-```
-
-### 8c. Update Client (same as booking flow)
-
----
-
-## 9. Product Image Resolver
-
-**After** the `product images` branch:
-
-```javascript
-const productIds = $input.first().json.productIds || [];
-const activeProducts = $('Execute a SQL query').first().json.active_products || [];
-
-let imageLinks = [];
-for (const id of productIds) {
-  const matches = activeProducts.filter(p => p.id === id);
-  for (const product of matches) {
-    if (product && product.images) {
-      imageLinks.push(...product.images);
-    }
-  }
-}
-
-return { productImages: imageLinks };
-```
-
-Then: **Split Out** node → field `productImages` → **HTTP Request** (send media loop).
-
----
-
-## 10. Admin Notification Formatter
-
-**Node**: `Edit Fields1` (Set node)
-**Purpose**: Format the WhatsApp notification to the admin.
-
-### For Bookings:
-```
-message = حجز جديد
-نوع الخدمه: {{ $json.bookingDetails.service }}
-المكان: {{ $json.bookingDetails.location }}
-التاريخ: {{ $json.bookingDetails.date }} {{ $json.bookingDetails.time }}
-الاسم: {{ $json.bookingDetails.name }}
-رقم الموبايل: {{ $json.bookingDetails.phone }}
-العنوان: {{ $json.bookingDetails.area }}
-```
-
-### For Orders (NEW):
-```
-message = طلب جديد 🛒
-المنتجات: {{ $json.orderDetails.items.map(i => i.name + ' x' + i.quantity).join(', ') }}
-المجموع: {{ total }} دينار
-الاسم: {{ $json.orderDetails.name }}
-الرقم: {{ $json.orderDetails.phone }}
-العنوان: {{ $json.orderDetails.address }}
-الدفع: كاش
-```
-
-### Send to admin number:
-```json
-{
-  "number": "{{ $('Execute a SQL query').first().json.system_settings.order_notification_whatsapp }}@s.whatsapp.net",
-  "text": "{{ JSON.stringify($json.message).slice(1, -1) }}",
-  "delay": 2000
-}
-```
-
----
-
-## 11. Agent Reply Flow
-
-**Trigger**: Separate Webhook (POST) from dashboard.
-
-### Step 1: Typing Delay Code
-```javascript
-const message = $input.first().json.body.message.text_content || '';
-const characterCount = message.length;
-let totalTypingTime = 0;
-for (let i = 0; i < characterCount; i++) {
-  totalTypingTime += Math.random() * 50 + 20;
-}
-items[0].json.typingAnalysis = {
-  calculatedTimeMs: Math.round(totalTypingTime)
-};
-return items;
-```
-
-### Step 2: Send via Evolution API
-```json
-POST https://evo.hillhousevilla.com/message/sendText/{{ $json.body.channel.name }}
-Headers: { "apikey": "{{ $json.body.channel.credentials.evolution_key }}" }
-Body: {
-  "number": "{{ $json.body.client.phone }}",
-  "text": "{{ JSON.stringify($json.body.message.text_content).slice(1, -1) }}",
-  "delay": {{ $json.typingAnalysis.calculatedTimeMs }}
-}
-```
-
-### Step 3: Log to Supabase
-```
-Table: Message
-Fields:
-  channel_id = {{ $json.body.client.channel_id }}
-  client_id = {{ $json.body.client.id }}
-  sender_type = "agent"
-  content_type = "text"
-  text_content = {{ $json.body.message.text_content }}
-```
-
----
-
-## n8n Credentials Required
-
-| Credential | Type | Purpose |
+| Switch Output | Condition | Target Connection |
 |---|---|---|
-| `Postgres account` | Postgres | Direct SQL queries for channel loading |
-| `Supabase account` | Supabase API | CRUD on Client, Message, Booking, Order tables |
-| `Google Gemini API` | Google PaLM | LLM for AI Agent |
-| `OpenRouter account` | OpenRouter | Alternative LLM (Grok) |
+| `conversation` | `{{ $json.intent }}` equals `conversation` | `Code1` ➔ `send txt` ➔ `Supabase27` |
+| `booking` | `{{ $json.intent }}` equals `create booking` | `Code` ➔ `send txt8` (Bypasses DB insert; goes straight to confirmation + admin notification) |
+| `product images` | `{{ $json.intent }}` equals `product images` | `Code4` ➔ `send txt3` ➔ `Supabase30` ➔ Send Images loop |
+| `testimonials` | `{{ $json.intent }}` equals `testimonials` | `Code3` ➔ `send txt1` ➔ `Supabase28` ➔ Send Testimonials loop |
+| `order` | `{{ $json.intent }}` equals `create order` | `Code` ➔ `send txt8` (Bypasses DB insert; routes to confirmation + admin notification) |
+| `customer_service` | `{{ $json.intent }}` equals `customer_service` | `HTTP Request14` (POSTs support request to `/api/notifications`) |
 
-## AI Agent Node Configuration
+---
 
-| Setting | Value |
-|---|---|
-| **Agent Type** | Tools Agent |
-| **Prompt Type** | Define |
-| **Text Input** | `{{ $json.body }}` (the customer message) |
-| **System Message** | Paste from `n8n-system-prompt.md` |
-| **Chat Memory** | Postgres Chat Memory |
-| **Session Key** | `{{ $('Edit Fields').item.json.SenderJid }}` |
-| **Table Name** | `saloon2` |
-| **Context Window** | 20 messages |
-| **Tools** | `get all products and services` + `get product details by id` |
+## 7. Booking & Order Post-Confirmation Flow
+
+Since bookings and orders are created **directly** by the AI Agent using the `create_booking` and `create_order` API tools, the database records are already present. The post-intent flow after sending the customer confirmation text is:
+
+1.  **`Update a row`** (Supabase): Updates the Client's address and name dynamically.
+    *   Address: `={{ $('Code in JavaScript2').item.json.intent === 'create order' ? $('Code in JavaScript2').item.json.orderDetails.customerAddress : $('Code in JavaScript2').item.json.bookingDetails.area }}`
+    *   Name: `={{ $('Code in JavaScript2').item.json.intent === 'create order' ? $('Code in JavaScript2').item.json.orderDetails.customerName : $('Code in JavaScript2').item.json.bookingDetails.name }}`
+2.  **`Supabase26`** (Supabase): Logs the bot's confirmation message in the `Message` table.
+3.  **`Edit Fields1`** (Set Node): Formats the WhatsApp notification message sent to the admin.
+4.  **`send txt2`** (HTTP Request): Sends the formatted text to the admin's phone number.
+
+---
+
+## 8. AI Agent Tools Configuration
+
+The AI Agent node (`AI Agent1`) is configured with the following 5 API tools:
+
+### 1. `check_availability` (httpRequestTool)
+*   **Method**: `GET`
+*   **URL**: `https://salonnoon.net/api/availability`
+*   **Query Params**: `staffId`, `serviceId`, `date`
+
+### 2. `get_staff_for_service` (httpRequestTool)
+*   **Method**: `GET`
+*   **URL**: `https://salonnoon.net/api/services-with-staff`
+*   **Query Params**: `branchId`
+
+### 3. `create_booking` (httpRequestTool)
+*   **Method**: `POST`
+*   **URL**: `https://salonnoon.net/api/booking`
+*   **Body Type**: `JSON` (contains all booking parameters mapped from AI arguments)
+
+### 4. `get_branches` (httpRequestTool)
+*   **Method**: `GET`
+*   **URL**: `https://salonnoon.net/api/branches?active=true`
+
+### 5. `create_order` (httpRequestTool)
+*   **Method**: `POST`
+*   **URL**: `https://salonnoon.net/api/order`
+*   **Body Type**: `JSON` (contains products items list, client name, phone, and address)
+
+---
+
+## 9. Admin Notification Formatter
+
+**Node**: `Edit Fields1` (Set Node)  
+**Expression**: Formats either a booking or an order notification depending on the intent.
+
+```javascript
+message = {{ $('Code in JavaScript2').item.json.intent === 'create order' ? `طلب جديد 🛒
+المنتجات: ${$('Code in JavaScript2').item.json.orderDetails.items.map(i => i.name + ' x' + i.quantity).join(', ')}
+المجموع: ${$('Code in JavaScript2').item.json.orderDetails.items.reduce((sum, i) => sum + i.price * i.quantity, 0)} JOD
+الاسم: ${$('Code in JavaScript2').item.json.orderDetails.customerName}
+الرقم: ${$('Code in JavaScript2').item.json.orderDetails.customerPhone}
+العنوان: ${$('Code in JavaScript2').item.json.orderDetails.customerAddress}
+الدفع: كاش` : `حجز جديد 🌸
+نوع الخدمة: ${$('Code in JavaScript2').item.json.bookingDetails.serviceSummary}
+المكان: ${$('Code in JavaScript2').item.json.bookingDetails.location}
+التاريخ: ${$('Code in JavaScript2').item.json.bookingDetails.date} ${$('Code in JavaScript2').item.json.bookingDetails.time}
+الاسم: ${$('Code in JavaScript2').item.json.bookingDetails.name}
+رقم الموبايل: ${$('Code in JavaScript2').item.json.bookingDetails.phone}
+العنوان: ${$('Code in JavaScript2').item.json.bookingDetails.area}` }}
+```
