@@ -990,8 +990,7 @@
                 912
             ],
             "id": "b8722d91-8b55-4313-95b0-c94cb62f3c68",
-            "name": "Aggregate4",
-            "disabled": true
+            "name": "Aggregate4"
         },
         {
             "parameters": {
@@ -1011,8 +1010,7 @@
                 976
             ],
             "id": "ccb485e8-19cd-4db5-ac0d-d206bc8acd1f",
-            "name": "Sort2",
-            "disabled": true
+            "name": "Sort2"
         },
         {
             "parameters": {
@@ -1043,8 +1041,7 @@
                     "id": "0n0dvp9elkJ5JEwI",
                     "name": "saloon"
                 }
-            },
-            "disabled": true
+            }
         },
         {
             "parameters": {
@@ -1105,8 +1102,7 @@
                     "id": "0n0dvp9elkJ5JEwI",
                     "name": "saloon"
                 }
-            },
-            "disabled": true
+            }
         },
         {
             "parameters": {
@@ -1141,8 +1137,7 @@
                 976
             ],
             "id": "84fb2ab2-d6b2-4372-8783-4aeac7c4a96b",
-            "name": "If23",
-            "disabled": true
+            "name": "If23"
         },
         {
             "parameters": {
@@ -1155,8 +1150,7 @@
                 928
             ],
             "id": "7bc2787f-80d3-41cc-aa1f-bfdb677e7dae",
-            "name": "Code2",
-            "disabled": true
+            "name": "Code2"
         },
         {
             "parameters": {},
@@ -1782,8 +1776,8 @@
             "type": "n8n-nodes-base.httpRequest",
             "typeVersion": 4.2,
             "position": [
-                9376,
-                816
+                11088,
+                592
             ],
             "id": "8f41b622-1018-41e8-a44d-694f6ae0e8ac",
             "name": "send txt8"
@@ -1808,7 +1802,7 @@
             "type": "n8n-nodes-base.code",
             "typeVersion": 2,
             "position": [
-                7920,
+                8096,
                 928
             ],
             "id": "b936e676-ee94-4243-921b-1c2fee7e8d9b",
@@ -1818,9 +1812,9 @@
         {
             "parameters": {
                 "promptType": "define",
-                "text": "=الوزيريه ميكاب\n",
+                "text": "={{ $json.body }}",
                 "options": {
-                    "systemMessage": "=# Noon Salon — Virtual Assistant System Prompt (v4 — Production)\n\n## 1. Identity & Persona\n\nYou are **\"نون\" (Noon)**, a virtual assistant for Noon Salon (صالون نون). You default to Arabic with customers.\n\n### Context Variables\n- **Current Date/Time**: {{ $now.setZone('Etc/GMT-3').toISO() }}\n- **Customer Name**: {{ $('Edit Fields').first().json.SenderName }}\n- **Salon Address**: {{ $('Execute a SQL query').first().json.system_settings.salon_address }}\n- **Working Hours**: {{ $('Execute a SQL query').first().json.system_settings.working_hours_weekdays }}\n- **Delivery Fee**: {{ $('Execute a SQL query').first().json.system_settings.delivery_fee }} JOD\n- **Available Image Sets**: {{ $('Edit Fields').first().json.image_sets }}\n- **Active Branches**: {{ $('Edit Fields').first().json.active_branches }}\n- **Active Staff**: {{ $('Edit Fields').first().json.active_staff }}\n- **Staff-Service Assignments**: {{ $('Edit Fields').first().json.staff_services }}\n- **Bot Offers**: {{ $('Edit Fields').first().json.bot_offers }}\n- **Categories**: {{ $('Edit Fields').first().json.categories }}\n\n---\n\n## 2. JSON Output & Intents\n\nOutput = JSON خام فقط — أول حرف في ردك لازم يكون { وآخر حرف }.\n❌ ممنوع تماماً: ```json أو ``` أو أي text قبل أو بعد الـ JSON.\n\nYour final output for every turn must be a single JSON object:\n\n{\n  \"intent\": \"...\",\n  \"response\": \"Your complete message in Arabic.\",\n  \"bookingDetails\": {\n    \"serviceId\": \"uuid\",\n    \"serviceSummary\": \"service name\",\n    \"branchId\": \"uuid\",\n    \"staffId\": \"uuid\",\n    \"location\": \"Salon\",\n    \"date\": \"YYYY-MM-DD\",\n    \"time\": \"HH:MM\",\n    \"name\": \"...\",\n    \"phone\": \"...\",\n    \"durationMode\": \"time\",\n    \"durationMinutes\": 60,\n    \"paymentMethod\": \"cash\"\n  },\n  \"orderDetails\": {\n    \"items\": [{\"id\": \"uuid\", \"name\": \"...\", \"price\": 0, \"quantity\": 1}],\n    \"customerName\": \"...\",\n    \"customerPhone\": \"...\",\n    \"customerAddress\": \"...\",\n    \"paymentMethod\": \"cash\"\n  },\n  \"productIds\": [\"uuid-1\"],\n  \"imageSetName\": \"...\"\n}\n\n**Field Rules:**\n- bookingDetails: Include ONLY when intent is \"create booking\". Uses UUIDs.\n- orderDetails: Include ONLY when intent is \"create order\".\n- productIds: Include ONLY when intent is \"product images\".\n- imageSetName: Include ONLY when intent is \"testimonials\".\n\n**Allowed Intents (6 total):**\n\n| Intent | When to Use |\n|---|---|\n| conversation | DEFAULT. Greetings, pricing, info collection, general chat. |\n| create booking | ONLY after ALL booking fields + summarized + customer EXPLICITELY confirmed + create_booking tool returned success. |\n| create order | ONLY after ALL order fields + summarized + customer EXPLICITELY confirmed + create_order tool returned success. |\n| product images | Customer asks to see product photos. |\n| testimonials | Customer asks for before/after reviews. |\n| customer_service | Customer asks to talk to a human. |\n\n---\n\n## 3. Intent Decision Tree\n\n1. Customer wants to talk to a human? → intent = \"customer_service\"\n2. Asking for reviews / before-and-after? → intent = \"testimonials\"\n3. Asking to SEE product images? → intent = \"product images\"\n4. BUYING products? → collect all fields → summarize → confirm → call create_order tool → intent = \"create order\"\n5. BOOKING a service? → follow the booking flow below → intent = \"create booking\"\n6. Everything else → intent = \"conversation\"\n\n---\n\n## 4. Tool Usage\n\nYou have 7 tools. Each tool AT MOST ONCE per conversation turn.\n\n### Tool 1: get_all_products_and_services\n- When: Customer asks about available services/products\n- Returns: [{id, name, price, notes, type, durationMode, durationMinutes, branchId}]\n\n### Tool 2: get_product_details_by_id\n- When: Need description of a specific product\n- Returns: {name, description, price, images, notes}\n\n### Tool 3: check_availability\n- When: AFTER customer selected branch + service + staff + date\n- Parameters: staffId, serviceId, date (YYYY-MM-DD)\n- Returns: {mode: \"time\", slots: [...]} or {mode: \"queue\", nextQueueNumber: N} or {blocked: true}\n\n### Tool 4: get_branches\n- When: Customer wants to book and you need branch list\n- Returns: [{id, name, nameAr, address, phone}]\n\n### Tool 5: get_staff_for_service\n- When: AFTER customer selected a branch, to show services + staff\n- Parameters: branchId\n- Returns: [{category, services: [{id, name, price, staff: [{id, name}]}]}]\n\n### Tool 6: create_booking\n- When: ONLY after ALL fields collected + customer confirmed\n- Parameters: serviceId, branchId, staffId, date, time, name, phone, durationMode, durationMinutes, paymentMethod, serviceSummary, notes\n- Returns: {success: true, bookingId} or {error: \"...\"} (409)\n- ⚠️ If error 409: tell customer the issue, ask to pick another time/date\n\n### Tool 7: create_order\n- When: ONLY after ALL order fields + customer confirmed\n- Parameters: items, customerName, customerPhone, customerAddress, subtotal, deliveryFee, total, paymentMethod\n- Returns: {success: true, orderId, orderCode}\n\n### Anti-Loop Rules\n1. NEVER call a tool if you already have the answer\n2. Maximum tool calls per turn: 2\n3. If a tool errors, respond gracefully — do NOT retry\n\n---\n\n## 5. Personality & Language\n\n- Professional, elegant, warm tone\n- Use exactly one emoji per message: 🌸 💖 ✨\n- Keep messages concise\n- Accept all Arabic dialects and typos\n- Respond in the customer's dialect when possible\n- Use customer name naturally if available\n\n---\n\n## 6. Greeting Protocol\n\nSend exactly once at start:\nشكرًا لتواصلكِ مع صالون نون! ✨\nأنا نون، كيف أقدر أساعدكِ؟\n1️⃣ حجز موعد\n2️⃣ شراء منتجات\n\n---\n\n## 7. Booking Flow (UPDATED)\n\n### Step-by-Step:\n\n1. **Branch (الفرع)** — ALWAYS ASK FIRST\n   → Use context active_branches or call get_branches tool\n   → Store the branch UUID (not just name)\n\n2. **Service Type** — Ask\n   → Use get_staff_for_service tool with branchId\n   → Show services available at that branch\n\n3. **Staff Member (العاملة)** — Ask if multiple staff\n   → \"مين العاملة اللي بتحبي تحجزي معها؟\"\n   → If only one staff does this service, auto-assign\n   → Store the staff UUID\n\n4. **Preferred Day & Date** — Ask\n\n5. **Check Availability** — MANDATORY\n   → Call check_availability tool with staffId + serviceId + date\n   → If mode=time: Show available (unbooked) slots, let customer pick\n   → If mode=queue: Tell customer their queue number\n   → If blocked=true: Tell customer staff is off, suggest another date/staff\n\n6. **Preferred Time** — Customer picks from available slots\n\n7. **Full Name** — Ask\n\n8. **Phone Number** — Ask, then \"نفس رقم الواتس؟\"\n\n### Summary & Confirmation:\nAfter ALL fields, summarize and ask for confirmation (intent = \"conversation\")\n\n### Customer Confirms:\n→ Call create_booking tool with ALL collected UUIDs\n→ If success: intent = \"create booking\"\n→ If 409 error: tell customer, ask to adjust (intent stays \"conversation\")\n\n### Special Rules:\n- Tuesday Rule: No bookings on Tuesdays\n- Date/Day conflict: Ask customer to confirm\n- Location: Always \"Salon\" (home services disabled)\n\n---\n\n## 8. Product Order Flow\n\n1. Product Selection → show products (type = \"product\")\n2. Quantity\n3. Full Name\n4. Phone Number\n5. Delivery Address\n6. Payment = \"cash\"\n\nAfter confirmation: call create_order tool → intent = \"create order\"\n\n---\n\n## 9. Conversation Rules\n\n### DO:\n- Accept all dialects gracefully\n- Never collect personal info until service/product confirmed\n- Always ask which service — never assume\n\n### DO NOT:\n- Never offer times outside 9AM–9PM\n- Never evaluate customer images — specialist handles this\n- Never repeat the same phrase\n- If customer sends sticker/smiley to end conversation, stay silent\n\n---\n\n## 10. Image Handling Rule\n\nIf customer sends any image (especially hair photos):\n- ❌ Do NOT quote a price\n- ❌ Do NOT evaluate\n- ✅ \"الأخصائية رح تقيّم وتعطيكِ السعر\"\n- Intent: conversation\n\n---\n\nCRITICAL NOTES:\n- NEVER ASSUME PRODUCTS OR SERVICES YOU DON'T HAVE\n- NEVER call a tool more than once for the same data\n- For SERVICES (type=service) → BOOKING flow\n- For PRODUCTS (type=product) → ORDER flow\n- NEVER confuse the two flows\n- bookingDetails must use UUIDs for serviceId, branchId, staffId\n"
+                    "systemMessage": "=# Noon Salon — Virtual Assistant System Prompt (v5 — Production)\n\n## 1. Identity & Persona\n\nYou are **\"نون\" (Noon)**, a virtual assistant for Noon Salon (صالون نون). You default to Arabic with customers.\n\n### Context Variables (Pre-loaded — use these BEFORE calling any tool)\n- **Current Date/Time**: {{ $now.setZone('Etc/GMT-3').toISO() }}\n- **Customer Name**: {{ $('Edit Fields').first().json.SenderName }}\n- **Customer Mobile number**: {{ $('Edit Fields').item.json.phonenumber }}\n- **Salon Address**: {{ $('Execute a SQL query').first().json.system_settings.salon_address }}\n- **Working Hours**: {{ $('Execute a SQL query').first().json.system_settings.working_hours_weekdays }}\n- **Available Image Sets**: {{ $('Edit Fields').first().json.image_sets }}\n- **Active Branches**: {{ $('Edit Fields').first().json.active_branches }}\n- **Active Staff**: {{ $('Edit Fields').first().json.active_staff }}\n- **Staff-Service Assignments**: {{ $('Edit Fields').first().json.staff_services }}\n- **Bot Offers**: {{ $('Edit Fields').first().json.bot_offers }}\n- **Categories**: {{ $('Edit Fields').first().json.categories }}\n- **Bot Services Text**: {{ $('Execute a SQL query').first().json.system_settings.bot_services_text }}\n\n---\n\n## 2. JSON Output & Intents\n\n⚠️ CRITICAL: Your output MUST be a raw JSON object. First character = `{`, last character = `}`.\n❌ FORBIDDEN: ```json, ```, markdown, any text before or after the JSON.\n\nEvery response must follow this structure:\n\n{\n  \"intent\": \"...\",\n  \"response\": \"Your complete message in Arabic.\",\n  \"bookingDetails\": {\n    \"serviceId\": \"uuid\",\n    \"serviceSummary\": \"service name\",\n    \"branchId\": \"uuid\",\n    \"staffId\": \"uuid\",\n    \"location\": \"Salon\",\n    \"date\": \"YYYY-MM-DD\",\n    \"time\": \"HH:MM\",\n    \"name\": \"...\",\n    \"phone\": \"...\",\n    \"durationMode\": \"time\",\n    \"durationMinutes\": 60,\n    \"paymentMethod\": \"cash\"\n  },\n  \"imageSetName\": \"...\"\n}\n\n**Field Rules:**\n- `bookingDetails`: Include ONLY when intent = `create booking`.\n- `imageSetName`: Include ONLY when intent = `testimonials`.\n- If a field doesn't apply, OMIT it entirely (don't send null).\n\n**Allowed Intents (4 total):**\n\n| Intent | When to Use |\n|---|---|\n| conversation | DEFAULT. Greetings, pricing, info, general chat, collecting booking data. |\n| create booking | ONLY after ALL booking fields collected + summary shown + customer EXPLICITLY confirmed + create_booking tool returned success. |\n| testimonials | Customer asks for before/after reviews. |\n| customer_service | Customer asks to talk to a human / specialist. |\n\n---\n\n## 3. Intent Decision Tree\n\n1. Customer wants to talk to a human? → intent = `customer_service`\n2. Asking for reviews / before-and-after? → intent = `testimonials`\n3. BOOKING a service? → follow the booking flow (Section 6) → until confirmed, intent = `conversation`\n4. Asking about products? → \"حالياً نقدم خدمات فقط، تقدرين تحجزين موعد لأي خدمة ✨\"\n5. Everything else → intent = `conversation`\n\n---\n\n## 4. Available Tools (4 Tools)\n\nYou have exactly 4 tools. Follow these rules strictly:\n\n### TOOL USAGE RULES:\n1. **ALWAYS call the tool** when you need fresh data — NEVER guess or fabricate data.\n2. Each tool can be called AT MOST ONCE per conversation turn.\n3. If a tool returns an error, tell the customer gracefully and do NOT retry in the same turn.\n4. **NEVER skip a required tool call** — if the booking flow requires check_availability, you MUST call it.\n5. Use context variables (Section 1) for data that's already pre-loaded.\n\n### Tool 1: get_branches\n- **When**: Customer wants to book and you need the branch list.\n- **Call if**: Branches are NOT already in context variables, OR you need the latest list.\n- **Returns**: [{id, name, nameAr, address, phone}]\n\n### Tool 2: get_staff_for_service\n- **When**: AFTER customer selected a branch — to show available services and their assigned staff.\n- **Parameters**: branchId (UUID)\n- **MUST call**: Every time a branch is selected, to get the latest services and staff.\n- **Returns**: [{category, services: [{id, name, price, staff: [{id, name}]}]}]\n- **Use the returned data** to present services to the customer. Do NOT make up services.\n\n### Tool 3: check_availability\n- **When**: AFTER customer selected branch + service + staff + date.\n- **Parameters**: staffId, serviceId, date (YYYY-MM-DD)\n- **MUST call**: MANDATORY before showing available times. NEVER skip this step.\n- **Returns one of**:\n  - `{mode: \"time\", slots: [{time: \"HH:MM\", booked: true/false}]}` → Show ONLY unbooked slots\n  - `{mode: \"queue\", nextQueueNumber: N}` → Tell customer their queue number\n  - `{blocked: true}` → Staff is off that day, ask customer to pick another date/staff\n- **⚠️ If all slots are booked**: Tell customer and suggest another date or staff member.\n\n### Tool 4: create_booking\n- **When**: ONLY after ALL 8 required fields are collected AND the customer has explicitly confirmed.\n- **Parameters**: serviceId, branchId, staffId, date, time, name, phone, durationMode, durationMinutes, paymentMethod, serviceSummary, notes\n- **Returns**: `{success: true, bookingId}` or `{error: \"...\"}` (409 conflict)\n- **On success**: Set intent = `create booking` and congratulate the customer.\n- **On 409 error**: Tell customer the slot was just taken, ask them to pick another time. Intent stays `conversation`.\n- **⚠️ NEVER call create_booking without confirming with the customer first.**\n\n---\n\n## 5. Personality & Language\n\n- Professional, elegant, warm tone\n- Use exactly one emoji per message: 🌸 💖 ✨\n- Keep messages concise (2-4 sentences max)\n- Accept all Arabic dialects and typos\n- Respond in the customer's dialect when possible\n- Use customer name naturally if available from context\n\n---\n\n## 6. Booking Flow (Step by Step)\n\n### GREETING (First Message Only):\nشكرًا لتواصلكِ مع صالون نون! ✨\nأنا نون، كيف أقدر أساعدكِ؟\nحابة تحجزي موعد لخدمة معينة؟\n\n### Step 1: Branch Selection (الفرع) — ALWAYS FIRST\n→ Check active_branches from context variables\n→ If only 1 branch: auto-select it and inform customer\n→ If multiple: Present options and ask customer to choose\n→ Store the branch UUID\n\n### Step 2: Service Selection (الخدمة)\n→ **MUST call** `get_staff_for_service` tool with the selected branchId\n→ Present the returned categories and services with prices\n→ Let customer choose a service\n→ Store the service UUID, price, durationMode, durationMinutes\n→ **⚠️ CHECK walk-in rule** (see below)\n\n### ⚠️ Walk-in Services Rule (الحجز بالحضور):\nThe `bot_services_text` context variable contains a list of services that are **walk-in only** — NO advance booking.\nIf the customer selects a service that matches any service mentioned in `bot_services_text`:\n→ Tell them: \"هذي الخدمة بالحضور المباشر بدون حجز مسبق، تقدرين تزورينا مباشرة في الصالون خلال ساعات العمل ✨\"\n→ Provide the salon address and working hours from context\n→ Do NOT proceed with the booking flow for this service\n→ Intent stays `conversation`\n→ If customer asks about other services, continue normally\n\n### Step 3: Staff Selection (العاملة)\n→ From the get_staff_for_service response, show staff assigned to the selected service\n→ If only 1 staff member: auto-assign and tell the customer\n→ If multiple: Ask \"مين العاملة اللي بتحبي تحجزي معها؟\"\n→ Store the staff UUID\n\n### Step 4: Date Selection (التاريخ)\n→ Ask for preferred date or day\n→ Convert day names to actual dates using current date/time context\n→ **Tuesday Rule**: No bookings on Tuesdays — inform customer and suggest alternatives\n→ If customer says a day name that conflicts with the actual date, clarify\n\n### Step 5: Time Selection (الوقت) — REQUIRES TOOL CALL\n→ **MUST call** `check_availability` tool with staffId + serviceId + date\n→ Based on response:\n  - **mode = \"time\"**: Show ONLY available (unbooked) slots in 12-hour format (e.g., 10:00 ص). Let customer pick.\n  - **mode = \"queue\"**: Tell customer their queue number and that no specific time is needed.\n  - **blocked = true**: Tell customer the staff member is off that day. Suggest another date or another staff member.\n→ **NEVER offer times without calling check_availability first**\n→ Working hours: 9:00 AM – 9:00 PM only\n\n### Step 6: Personal Information (البيانات)\n→ Ask for: Full Name + Phone Number\n→ After phone: \"نفس رقم الواتس؟\"\n→ Phone must be valid Saudi format (05XXXXXXXX or +966...)\n\n### Step 7: Summary & Confirmation (التأكيد)\n→ Present a clear summary of ALL booking details:\n  - Branch, Service, Staff, Date, Time, Name, Phone\n→ Ask: \"تأكدي إن كل شيء صح وأحجز لك؟\"\n→ Intent = `conversation` at this stage\n\n### Step 8: Create Booking (الحجز)\n→ ONLY when customer explicitly confirms (e.g., \"تمام\", \"أكيد\", \"نعم\", \"اي\")\n→ **MUST call** `create_booking` tool with ALL collected UUIDs and data\n→ On success: intent = `create booking`, send confirmation message\n→ On error: keep intent = `conversation`, inform customer, suggest alternatives\n\n---\n\n## 7. Conversation Rules\n\n### DO:\n- Accept all dialects gracefully\n- Always ask which service — NEVER assume\n- ALWAYS use tools to fetch latest data (services, availability, branches)\n- If customer asks about a service not in the tool results, say \"هذي الخدمة مش متوفرة حالياً\"\n- If customer sends an image: \"الأخصائية رح تقيّم وتعطيكِ السعر ✨\" (intent = conversation)\n- If customer asks about products/orders: \"حالياً نقدم خدمات فقط، تقدرين تحجزين موعد ✨\"\n\n### DO NOT:\n- ❌ NEVER offer times without calling check_availability\n- ❌ NEVER skip the availability check step\n- ❌ NEVER fabricate services, prices, or staff names\n- ❌ NEVER offer times outside 9AM–9PM\n- ❌ NEVER evaluate customer images — specialist handles this\n- ❌ NEVER repeat the same phrase twice\n- ❌ NEVER book without explicit customer confirmation\n- ❌ If customer sends sticker/smiley to end conversation, stay silent (no response)\n\n---\n\n## 8. CRITICAL RULES (READ EVERY TIME)\n\n1. **SERVICES ONLY** — No products, no orders. Only service bookings.\n2. **ALWAYS USE TOOLS** — Never guess availability, services, or staff. Call the tool.\n3. **TOOL CALL ORDER**: get_branches → get_staff_for_service → check_availability → create_booking\n4. **UUID REQUIRED** — bookingDetails MUST use real UUIDs from tool responses for serviceId, branchId, staffId.\n5. **NO FABRICATION** — If a tool returns empty data, tell the customer. Don't invent data.\n6. **CONFIRMATION BEFORE BOOKING** — Always summarize and get explicit \"yes\" before calling create_booking.\n7. **HANDLE ERRORS GRACEFULLY** — If a tool fails, apologize and suggest alternatives. Never crash.\n8. **ONE JSON ONLY** — Your entire response is one JSON object. Nothing else.\n"
                 }
             },
             "type": "@n8n/n8n-nodes-langchain.agent",
@@ -1835,7 +1829,7 @@
         {
             "parameters": {
                 "method": "POST",
-                "url": "=https://evo.hillhousevilla.com/message/sendText/{{ $('Webhook').item.json.body.instance }}",
+                "url": "=https://evo.ai4eg.com/message/sendText/{{ $('Webhook').item.json.body.instance }}",
                 "sendHeaders": true,
                 "headerParameters": {
                     "parameters": [
@@ -2459,7 +2453,7 @@
             "typeVersion": 1.1,
             "position": [
                 4928,
-                720
+                960
             ],
             "id": "4e8d2f91-262c-47d9-b5f4-594e23500e85",
             "name": "Wait",
@@ -2467,8 +2461,10 @@
         },
         {
             "parameters": {
-                "model": "openrouter/owl-alpha",
-                "options": {}
+                "model": "google/gemini-3.5-flash",
+                "options": {
+                    "responseFormat": "json_object"
+                }
             },
             "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
             "typeVersion": 1,
@@ -2480,8 +2476,8 @@
             "name": "OpenRouter Chat Model",
             "credentials": {
                 "openRouterApi": {
-                    "id": "mL27w6miKABIhADN",
-                    "name": "OpenRouter account"
+                    "id": "vfqMX5s6jqXNTKPv",
+                    "name": "SALOON"
                 }
             }
         },
@@ -2506,8 +2502,8 @@
             "type": "n8n-nodes-base.httpRequest",
             "typeVersion": 4.2,
             "position": [
-                10672,
-                832
+                11264,
+                816
             ],
             "id": "84beec3c-0bf8-4b5d-9be5-0527c03f4ba3",
             "name": "send txt2"
@@ -2516,7 +2512,7 @@
             "parameters": {
                 "sessionIdType": "customKey",
                 "sessionKey": "={{ $('Edit Fields').item.json.SenderJid }}",
-                "tableName": "saloon212",
+                "tableName": "saloon2122",
                 "contextWindowLength": 20
             },
             "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
@@ -2533,19 +2529,6 @@
                     "name": "salloon"
                 }
             }
-        },
-        {
-            "parameters": {
-                "jsCode": "// Set your desired wait time in seconds here\nconst waitTimeSeconds = $('Execute a SQL query').first().json.variables.delay; \n\nreturn new Promise((resolve) => {\n    setTimeout(() => {\n        resolve($input.all()); // $input.all() is the modern n8n way to pass items through\n    }, waitTimeSeconds * 10); \n});\n"
-            },
-            "type": "n8n-nodes-base.code",
-            "typeVersion": 2,
-            "position": [
-                4944,
-                896
-            ],
-            "id": "72224033-ef98-4345-885a-c354bb7057db",
-            "name": "Wait1"
         },
         {
             "parameters": {
@@ -2650,8 +2633,8 @@
             "type": "n8n-nodes-base.httpRequestTool",
             "typeVersion": 4.3,
             "position": [
-                7360,
-                1200
+                7376,
+                1184
             ],
             "id": "613117b3-7dd5-4b02-a667-bd0f5bd9ab38",
             "name": "check_availability"
@@ -2674,7 +2657,7 @@
             "type": "n8n-nodes-base.httpRequestTool",
             "typeVersion": 4.3,
             "position": [
-                7616,
+                7568,
                 1184
             ],
             "id": "6aedbd93-2f5a-4a0f-86b6-ae74ffd5c977",
@@ -2685,44 +2668,44 @@
                 "toolDescription": "Use this tool to create a booking ONLY after ALL booking fields are collected AND the customer explicitly confirmed. This validates availability and blocked dates automatically. If it returns an error (409), tell the customer the issue and ask them to pick another time/date. Parameters: serviceId (UUID), branchId (UUID), staffId (UUID), date (YYYY-MM-DD), time (HH:mm or null for queue), name (customer name), phone (customer phone), durationMode (\"time\" or \"queue\"), durationMinutes (number), paymentMethod (\"cash\"), notes (optional).",
                 "method": "POST",
                 "url": "https://salonnoon.net/api/booking",
-                "sendQuery": true,
-                "queryParameters": {
+                "sendBody": true,
+                "bodyParameters": {
                     "parameters": [
                         {
                             "name": "serviceId",
-                            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', ``, 'string') }}"
+                            "value": "={{ $fromAI('serviceId', '', 'string') }}"
                         },
                         {
                             "name": "branchId",
-                            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters1_Value', ``, 'string') }}"
+                            "value": "={{ $fromAI('branchId', '', 'string') }}"
                         },
                         {
                             "name": "staffId",
-                            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters2_Value', ``, 'string') }}"
+                            "value": "={{ $fromAI('staffId', '', 'string') }}"
                         },
                         {
                             "name": "date",
-                            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters3_Value', ``, 'string') }}"
+                            "value": "={{ $fromAI('date', '', 'string') }}"
                         },
                         {
                             "name": "time",
-                            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters4_Value', ``, 'string') }}"
+                            "value": "={{ $fromAI('time', '', 'string') }}"
                         },
                         {
                             "name": "name",
-                            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters5_Value', ``, 'string') }}"
+                            "value": "={{ $fromAI('name', '', 'string') }}"
                         },
                         {
                             "name": "phone",
-                            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters6_Value', ``, 'string') }}"
+                            "value": "={{ $fromAI('phone', '', 'string') }}"
                         },
                         {
                             "name": "durationMode",
-                            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters7_Value', ``, 'string') }}"
+                            "value": "={{ $fromAI('durationMode', '', 'string') }}"
                         },
                         {
-                            "name": "durationMinutes",
-                            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters8_Value', ``, 'string') }}"
+                            "name": "=durationMinutes",
+                            "value": "={{ $fromAI('durationMinutes', '', 'string') }}"
                         },
                         {
                             "name": "paymentMethod",
@@ -2730,11 +2713,15 @@
                         },
                         {
                             "name": "notes",
-                            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters10_Value', ``, 'string') }}"
+                            "value": "={{ $fromAI('notes', '', 'string') }}"
                         },
                         {
                             "name": "serviceSummary",
-                            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters11_Value', ``, 'string') }}"
+                            "value": "={{ $fromAI('serviceSummary', '', 'string') }}"
+                        },
+                        {
+                            "name": "channelType",
+                            "value": "WhatsApp"
                         }
                     ]
                 },
@@ -2743,11 +2730,100 @@
             "type": "n8n-nodes-base.httpRequestTool",
             "typeVersion": 4.3,
             "position": [
-                7872,
-                1168
+                7952,
+                1184
             ],
             "id": "65ba5520-e73f-4202-a556-f20a6c05b5b0",
             "name": "create_booking"
+        },
+        {
+            "parameters": {
+                "url": "https://salonnoon.net/api/branches?active=true",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequestTool",
+            "typeVersion": 4.3,
+            "position": [
+                7760,
+                1184
+            ],
+            "id": "72ecf5a0-a0bc-46a5-a2a6-4b63d92aa799",
+            "name": "get_branches"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://evo.ai4eg.com/message/sendText/{{ $('Webhook').item.json.body.instance }}",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "=apikey",
+                            "value": "={{ $('Edit Fields').item.json.Key }}"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n    \"number\": \"{{ $('Edit Fields').item.json.SenderJid }}\",\n    \"text\": \"{{ JSON.stringify($json.response).slice(1, -1) }}\",\n    \"delay\":{{ $json.typingAnalysis.calculatedTimeMs }}\n}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                9568,
+                864
+            ],
+            "id": "f8a04008-544b-4347-98c9-f5780f40ce8d",
+            "name": "send txt4"
+        },
+        {
+            "parameters": {
+                "tableId": "Message",
+                "fieldsUi": {
+                    "fieldValues": [
+                        {
+                            "fieldId": "channel_id",
+                            "fieldValue": "={{ $('Execute a SQL query').first().json.id }}"
+                        },
+                        {
+                            "fieldId": "sender_type",
+                            "fieldValue": "bot"
+                        },
+                        {
+                            "fieldId": "content_type",
+                            "fieldValue": "=text"
+                        },
+                        {
+                            "fieldId": "platform_timestamp",
+                            "fieldValue": "={{ $('Edit Fields').first().json.Timestamp }}"
+                        },
+                        {
+                            "fieldId": "text_content",
+                            "fieldValue": "={{ $('Code').item.json.response }}"
+                        },
+                        {
+                            "fieldId": "client_id",
+                            "fieldValue": "={{ $('Edit Fields13').item.json.id }}"
+                        }
+                    ]
+                }
+            },
+            "type": "n8n-nodes-base.supabase",
+            "typeVersion": 1,
+            "position": [
+                9904,
+                832
+            ],
+            "id": "f0d9d4ee-102d-40ff-a601-32a2701be578",
+            "name": "Supabase33",
+            "retryOnFail": true,
+            "credentials": {
+                "supabaseApi": {
+                    "id": "0n0dvp9elkJ5JEwI",
+                    "name": "saloon"
+                }
+            }
         }
     ],
     "connections": {
@@ -3093,7 +3169,7 @@
             "main": [
                 [
                     {
-                        "node": "Wait1",
+                        "node": "Wait",
                         "type": "main",
                         "index": 0
                     }
@@ -3255,13 +3331,7 @@
                         "index": 0
                     }
                 ],
-                [
-                    {
-                        "node": "Code4",
-                        "type": "main",
-                        "index": 0
-                    }
-                ],
+                [],
                 [
                     {
                         "node": "Code3",
@@ -3313,7 +3383,7 @@
             "main": [
                 [
                     {
-                        "node": "send txt8",
+                        "node": "send txt4",
                         "type": "main",
                         "index": 0
                     }
@@ -3507,6 +3577,17 @@
                 ]
             ]
         },
+        "Wait": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase5",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
         "OpenRouter Chat Model": {
             "ai_languageModel": [
                 [
@@ -3524,17 +3605,6 @@
                     {
                         "node": "AI Agent1",
                         "type": "ai_memory",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "Wait1": {
-            "main": [
-                [
-                    {
-                        "node": "Supabase5",
-                        "type": "main",
                         "index": 0
                     }
                 ]
@@ -3601,6 +3671,28 @@
                     }
                 ]
             ]
+        },
+        "get_branches": {
+            "ai_tool": [
+                [
+                    {
+                        "node": "AI Agent1",
+                        "type": "ai_tool",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "send txt4": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase33",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
         }
     },
     "pinData": {
@@ -3608,16 +3700,16 @@
             {
                 "headers": {
                     "host": "n8n.asra3.com",
-                    "x-real-ip": "172.71.164.199",
-                    "x-forwarded-for": "152.53.146.113, 172.71.164.199",
+                    "x-real-ip": "172.71.172.110",
+                    "x-forwarded-for": "152.53.146.113, 172.71.172.110",
                     "x-forwarded-proto": "https",
                     "connection": "Upgrade",
-                    "content-length": "1383",
+                    "content-length": "1397",
                     "accept": "application/json, text/plain, */*",
                     "content-type": "application/json",
                     "accept-encoding": "gzip, br",
                     "user-agent": "axios/1.12.2",
-                    "cf-ray": "a0b94492ba83d2ea-FRA",
+                    "cf-ray": "a0e2625ade83d382-FRA",
                     "bypass-tunnel-reminder": "true",
                     "cdn-loop": "cloudflare; loops=1",
                     "cf-connecting-ip": "152.53.146.113",
@@ -3634,14 +3726,14 @@
                             "remoteJid": "173422726385840@lid",
                             "remoteJidAlt": "971504798759@s.whatsapp.net",
                             "fromMe": false,
-                            "id": "3A9A5BA34A2A9F173A14",
+                            "id": "3A05535A674AF2267787",
                             "participant": "",
                             "addressingMode": "lid"
                         },
                         "pushName": "Dr Mostafa Alaa",
                         "status": "DELIVERY_ACK",
                         "message": {
-                            "conversation": "‏هاي",
+                            "conversation": "نعمً صحيح",
                             "messageContextInfo": {
                                 "deviceListMetadata": {
                                     "senderKeyIndexes": [],
@@ -3683,60 +3775,54 @@
                                 },
                                 "deviceListMetadataVersion": 2,
                                 "messageSecret": {
-                                    "0": 109,
-                                    "1": 10,
-                                    "2": 157,
-                                    "3": 74,
-                                    "4": 231,
-                                    "5": 12,
-                                    "6": 25,
-                                    "7": 176,
-                                    "8": 176,
-                                    "9": 50,
-                                    "10": 201,
-                                    "11": 31,
-                                    "12": 39,
-                                    "13": 186,
-                                    "14": 194,
-                                    "15": 160,
-                                    "16": 38,
-                                    "17": 247,
-                                    "18": 17,
-                                    "19": 184,
-                                    "20": 137,
-                                    "21": 6,
-                                    "22": 138,
-                                    "23": 21,
-                                    "24": 182,
-                                    "25": 36,
-                                    "26": 104,
-                                    "27": 9,
-                                    "28": 69,
-                                    "29": 171,
-                                    "30": 18,
-                                    "31": 226
+                                    "0": 225,
+                                    "1": 75,
+                                    "2": 2,
+                                    "3": 188,
+                                    "4": 229,
+                                    "5": 105,
+                                    "6": 14,
+                                    "7": 158,
+                                    "8": 37,
+                                    "9": 187,
+                                    "10": 115,
+                                    "11": 101,
+                                    "12": 119,
+                                    "13": 197,
+                                    "14": 229,
+                                    "15": 79,
+                                    "16": 19,
+                                    "17": 49,
+                                    "18": 33,
+                                    "19": 109,
+                                    "20": 144,
+                                    "21": 133,
+                                    "22": 125,
+                                    "23": 191,
+                                    "24": 72,
+                                    "25": 184,
+                                    "26": 148,
+                                    "27": 45,
+                                    "28": 238,
+                                    "29": 226,
+                                    "30": 110,
+                                    "31": 179
                                 }
                             }
                         },
                         "messageType": "conversation",
-                        "messageTimestamp": 1781439403,
+                        "messageTimestamp": 1781870539,
                         "instanceId": "20dfeeb4-13a2-441b-9602-ffe6afdf2ff4",
                         "source": "ios"
                     },
                     "destination": "https://n8n.asra3.com/webhook/saloooon",
-                    "date_time": "2026-06-14T09:16:43.825Z",
+                    "date_time": "2026-06-19T09:02:19.867Z",
                     "sender": "201201104696@s.whatsapp.net",
                     "server_url": "http://152.53.146.113:8080",
                     "apikey": "25FA1D6E-1589-46B5-9B3C-92C51D8EA8EC"
                 },
                 "webhookUrl": "https://n8n.asra3.com/webhook/saloooon",
                 "executionMode": "production"
-            }
-        ],
-        "Wait": [
-            {
-                "message_id": "41",
-                "uuid": "d23ee298-d4a2-44d5-81b7-bbd36cead024"
             }
         ]
     },

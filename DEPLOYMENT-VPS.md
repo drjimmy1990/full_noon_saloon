@@ -184,6 +184,35 @@ Follow the prompts. Certbot will automatically configure Nginx to use SSL and se
 
 ---
 
+## 8. Quick Update (After Code Changes)
+
+Run these commands to deploy new changes to the VPS:
+
+```bash
+# === 1. Update Dashboard ===
+cd /www/wwwroot/saloooon/saloon-mostafa
+git pull origin main
+npm install
+npm run build
+pm2 restart salon-dashboard
+
+# === 2. Update Website ===
+cd /www/wwwroot/saloooon/gardenia-website
+git pull origin website
+npm install
+rm -rf .next
+npm run build
+pm2 restart salon-website
+
+# === 3. Clear Nginx Proxy Cache (IMPORTANT!) ===
+rm -rf /www/server/nginx/proxy_cache_dir/*
+sudo systemctl restart nginx
+```
+
+> ⚠️ **You MUST clear the Nginx proxy cache** after every deployment, otherwise the old cached pages will continue to be served to visitors even after rebuilding.
+
+---
+
 ## 🎉 Deployment Complete!
 Your applications are now live. 
 
@@ -192,3 +221,4 @@ Your applications are now live.
 - **Restart dashboard:** `pm2 restart salon-dashboard`
 - **Restart website:** `pm2 restart salon-website`
 - **Monitor performance:** `pm2 monit`
+- **Clear Nginx cache:** `rm -rf /www/server/nginx/proxy_cache_dir/*`
