@@ -1,0 +1,8 @@
+[submodule "saloon-mostafa"]
+	path = saloon-mostafa
+	url = https://github.com/drjimmy1990/saloon-mostafa.git
+	branch = main
+[submodule "gardenia-website"]
+	path = gardenia-website
+	url = https://github.com/drjimmy1990/saloon-mostafa.git
+	branch = website
