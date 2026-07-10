@@ -49,3 +49,8 @@ pnpm-debug.log*
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# E2E (Playwright) generated artifacts
+e2e-tests/playwright-report/
+e2e-tests/test-results/
+e2e-tests/node_modules/
