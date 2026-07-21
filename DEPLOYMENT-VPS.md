@@ -222,3 +222,32 @@ Your applications are now live.
 - **Restart website:** `pm2 restart salon-website`
 - **Monitor performance:** `pm2 monit`
 - **Clear Nginx cache:** `rm -rf /www/server/nginx/proxy_cache_dir/*`
+
+
+
+
+
+
+
+
+
+
+# === 1. Update Website (gardenia) ===
+cd /www/wwwroot/saloooon/gardenia-website
+git pull origin website
+npm install
+rm -rf .next
+npm run build
+pm2 restart salon-website
+
+# === 2. Update Dashboard (CRM) ===
+cd /www/wwwroot/saloooon/saloon-mostafa
+git pull origin main
+npm install
+npm run build
+pm2 restart salon-dashboard
+
+# === 3. Clear Nginx cache ===
+rm -rf /www/server/nginx/proxy_cache_dir/*
+
+
