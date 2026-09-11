@@ -54,3 +54,18 @@ Thumbs.db
 e2e-tests/playwright-report/
 e2e-tests/test-results/
 e2e-tests/node_modules/
+
+# Scratch Scripts & Database Utils
+check_db.js
+cleanup-db.js
+zerniowhats.txt
+
+# Agent Scaffolding & Temporary Audit Artifacts
+.agents/*
+!.agents/rules/
+!.agents/skills/
+ORIGINAL_REQUEST.md
+PROJECT-REVIEW-FINDINGS.md
+TEST_INFRA.md
+TEST_READY.md
+docs/superpowers/
