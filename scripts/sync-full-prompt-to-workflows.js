@@ -55,7 +55,7 @@ workflowFiles.forEach(file => {
     // 4. Update get_branches tool description
     if (node.name === 'get_branches') {
       if (node.parameters) {
-        const branchDesc = "Returns the list of active branches. CRITICAL: NEVER ask the customer to choose a branch. Only فرع السنابل is currently open; automatically assign فرع السنابل for any booking without asking the customer.";
+        const branchDesc = "Returns the list of active branches. If only ONE branch is open in the salon, automatically use it directly without asking the customer. If TWO OR MORE branches are open, ask the customer to choose their preferred branch among the open branches. NEVER offer or mention branches where all days are closed.";
         node.parameters.toolDescription = branchDesc;
         node.parameters.description = branchDesc;
         updatedBranches = true;
