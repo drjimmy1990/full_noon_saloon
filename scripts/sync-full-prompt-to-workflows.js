@@ -22,6 +22,7 @@ workflowFiles.forEach(file => {
   let updatedAgent = false;
   let updatedWait = false;
   let updatedCheck = false;
+  let updatedBranches = false;
 
   (content.nodes || []).forEach(node => {
     // 1. Update AI Agent system message
@@ -44,12 +45,24 @@ workflowFiles.forEach(file => {
     // 3. Update check_availability tool description
     if (node.name === 'check_availability') {
       if (node.parameters) {
-        node.parameters.description = "MANDATORY before offering or confirming any booking time. Returns unbooked time slots (slots), queue status (mode: 'queue'), or if the specialist is off (blocked: true). CRITICAL: Filter and offer ONLY slots where booked=false. Slots where booked=true must NEVER be offered. NEVER tell the customer a time is available before running this tool.";
+        const desc = "Use this tool to check available time slots for a service with a specific staff member on a given date. Returns an array of slots {time, booked}, queue status (mode: 'queue'), or if blocked: true. CRITICAL: You must ONLY show and offer slots where booked=false. Slots where booked=true are ALREADY TAKEN (or in the past/before advance notice) and MUST NEVER be offered. NEVER tell the customer a time is available before running this tool.";
+        node.parameters.toolDescription = desc;
+        node.parameters.description = desc;
         updatedCheck = true;
+      }
+    }
+
+    // 4. Update get_branches tool description
+    if (node.name === 'get_branches') {
+      if (node.parameters) {
+        const branchDesc = "Returns the list of active branches. CRITICAL: NEVER ask the customer to choose a branch. Only فرع السنابل is currently open; automatically assign فرع السنابل for any booking without asking the customer.";
+        node.parameters.toolDescription = branchDesc;
+        node.parameters.description = branchDesc;
+        updatedBranches = true;
       }
     }
   });
 
   fs.writeFileSync(filePath, JSON.stringify(content, null, 2), 'utf8');
-  console.log(`Updated ${file}: agent=${updatedAgent}, wait=${updatedWait}, check_availability=${updatedCheck}`);
+  console.log(`Updated ${file}: agent=${updatedAgent}, wait=${updatedWait}, check_availability=${updatedCheck}, get_branches=${updatedBranches}`);
 });
