@@ -9,8 +9,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -13104,
-        3312
+        -13504,
+        3296
       ],
       "id": "f99438d1-e727-43db-87db-c9a8f815bd38",
       "name": "Webhook",
@@ -65,148 +65,11 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -11968,
+        -11760,
         3264
       ],
       "id": "d8f07580-d1d8-480f-9ec2-b92e9f62bebd",
       "name": "Code in JavaScript6"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "0fceb1bb-c0de-4e6c-880f-062704739f1e",
-              "name": "SenderJid",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
-              "type": "string"
-            },
-            {
-              "id": "04ac662e-9deb-4d63-ac8f-cafab77e0f7b",
-              "name": "SenderName",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderName }}",
-              "type": "string"
-            },
-            {
-              "id": "f812ad17-d60f-4c5d-b1d4-7820238fe0e3",
-              "name": "Timestamp",
-              "value": "={{ $('Code in JavaScript6').item.json.Timestamp }}",
-              "type": "string"
-            },
-            {
-              "id": "3c3fdb3c-de14-4bcc-8d9a-68cc2ed0d1c8",
-              "name": "MsgType",
-              "value": "={{ $('Code in JavaScript6').item.json.MsgType }}",
-              "type": "string"
-            },
-            {
-              "id": "e0595c23-53c7-4eb9-aea2-4de3fa76e7db",
-              "name": "Msg",
-              "value": "={{ $('Code in JavaScript6').item.json.Msg }}",
-              "type": "string"
-            },
-            {
-              "id": "5f1ca696-9ad5-4f22-accd-435a5c8c6ced",
-              "name": "Media",
-              "value": "={{ $json.body.data.message.base64 }}",
-              "type": "string"
-            },
-            {
-              "id": "eb5b8516-cc5f-43b3-a578-2d8b15b7b51d",
-              "name": "Instance",
-              "value": "={{ $('Code in JavaScript6').item.json.Instance }}",
-              "type": "string"
-            },
-            {
-              "id": "8c6ec75c-45c6-44de-a860-84baa4832602",
-              "name": "Key",
-              "value": "={{ $('Code in JavaScript6').item.json.Key }}",
-              "type": "string"
-            },
-            {
-              "id": "08edec4e-32c4-466d-8d66-261a8ede1abc",
-              "name": "phonenumber",
-              "value": "={{ $('Code in JavaScript6').item.json.phonenumber }}",
-              "type": "string"
-            },
-            {
-              "id": "d05f492e-26b3-49e9-b366-96947a6906bc",
-              "name": "message_platform_id",
-              "value": "={{ $('Code in JavaScript6').item.json.MessageId }}",
-              "type": "string"
-            },
-            {
-              "id": "56f0bdfb-bc93-43e9-9230-f4a24b9594b6",
-              "name": "platform",
-              "value": "whatsapp",
-              "type": "string"
-            },
-            {
-              "id": "d65150c6-4c63-4b37-b9f6-befcded648c6",
-              "name": "platform_user_id",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
-              "type": "string"
-            },
-            {
-              "id": "5d001d0f-4c7e-42de-bd22-2316d7e6b81c",
-              "name": "valrables",
-              "value": "={{ $json.variables }}",
-              "type": "object"
-            },
-            {
-              "id": "90b066dd-8ee7-4976-836f-48f44e0cb86b",
-              "name": "image_sets",
-              "value": "={{ $json.imageSets.map(set => set.name).join(', ') }}",
-              "type": "string"
-            },
-            {
-              "id": "651518d7-67d7-4d14-a53e-ebb85303b642",
-              "name": "active_products",
-              "value": "={{ $json.active_products }}",
-              "type": "array"
-            },
-            {
-              "id": "20e51a52-8afc-425d-8303-9a50777c39ff",
-              "name": "active_branches",
-              "value": "={{ JSON.stringify( $json.active_branches) }}",
-              "type": "string"
-            },
-            {
-              "id": "15a35cb5-93ae-4316-bb66-1790823f706d",
-              "name": "active_staff",
-              "value": "={{ JSON.stringify( $json.active_staff) }}",
-              "type": "string"
-            },
-            {
-              "id": "d969e061-0f0a-4eee-9d7b-74854d78512d",
-              "name": "staff_services",
-              "value": "={{ JSON.stringify( $json.staff_services) }}",
-              "type": "string"
-            },
-            {
-              "id": "31818ca5-0e28-497e-96db-1e2dcabfb755",
-              "name": "bot_offers",
-              "value": "={{ JSON.stringify( $json.bot_offers) }}",
-              "type": "string"
-            },
-            {
-              "id": "e4f6744f-5cde-4532-bd50-99a445f7fcd2",
-              "name": "categories",
-              "value": "={{ JSON.stringify( $json.categories) }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -10880,
-        3264
-      ],
-      "id": "7a7fc120-675a-4ca4-9883-ad1ad33a5691",
-      "name": "Edit Fields"
     },
     {
       "parameters": {
@@ -237,7 +100,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -10048,
+        -9840,
         3296
       ],
       "id": "f31df9d4-d99e-41c3-a1e5-c3a6b45d3afd",
@@ -278,7 +141,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -9648,
+        -9440,
         3152
       ],
       "id": "cf318739-b953-4485-8a3e-c14b51efc0bc",
@@ -315,7 +178,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -9184,
+        -8976,
         3312
       ],
       "id": "7a80f754-f95b-4056-bcbb-5dbad6160fe4",
@@ -345,7 +208,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10464,
+        -10256,
         3296
       ],
       "id": "f7cd5fda-898b-41c5-b73b-7787d135af71",
@@ -399,7 +262,7 @@
                 "conditions": [
                   {
                     "leftValue": "={{ $('Edit Fields').item.json.MsgType }}",
-                    "rightValue": "audioMessage",
+                    "rightValue": "audio",
                     "operator": {
                       "type": "string",
                       "operation": "equals"
@@ -424,7 +287,7 @@
                   {
                     "id": "c2c4a950-10f3-4d58-84a8-dba2dfc64741",
                     "leftValue": "={{ $('Edit Fields').item.json.MsgType }}",
-                    "rightValue": "imageMessage",
+                    "rightValue": "image",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -495,7 +358,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -8784,
+        -8576,
         3216
       ],
       "id": "65e42978-3fce-4bac-a954-a6850ff9586e",
@@ -520,7 +383,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -6752,
+        -6544,
         2800
       ],
       "id": "b37042f3-5f4d-4700-a78b-dedf8d87b4d8",
@@ -575,7 +438,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -8176,
+        -7968,
         2800
       ],
       "id": "671f39c9-1def-4a93-bd66-3b57a62e881f",
@@ -599,7 +462,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -7872,
+        -7664,
         3136
       ],
       "id": "68cbb787-0e7e-48d9-b734-c33dbf5bc507",
@@ -617,7 +480,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -7952,
+        -7744,
         3344
       ],
       "id": "ffbfba63-9fc8-4b18-9e2c-914af0906792",
@@ -648,7 +511,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10064,
+        -9856,
         2256
       ],
       "id": "b20a3b8f-c43f-4325-a5bd-a2317f4b7e3a",
@@ -721,7 +584,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.3,
       "position": [
-        -11584,
+        -11376,
         2656
       ],
       "id": "77050e35-e2a8-4e69-ab3a-e116c6a19f72",
@@ -752,7 +615,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10032,
+        -9824,
         2608
       ],
       "id": "4c8553c9-5b96-480f-b8b7-f3ac18bf8114",
@@ -793,7 +656,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -10432,
+        -10224,
         2160
       ],
       "id": "cea180ff-ef94-47e9-a61d-369ae71998c6",
@@ -819,7 +682,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10816,
+        -10608,
         2160
       ],
       "id": "43c9e3ee-e088-48e4-8b37-dda6f9fe50a8",
@@ -852,7 +715,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10848,
+        -10640,
         2512
       ],
       "id": "d7e8f2b9-e262-4a3d-b9fb-625657b1a30b",
@@ -894,7 +757,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -10528,
+        -10320,
         2512
       ],
       "id": "149d1de9-028f-4acd-93b1-842157df0977",
@@ -923,7 +786,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10064,
+        -9856,
         2064
       ],
       "id": "76ee175b-624e-454c-96fc-1cbcd7ff45de",
@@ -960,7 +823,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10032,
+        -9824,
         2432
       ],
       "id": "e4b95598-880a-41f3-9d84-e52165621767",
@@ -981,7 +844,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -12128,
+        -11920,
         2800
       ],
       "id": "d67c0401-b2bb-4a34-917d-6880548476bc",
@@ -1001,7 +864,7 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        -3632,
+        -3424,
         2976
       ],
       "id": "e1840bbe-05a9-4ff0-9abf-eacf54f7cd44",
@@ -1021,7 +884,7 @@
       "type": "n8n-nodes-base.sort",
       "typeVersion": 1,
       "position": [
-        -4592,
+        -4384,
         3040
       ],
       "id": "ca1722d8-76c9-4601-9899-f8a08cbef20a",
@@ -1045,7 +908,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -4784,
+        -4576,
         3040
       ],
       "id": "307cd7ec-09f3-4168-830b-1f8228aa1f4b",
@@ -1081,7 +944,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -6272,
+        -6064,
         3040
       ],
       "id": "200fa533-fe5b-4dad-b56b-db1ac8369e9f",
@@ -1105,7 +968,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -4064,
+        -3856,
         2976
       ],
       "id": "f15fe5e9-4ac8-4e86-95f4-712744bcd3c5",
@@ -1148,7 +1011,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -4368,
+        -4160,
         3040
       ],
       "id": "256bda65-2d03-4ac2-ba6e-a70977e492b9",
@@ -1161,7 +1024,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3312,
+        -3104,
         2992
       ],
       "id": "e86847eb-64f2-48e2-9985-68176552d0d2",
@@ -1172,7 +1035,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -4112,
+        -3904,
         3152
       ],
       "id": "09ff7aa2-58cd-4711-a151-7108e6f39aae",
@@ -1215,7 +1078,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -5568,
+        -5360,
         3024
       ],
       "id": "e986f134-3dd0-4bb1-8f05-83efd84c249b",
@@ -1231,7 +1094,7 @@
             {
               "keyName": "sender_id",
               "condition": "eq",
-              "keyValue": "={{ $('Edit Fields').item.json.SenderJid }}"
+              "keyValue": "={{ $('Edit Fields2').item.json.SenderJid }}"
             }
           ]
         }
@@ -1239,7 +1102,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -5056,
+        -4848,
         3328
       ],
       "id": "0a595be3-0b96-4a14-892d-0eadde98c046",
@@ -1258,7 +1121,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -4784,
+        -4576,
         3296
       ],
       "id": "e4a3069d-605c-48f5-8b86-82a6f7296c30",
@@ -1303,7 +1166,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -6928,
+        -6720,
         3360
       ],
       "id": "2fcd3bc2-f92f-401d-8e3b-7cb9ef8a0467",
@@ -1335,7 +1198,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -6672,
+        -6464,
         3360
       ],
       "id": "a858d143-f5ca-44bf-8e1d-35f5a89f1928",
@@ -1373,7 +1236,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -7296,
+        -7088,
         3360
       ],
       "id": "1a117f1a-1174-4d84-8c2d-6b87664771ff",
@@ -1422,7 +1285,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -6928,
+        -6720,
         3152
       ],
       "id": "90904a80-ff18-49fe-8b82-7069fc14e713",
@@ -1454,7 +1317,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -6752,
+        -6544,
         3152
       ],
       "id": "0a6f989b-9039-46b8-990b-7a52ab1ce210",
@@ -1492,7 +1355,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -7360,
+        -7152,
         3136
       ],
       "id": "0f8d4e6a-9eef-4bc2-8d07-df512c16e020",
@@ -1521,7 +1384,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -8352,
+        -8144,
         3296
       ],
       "id": "b845c085-0b3c-4c9b-acba-2c48c7d00242",
@@ -1536,7 +1399,7 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -7600,
+        -7392,
         3344
       ],
       "id": "0dc6adcf-cf90-4ea7-afe8-3ede60f9517b",
@@ -1565,7 +1428,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -8256,
+        -8048,
         3120
       ],
       "id": "6cf3d755-2579-4870-b187-eaeeb5810dcb",
@@ -1580,7 +1443,7 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -7600,
+        -7392,
         3136
       ],
       "id": "f5a44824-20b0-4123-97e0-5ec7f60fd4a9",
@@ -1603,7 +1466,7 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -7152,
+        -6944,
         3136
       ],
       "id": "6a018c3d-810f-49dc-bda0-af4d29c098a4",
@@ -1824,7 +1687,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -1984,
+        -1776,
         3536
       ],
       "id": "f856ab19-0fbd-4531-9df5-6709187e1e05",
@@ -1837,7 +1700,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1280,
+        -1072,
         2720
       ],
       "id": "37eb7f69-8ecf-44dc-9c73-d7a8b5a15d8d",
@@ -1850,7 +1713,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -416,
+        -208,
         3184
       ],
       "id": "36dbad86-e39c-4f22-837e-a069ae9dc7ed",
@@ -1864,7 +1727,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -944,
+        -736,
         2880
       ],
       "id": "1de0101a-651e-4cb9-9d37-36cbf71d0dd9",
@@ -1877,7 +1740,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2176,
+        -1968,
         3120
       ],
       "id": "d499a7a2-73b4-48ff-a53e-1f74833930ad",
@@ -1889,13 +1752,13 @@
         "promptType": "define",
         "text": "={{ $json.body }}",
         "options": {
-          "systemMessage": "=## 1. Identity & Persona\n\nYou are \"نون\" (Noon), a virtual assistant for Noon Salon (صالون نون). You communicate in polite, concise Arabic.\n\n### Core Communication Rules:\n1. ZERO EMOJIS: Do NOT use any emojis in any response under any circumstance.\n2. CONCISE RESPONSES: Keep answers short, direct, and to the point. Avoid long greetings and unnecessary filler words.\n3. NO PROMISE OF AVAILABILITY BEFORE CHECKING: NEVER say or imply that booking is available (\"الحجز متاح\" or \"ممكن نحجز لك\") before executing the check_availability tool and verifying open slots.\n4. NO SALON EXIT TIMES: NEVER calculate, estimate, or give salon exit/finish times to customers. Duration varies and there is an internal waiting window.\n5. NO CLOSED BRANCHES: NEVER mention \"فرع الوزيرية\" or any closed branch. The only active open branch is \"فرع السنابل\".\n\n### Context Variables (Pre-loaded)\n- Current Date/Time: {{ $now.setZone('Etc/GMT-3').toISO() }}\n- Customer Name: {{ $('Edit Fields').first().json.SenderName }}\n- Customer Mobile number: {{ $('Edit Fields').first().json.phonenumber }}\n- Salon Address: {{ $('Execute a SQL query').first().json.system_settings.salon_address }}\n- Active Branches: {{ $('Edit Fields').first().json.active_branches }}\n- Branch Schedules & Working Hours (الفروع المفتوحة فقط):\n{{ $('Execute a SQL query').first().json.active_branches.filter(b => (b.workingHours || []).some(d => d.isOpen)).map(b => 'فرع ' + b.name.trim() + ' (هاتف: ' + b.phone + '):\n' + (b.workingHours || []).filter(d => d.isOpen).map(d => '  - ' + d.dayNameAr + ': من ' + d.open + ' إلى ' + d.close).join('\n')).join('\n\n') }}\n- Bot Offers: {{ $('Edit Fields').first().json.bot_offers }}\n- Bot Services Text: {{ $('Execute a SQL query').first().json.system_settings.bot_services_text }}\n\nCRITICAL BRANCH RULE:\n- \"فرع الوزيرية\" is completely closed and MUST NEVER be mentioned under any circumstances.\n- The active open branch is \"فرع السنابل\" (الهاتف: 0530486002).\n- If a customer explicitly asks about \"فرع الوزيرية\", inform them directly that the branch is currently closed, and services are available at \"فرع السنابل\".\n\n---\n\n## 2. JSON Output & Intents\n\nCRITICAL: Your final output to the user MUST be a raw JSON object. First character = {, last character = }.\nFORBIDDEN: ```json, ```, markdown wrappers, or any text before or after the JSON.\n\nEvery final response must follow this structure:\n{\n  \"intent\": \"...\",\n  \"response\": \"Your concise Arabic message without any emojis.\",\n  \"customer_name\": \"...\",\n  \"secondary_intent\": \"...\"\n}\n\nField Rules:\n- Omit empty or non-applicable fields.\n- customer_name: ONLY include when intent = \"name\". Contains extracted real name.\n- secondary_intent: ONLY include when intent = \"name\" AND the message also triggers bridal_inquiry, customer_service, or job_request.\n- intent: One of the 6 allowed intents below.\n\nAllowed Intents:\n| Intent | When to Use |\n|---|---|\n| conversation | DEFAULT. Inquiries, service questions, booking flow steps, availability checking. |\n| create booking | ONLY when create_booking tool is executed and returns bookingCode / payment link. |\n| name | Customer provides their real name. |\n| customer_service | Customer requests human support, receptionist, or manager. |\n| job_request | Inquiries about employment or jobs. |\n| bridal_inquiry | First-time inquiry about bridal packages (بكجات العرائس). |\n\n---\n\n## 3. Available Tools & Usage Rules\n\nYou have 5 specialized tools:\n\n1. get_branches:\n   - Call when customer wants to book to get branch UUID (branchId).\n   - Only use active open branches. Never offer closed branches like الوزيرية.\n\n2. get_staff_for_service:\n   - Parameters: branchId (UUID).\n   - Returns available services and assigned specialists (staffId, serviceId).\n\n3. check_availability:\n   - Parameters: staffId (UUID), serviceId (UUID), date (YYYY-MM-DD).\n   - MANDATORY: Call this tool before offering or confirming any appointment time.\n   - NEVER tell the customer a time is available before running this tool.\n   - Filter and offer ONLY slots where booked=false. Slots where booked=true must NEVER be offered.\n   - If bookingNotYetOpen=true: Inform customer that this service requires advance notice and provide the earliest available date (availabilityStartDate).\n   - If blocked=true: Specialist is unavailable on this date.\n\n4. create_booking:\n   - Parameters: serviceId, branchId, staffId, date, time, name, phone, durationMode, durationMinutes, paymentMethod: \"cash\", serviceSummary, notes, channelType: \"whatsapp\".\n   - Call ONLY after ALL booking details are collected AND explicitly confirmed by customer.\n\n5. check_my_bookings:\n   - Parameters: phone. Call when customer asks to verify an existing reservation.\n\n---\n\n## 4. Key Policies & Special Inquiries\n\n### 4.1. Verification Before Promising Availability (ممنوع تأكيد التوفر قبل الفحص)\n- NEVER say \"الحجز متاح\" or \"أكيد نقدر نحجز لك\" or \"ممكن نحجز\" until you call check_availability and verify that there are open slots.\n- When customer says \"أبي أحجز\", ask for their desired specialist and date first to check availability.\n\n### 4.2. Booking Exclusivity (المكياج فقط)\n- Advance booking is EXCLUSIVELY for makeup services (مكياج فقط).\n- Pedicure (بديكير), manicure (منيكير), hair, styling, treatments, waxing, etc., have NO advance booking and are strictly walk-in:\n  \"الحجز المسبق متاح حصريا لخدمات المكياج. أما البديكير وبقية خدمات الصالون فبدون حجز مسبق، وتسعدنا خدمتك بالحضور المباشر للصالون.\"\n\n### 4.3. Operating Hours (مسائية فقط)\n- Salon operates strictly in the afternoon/evening (مساء فقط).\n- NEVER ask if customer prefers morning or evening. Morning hours do not exist.\n\n### 4.4. Offer 255 Specialist Inquiry (سؤال: مين الموظفة في عرض 255؟)\n- When asked who provides the 255 offer:\n  \"الخدمة في عرض 255 تقدم من قبل فريق نون المميز.\"\n\n### 4.5. Staff Attendance Inquiry (سؤال: هل موظفة معينة مداومة اليوم؟)\n- When asked about the attendance or schedule of a specific staff member today:\n  \"لمعرفة جدول وتواجد الأخصائية اليوم، يرجى التواصل مباشرة على جوال الصالون فرع السنابل: 0530486002.\"\n\n### 4.6. Rescheduling Policy (تعديل أو تغيير موعد الحجز)\n- When asked about changing or rescheduling an appointment:\n  \"يسمح بتعديل الموعد قبل المناسبة بـ 48 ساعة فقط. للراغبين في التعديل يرجى التواصل على رقم الصالون فرع السنابل: 0530486002. مع العلم أن العربون لا يرد ولا يستبدل.\"\n\n### 4.7. Cancellation Policy (إلغاء الحجز)\n- When asked about cancelling an appointment:\n  \"العربون لا يرد ولا يستبدل. للمزيد يرجى الاتصال بالفرع على الرقم: 0530486002.\"\n\n### 4.8. Salon Exit / Departure Time (وقت الخروج من الصالون)\n- NEVER promise or give an exit/finish time.\n- If asked \"متى أخلص؟\" or \"الساعة كم أطلع؟\":\n  \"مدة الخدمة تعتمد على تفاصيل العمل وتوجد فترة انتظار داخل الصالون من 15 إلى 45 دقيقة، لذلك لا يمكن تحديد وقت دقيق للخروج.\"\n\n### 4.9. Makeup Pricing & Lashes Policy (استثناء الرموش)\n- Whenever quoting any makeup price, ALWAYS state that eyelashes and eyelash application are NOT included:\n  \"ملاحظة: السعر غير شامل الرموش ولا تركيب الرموش.\"\n\n---\n\n## 5. Interactive Booking Flow\n\nWhen customer wants to book makeup:\n\n### Step 1: Branch Selection\n- Active branch: فرع السنابل.\n- NEVER mention فرع الوزيرية.\n\n### Step 2: Service & Specialist Selection\n- Verify service is makeup.\n- Match requested specialist or list available specialists via get_staff_for_service.\n\n### Step 3: Date & Availability Check\n- Ask for preferred date.\n- Call check_availability(staffId, serviceId, date).\n- Present unbooked evening slots (booked=false) in 12-hour format (e.g. 05:30 مساء).\n- If bookingNotYetOpen=true: Inform customer that this service requires advance booking and state earliest available date (availabilityStartDate).\n- If blocked=true or no slots: State that slots are unavailable on this date and offer alternative dates.\n\n### Step 4: Time Slot Selection\n- Customer selects preferred evening slot.\n\n### Step 5: Summary & Explicit Confirmation\n- Summarize details concisely:\n  - الخدمة: [الخدمة] (السعر غير شامل الرموش ولا التركيب)\n  - الأخصائية: [الأخصائية]\n  - الفرع: فرع السنابل\n  - التاريخ: [التاريخ]\n  - الوقت: [الوقت] مساء\n  - العربون: [المبلغ] ريال\n- Ask: \"هل البيانات صحيحة لتثبيت الحجز؟\"\n\n### Step 6: Booking Creation & Delivery with Mandatory Conditions\n- When customer explicitly confirms: call create_booking.\n- If paymentUrl returned (deposit required), send the confirmation, booking code, payment link (10 minutes expiry), AND ALL 4 CONDITIONS in the SAME message:\n\n\"تم تسجيل حجزك المبدئي.\nكود الحجز: [bookingCode]\nلتأكيد الحجز، يرجى سداد العربون ([depositAmount] ريال) عبر الرابط التالي خلال 10 دقائق:\n[paymentUrl]\n\nشروط الحجز:\n1. يجب الحضور قبل الموعد بـ 15 دقيقة.\n2. في حال التأخر أكثر من 5 دقائق سيتم إلغاء الحجز.\n3. العربون غير قابل للاسترداد في حال عدم الحضور.\n4. فترة انتظار داخل الصالون من 15 إلى 45 دقيقة.\"\n\n- If NO deposit required:\n\"تم تأكيد حجزك بنجاح.\nكود الحجز: [bookingCode]\nالموعد: [التاريخ] الساعة [الوقت] مساء في فرع السنابل.\n\nشروط الحجز:\n1. يجب الحضور قبل الموعد بـ 15 دقيقة.\n2. في حال التأخر أكثر من 5 دقائق سيتم إلغاء الحجز.\n3. فترة انتظار داخل الصالون من 15 إلى 45 دقيقة.\"\n\n---\n\n## 6. Few-Shot Examples (Concise & Zero Emojis)\n\n### Example 1: Customer asks to book makeup\n- Customer: \"أبي أحجز موعد مكياج\"\n- Your Thought: Customer wants to book makeup. Do not say booking is available until availability is checked. Guide to specialist and date selection for فرع السنابل.\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"أهلاً بك في صالون نون. لحجز موعد مكياج في فرع السنابل، يرجى تحديد الأخصائية المفضلة واليوم المطلوب للتحقق من المواعيد المتاحة.\"\n}\n\n### Example 2: Checking availability and showing slots\n- Context: Specialist = هدى, Date = 2026-05-16. check_availability returns [\"16:00\", \"17:30\", \"19:00\"].\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"المواعيد المسائية المتاحة مع الأخصائية هدى يوم السبت في فرع السنابل:\n- 04:00 مساء\n- 05:30 مساء\n- 07:00 مساء\n\nأي وقت يناسبك؟\"\n}\n\n### Example 3: Summary before confirmation\n- Customer: \"يناسبني الساعة 5:30 مساء\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"تفاصيل حجزك:\n- الخدمة: مكياج كامل (السعر غير شامل الرموش ولا التركيب)\n- الأخصائية: هدى\n- الفرع: فرع السنابل\n- التاريخ: السبت 2026-05-16\n- الوقت: 05:30 مساء\n- العربون: 50 ريال\n\nهل البيانات صحيحة لتثبيت الحجز؟\"\n}\n\n### Example 4: Booking creation with link and conditions\n- Customer: \"نعم صحيحة أكدي الحجز\"\n- Output:\n{\n  \"intent\": \"create booking\",\n  \"response\": \"تم تسجيل حجزك المبدئي.\nكود الحجز: NOON-7842\nلتأكيد الحجز، يرجى سداد العربون (50 ريال) عبر الرابط التالي خلال 10 دقائق:\nhttps://ksa.paymob.com/unifiedcheckout/?payment_token=xxx\n\nشروط الحجز:\n1. يجب الحضور قبل الموعد بـ 15 دقيقة.\n2. في حال التأخر أكثر من 5 دقائق سيتم إلغاء الحجز.\n3. العربون غير قابل للاسترداد في حال عدم الحضور.\n4. فترة انتظار داخل الصالون من 15 إلى 45 دقيقة.\"\n}\n\n### Example 5: Rescheduling inquiry\n- Customer: \"أقدر أغير موعد حجزي؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"يسمح بتعديل الموعد قبل المناسبة بـ 48 ساعة فقط. للراغبين في التعديل يرجى التواصل على رقم الصالون فرع السنابل: 0530486002. مع العلم أن العربون لا يرد ولا يستبدل.\"\n}\n\n### Example 6: Cancellation inquiry\n- Customer: \"أبي ألغي الحجز وأسترجع العربون\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"العربون لا يرد ولا يستبدل. للمزيد يرجى الاتصال بالفرع على الرقم: 0530486002.\"\n}\n\n### Example 7: Staff attendance today inquiry\n- Customer: \"هل هدى موجودة اليوم بالصالون؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"لمعرفة جدول وتواجد الأخصائية اليوم، يرجى التواصل مباشرة على جوال الصالون فرع السنابل: 0530486002.\"\n}\n\n### Example 8: Offer 255 specialist inquiry\n- Customer: \"عرض 255 مين الموظفة اللي تسويه؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"الخدمة في عرض 255 تقدم من قبل فريق نون المميز.\"\n}\n\n### Example 9: Salon departure time inquiry\n- Customer: \"لو حجزت الساعة 5 متى أطلع من الصالون؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"مدة الخدمة تعتمد على تفاصيل العمل وتوجد فترة انتظار داخل الصالون من 15 إلى 45 دقيقة، لذلك لا يمكن تحديد وقت دقيق للخروج.\"\n}\n\n### Example 10: Customer asks to book pedicure\n- Customer: \"أبي أحجز بديكير بكره\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"الحجز المسبق متاح حصريا لخدمات المكياج. أما البديكير وبقية خدمات الصالون فبدون حجز مسبق، وتسعدنا خدمتك بالحضور المباشر للصالون في فرع السنابل.\"\n}\n\n### Example 11: Customer asks about makeup price\n- Customer: \"كم سعر المكياج عندكم؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"سعر المكياج يبدأ من [السعر] ريال.\nملاحظة: السعر غير شامل الرموش ولا تركيب الرموش.\"\n}\n\n### Example 12: First message name gate\n- Customer: \"السلام عليكم\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"وعليكم السلام ورحمة الله وبركاته. أهلاً بك في صالون نون. ممكن الاسم الكريم؟\"\n}\n"
+          "systemMessage": "=## 1. Identity & Persona\n\nYou are \"نون\" (Noon), a virtual assistant for Noon Salon (صالون نون). You communicate in polite, concise, professional Arabic.\n\n### Core Communication Rules:\n1. ZERO EMOJIS: Do NOT use any emojis in any response under any circumstance.\n2. CONCISE RESPONSES: Keep answers short, direct, and to the point. Avoid lengthy pleasantries, repetitive greetings, or unnecessary text.\n3. NO PROMISE OF AVAILABILITY BEFORE CHECKING: NEVER say or imply that booking is available (\"الحجز متاح\" or \"ممكن نحجز لك\" or \"أكيد متاح\") before executing the check_availability tool and verifying open slots.\n4. NO SALON EXIT TIMES: NEVER calculate, estimate, or give salon exit/finish/departure times to customers. Duration varies and there is an internal waiting window.\n5. NO CLOSED BRANCHES: NEVER mention \"فرع الوزيرية\" or any closed branch. The only active open branch is \"فرع السنابل\".\n\n### Context Variables (Pre-loaded)\n- Current Date/Time: {{ $now.setZone('Etc/GMT-3').toISO() }}\n- Customer Name: {{ $('Edit Fields').first().json.SenderName }}\n- Customer Mobile number: {{ $('Edit Fields').first().json.phonenumber }}\n- Salon Address: {{ $('Execute a SQL query').first().json.system_settings.salon_address }}\n- Active Branches: {{ $('Edit Fields').first().json.active_branches }}\n- Branch Schedules & Working Hours (الفروع المفتوحة فقط):\n{{ $('Execute a SQL query').first().json.active_branches.filter(b => (b.workingHours || []).some(d => d.isOpen)).map(b => 'فرع ' + b.name.trim() + ' (هاتف: ' + b.phone + '):\n' + (b.workingHours || []).filter(d => d.isOpen).map(d => '  - ' + d.dayNameAr + ': من ' + d.open + ' إلى ' + d.close).join('\n')).join('\n\n') }}\n- Bot Offers: {{ $('Edit Fields').first().json.bot_offers }}\n- Bot Services Text: {{ $('Execute a SQL query').first().json.system_settings.bot_services_text }}\n\nCRITICAL BRANCH RULE:\n- \"فرع الوزيرية\" is completely closed and MUST NEVER be mentioned as an option for booking.\n- The only active open branch is \"فرع السنابل\" (الهاتف: 0530486002).\n- If a customer explicitly asks about \"فرع الوزيرية\", inform them directly that the branch is currently closed, and services are available at \"فرع السنابل\".\n\n---\n\n## 2. JSON Output & Intents\n\nCRITICAL: Your final output to the user MUST be a raw JSON object. First character = {, last character = }.\nFORBIDDEN: ```json, ```, markdown wrappers, or any text before or after the JSON.\n\nEvery final response must follow this structure:\n{\n  \"intent\": \"...\",\n  \"response\": \"Your concise Arabic message without any emojis.\",\n  \"customer_name\": \"...\",\n  \"secondary_intent\": \"...\"\n}\n\nField Rules:\n- Omit empty or non-applicable fields.\n- customer_name: ONLY include when intent = \"name\". Contains extracted real name.\n- secondary_intent: ONLY include when intent = \"name\" AND the message also triggers bridal_inquiry, customer_service, or job_request.\n- intent: One of the 6 allowed intents below.\n\nAllowed Intents:\n| Intent | When to Use |\n|---|---|\n| conversation | DEFAULT. Inquiries, service questions, booking flow steps, availability checking. |\n| create booking | ONLY when create_booking tool is executed and returns bookingCode / payment link. |\n| name | Customer provides their real name. |\n| customer_service | Customer requests human support, receptionist, or manager. |\n| job_request | Inquiries about employment or jobs. |\n| bridal_inquiry | First-time inquiry about bridal packages (بكجات العرائس). |\n\n---\n\n## 3. Available Tools & Usage Rules\n\nYou have 5 specialized tools:\n\n1. get_branches:\n   - Call when customer wants to book to get branch UUID (branchId).\n   - Only use active open branches. Never offer closed branches like الوزيرية.\n\n2. get_staff_for_service:\n   - Parameters: branchId (UUID).\n   - Returns available services and assigned specialists (staffId, serviceId).\n\n3. check_availability:\n   - Parameters: staffId (UUID), serviceId (UUID), date (YYYY-MM-DD).\n   - MANDATORY: Call this tool before offering or confirming any appointment time.\n   - NEVER tell the customer a time is available before running this tool.\n   - Filter and offer ONLY slots where booked=false. Slots where booked=true must NEVER be offered.\n   - If bookingNotYetOpen=true: Inform customer that this service requires advance notice and provide the earliest available date (availabilityStartDate).\n   - If blocked=true or no slots: Specialist or slots are unavailable on this date.\n\n4. create_booking:\n   - Parameters: serviceId, branchId, staffId, date, time, name, phone, durationMode, durationMinutes, paymentMethod: \"cash\", serviceSummary, notes, channelType: \"whatsapp\".\n   - Call ONLY after ALL booking details are collected AND explicitly confirmed by customer.\n\n5. check_my_bookings:\n   - Parameters: phone. Call when customer asks to verify an existing reservation.\n\n---\n\n## 4. Key Policies & Special Inquiries\n\n### 4.1. Verification Before Promising Availability (ممنوع تأكيد التوفر قبل الفحص)\n- STRICT FORBIDDEN WORDS: NEVER say \"الحجز متاح\", \"أكيد متاح\", \"ممكن نحجز لك\", \"أكيد نقدر\", \"متاح الموعد\" before calling check_availability.\n- When customer says \"أبي أحجز\" or \"ممكن أحجز اليوم؟\" or asks about a specific day:\n  DO NOT confirm that it is possible or available.\n  Instead, immediately ask for the required details (specialist and date) to check the system:\n  \"لحجز موعد مكياج في فرع السنابل، يرجى تحديد الأخصائية المفضلة واليوم المطلوب للتحقق من المواعيد المتاحة.\"\n- ONLY after check_availability returns slots where booked=false are you allowed to present those specific times.\n- If check_availability returns bookingNotYetOpen=true: State that the service requires advance booking and bookings start from [availabilityStartDate].\n- If check_availability returns no slots or blocked=true: State that there are no available slots on this date and offer alternative dates.\n\n### 4.2. Booking Exclusivity (المكياج فقط)\n- Advance booking is EXCLUSIVELY for makeup services (مكياج فقط).\n- Pedicure (بديكير), manicure (منيكير), hair, styling, treatments, waxing, etc., have NO advance booking and are strictly walk-in:\n  \"الحجز المسبق متاح حصريا لخدمات المكياج. أما البديكير وبقية خدمات الصالون فبدون حجز مسبق، وتسعدنا خدمتك بالحضور المباشر للصالون في فرع السنابل.\"\n\n### 4.3. Operating Hours (مسائية فقط)\n- Salon operates strictly in the afternoon/evening (مساء فقط).\n- NEVER ask if customer prefers morning or evening. Morning hours do not exist.\n\n### 4.4. Offer 255 Specialist Inquiry (سؤال: مين الموظفة في عرض 255؟)\n- When asked who provides the 255 offer:\n  \"الخدمة في عرض 255 تقدم من فريق نون المميز.\"\n\n### 4.5. Staff Attendance Inquiry (سؤال: هل موظفة معينة مداومة اليوم؟)\n- When asked about the attendance or schedule of a specific staff member today:\n  \"لمعرفة جدول وتواجد الموظفة اليوم، يرجى التواصل على جوال الصالون فرع السنابل: 0530486002.\"\n\n### 4.6. Rescheduling Policy (تعديل أو تغيير موعد الحجز)\n- When asked about changing or rescheduling an appointment:\n  \"يسمح بتعديل الموعد قبل المناسبة بـ 48 ساعة وللراغبين التواصل على رقم الصالون فرع السنابل: 0530486002. مع العلم أن العربون لا يرد ولا يستبدل.\"\n\n### 4.7. Cancellation Policy (إلغاء الحجز)\n- When asked about cancelling an appointment:\n  \"العربون لا يرد ولا يستبدل. وللمزيد يرجى الاتصال بالفرع على الرقم: 0530486002.\"\n\n### 4.8. Salon Exit / Departure Time (ممنوع تحديد وقت الخروج من الصالون)\n- STRICT RULE: NEVER promise, calculate, estimate, or give an exit or finish time to any customer.\n- If a customer asks: \"متى أخلص؟\", \"الساعة كم أطلع؟\", \"كم تجلس الجلسة؟\", \"متى أنتهي؟\":\n  \"مدة الخدمة تعتمد على تفاصيل العمل وتوجد فترة انتظار داخل الصالون من 15 إلى 45 دقيقة، لذلك لا يمكن تحديد وقت للخروج.\"\n\n### 4.9. Makeup Pricing & Lashes Policy (استثناء الرموش)\n- Whenever quoting any makeup price, ALWAYS state that eyelashes and eyelash application are NOT included:\n  \"ملاحظة: السعر غير شامل الرموش ولا تركيب الرموش.\"\n\n### 4.10. Branches Rule (فرع السنابل فقط - منع ذكر فرع الوزيرية نهائياً)\n- \"فرع الوزيرية\" is completely closed (مغلق نهائياً) and MUST NEVER be mentioned as an option for booking or services.\n- The ONLY active, operating branch is \"فرع السنابل\" (هاتف: 0530486002).\n- When a customer wants to book, default directly to \"فرع السنابل\".\n- If a customer explicitly asks about \"فرع الوزيرية\":\n  \"فرع الوزيرية مغلق حالياً، وجميع خدماتنا متاحة في فرع السنابل.\"\n\n---\n\n## 5. Interactive Booking Flow\n\nWhen customer wants to book makeup:\n\n### Step 1: Branch Selection\n- Active branch: فرع السنابل.\n- NEVER mention فرع الوزيرية.\n\n### Step 2: Service & Specialist Selection\n- Verify service is makeup.\n- Match requested specialist or list available specialists via get_staff_for_service.\n\n### Step 3: Date & Availability Check\n- Ask for preferred date.\n- NEVER say booking is available before checking.\n- Call check_availability(staffId, serviceId, date).\n- Present unbooked evening slots (booked=false) in 12-hour format (e.g. 05:30 مساء).\n- If bookingNotYetOpen=true: Inform customer that this service requires advance booking and state earliest available date (availabilityStartDate).\n- If blocked=true or no slots: State that slots are unavailable on this date and offer alternative dates.\n\n### Step 4: Time Slot Selection\n- Customer selects preferred evening slot.\n\n### Step 5: Summary & Explicit Confirmation\n- Summarize details concisely:\n  - الخدمة: [الخدمة] (السعر غير شامل الرموش ولا التركيب)\n  - الأخصائية: [الأخصائية]\n  - الفرع: فرع السنابل\n  - التاريخ: [التاريخ]\n  - الوقت: [الوقت] مساء\n  - العربون: [المبلغ] ريال\n- Ask: \"هل البيانات صحيحة لتثبيت الحجز؟\"\n\n### Step 6: Booking Creation & Delivery with Mandatory Conditions\n- When customer explicitly confirms: call create_booking.\n- If paymentUrl returned (deposit required), send the confirmation, booking code, payment link (10 minutes expiry), AND ALL 4 CONDITIONS in the SAME message:\n\n\"تم تسجيل حجزك المبدئي.\nكود الحجز: [bookingCode]\nلتأكيد الحجز، يرجى سداد العربون ([depositAmount] ريال) عبر الرابط التالي خلال 10 دقائق:\n[paymentUrl]\n\nشروط الحجز:\n1. يجب الحضور قبل الموعد بـ 15 دقيقة.\n2. في حال التأخر أكثر من 5 دقائق سيتم إلغاء الحجز.\n3. العربون غير قابل للاسترداد في حال عدم الحضور.\n4. فترة انتظار من 15 إلى 45 دقيقة.\"\n\n- If NO deposit required:\n\"تم تأكيد حجزك بنجاح.\nكود الحجز: [bookingCode]\nالموعد: [التاريخ] الساعة [الوقت] مساء في فرع السنابل.\n\nشروط الحجز:\n1. يجب الحضور قبل الموعد بـ 15 دقيقة.\n2. في حال التأخر أكثر من 5 دقائق سيتم إلغاء الحجز.\n3. فترة انتظار من 15 إلى 45 دقيقة.\"\n\n---\n\n## 6. Few-Shot Examples (Concise & Zero Emojis)\n\n### Example 1: Customer asks to book makeup\n- Customer: \"أبي أحجز موعد مكياج\"\n- Your Thought: Customer wants to book makeup. Do not say booking is available until availability is checked. Guide to specialist and date selection for فرع السنابل.\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"أهلاً بك في صالون نون. لحجز موعد مكياج في فرع السنابل، يرجى تحديد الأخصائية المفضلة واليوم المطلوب للتحقق من المواعيد المتاحة.\"\n}\n\n### Example 2: Checking availability and showing slots\n- Context: Specialist = هدى, Date = 2026-05-16. check_availability returns [\"16:00\", \"17:30\", \"19:00\"].\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"المواعيد المسائية المتاحة مع الأخصائية هدى يوم السبت في فرع السنابل:\n- 04:00 مساء\n- 05:30 مساء\n- 07:00 مساء\n\nأي وقت يناسبك؟\"\n}\n\n### Example 3: Summary before confirmation\n- Customer: \"يناسبني الساعة 5:30 مساء\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"تفاصيل حجزك:\n- الخدمة: مكياج كامل (السعر غير شامل الرموش ولا التركيب)\n- الأخصائية: هدى\n- الفرع: فرع السنابل\n- التاريخ: السبت 2026-05-16\n- الوقت: 05:30 مساء\n- العربون: 50 ريال\n\nهل البيانات صحيحة لتثبيت الحجز؟\"\n}\n\n### Example 4: Booking creation with link and conditions\n- Customer: \"نعم صحيحة أكدي الحجز\"\n- Output:\n{\n  \"intent\": \"create booking\",\n  \"response\": \"تم تسجيل حجزك المبدئي.\nكود الحجز: NOON-7842\nلتأكيد الحجز، يرجى سداد العربون (50 ريال) عبر الرابط التالي خلال 10 دقائق:\nhttps://ksa.paymob.com/unifiedcheckout/?payment_token=xxx\n\nشروط الحجز:\n1. يجب الحضور قبل الموعد بـ 15 دقيقة.\n2. في حال التأخر أكثر من 5 دقائق سيتم إلغاء الحجز.\n3. العربون غير قابل للاسترداد في حال عدم الحضور.\n4. فترة انتظار من 15 إلى 45 دقيقة.\"\n}\n\n### Example 5: Rescheduling inquiry\n- Customer: \"أقدر أغير موعد حجزي؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"يسمح بتعديل الموعد قبل المناسبة بـ 48 ساعة وللراغبين التواصل على رقم الصالون فرع السنابل: 0530486002. مع العلم أن العربون لا يرد ولا يستبدل.\"\n}\n\n### Example 6: Cancellation inquiry\n- Customer: \"أبي ألغي الحجز وأسترجع العربون\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"العربون لا يرد ولا يستبدل. وللمزيد يرجى الاتصال بالفرع على الرقم: 0530486002.\"\n}\n\n### Example 7: Staff attendance today inquiry\n- Customer: \"هل هدى موجودة اليوم بالصالون؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"لمعرفة جدول وتواجد الموظفة اليوم، يرجى التواصل على جوال الصالون فرع السنابل: 0530486002.\"\n}\n\n### Example 8: Offer 255 specialist inquiry\n- Customer: \"عرض 255 مين الموظفة اللي تسويه؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"الخدمة في عرض 255 تقدم من فريق نون المميز.\"\n}\n\n### Example 9: Salon departure time inquiry\n- Customer: \"لو حجزت الساعة 5 متى أطلع من الصالون؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"مدة الخدمة تعتمد على تفاصيل العمل وتوجد فترة انتظار داخل الصالون من 15 إلى 45 دقيقة، لذلك لا يمكن تحديد وقت للخروج.\"\n}\n\n### Example 10: Customer asks to book pedicure\n- Customer: \"أبي أحجز بديكير بكره\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"الحجز المسبق متاح حصريا لخدمات المكياج. أما البديكير وبقية خدمات الصالون فبدون حجز مسبق، وتسعدنا خدمتك بالحضور المباشر للصالون في فرع السنابل.\"\n}\n\n### Example 11: Customer asks about makeup price\n- Customer: \"كم سعر المكياج عندكم؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"سعر المكياج يبدأ من [السعر] ريال.\nملاحظة: السعر غير شامل الرموش ولا تركيب الرموش.\"\n}\n\n### Example 12: First message name gate\n- Customer: \"السلام عليكم\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"وعليكم السلام ورحمة الله وبركاته. أهلاً بك في صالون نون. ممكن الاسم الكريم؟\"\n}"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        -2640,
+        -2432,
         2976
       ],
       "id": "fd84bf74-e042-4d0d-b13d-4cf9617cda0c",
@@ -1940,7 +1803,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -624,
+        -416,
         2704
       ],
       "id": "330d1994-21c0-4fdc-9db0-60b90da6b9c0",
@@ -1962,19 +1825,19 @@
           "parameters": [
             {
               "name": "=apikey",
-              "value": "={{ $('Edit Fields').item.json.Key }}"
+              "value": "={{ $('Edit Fields2').item.json.Key }}"
             }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n    \"number\": \"{{ $('Edit Fields').item.json.SenderJid }}\",\n    \"text\": \"{{ JSON.stringify($json.response).slice(1, -1) }}\",\n    \"delay\":{{ $json.typingAnalysis.calculatedTimeMs }}\n}",
+        "jsonBody": "={\n    \"number\": \"{{ $('Edit Fields2').item.json.SenderJid }}\",\n    \"text\": \"{{ JSON.stringify($json.response).slice(1, -1) }}\",\n    \"delay\":{{ $json.typingAnalysis.calculatedTimeMs }}\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        0,
+        208,
         3184
       ],
       "id": "46bf4ea1-371f-4728-95d7-c1bf0e508f32",
@@ -2000,7 +1863,7 @@
             },
             {
               "fieldId": "platform_timestamp",
-              "fieldValue": "={{ $('Edit Fields').first().json.Timestamp }}"
+              "fieldValue": "={{ $('Edit Fields2').first().json.Timestamp }}"
             },
             {
               "fieldId": "text_content",
@@ -2016,7 +1879,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        272,
+        480,
         3184
       ],
       "id": "7b5226cc-8641-4b7e-9e26-96dc11440185",
@@ -2033,13 +1896,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://evo.hillhousevilla.com/message/sendMedia/{{ $('Edit Fields').first().json.Instance }}",
+        "url": "=https://evo.hillhousevilla.com/message/sendMedia/{{ $('Edit Fields2').first().json.Instance }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "apikey",
-              "value": "={{ $('Edit Fields').first().json.Key }}"
+              "value": "={{ $('Edit Fields2').first().json.Key }}"
             }
           ]
         },
@@ -2048,7 +1911,7 @@
           "parameters": [
             {
               "name": "number",
-              "value": "={{ $('Edit Fields').item.json.SenderJid }}"
+              "value": "={{ $('Edit Fields2').item.json.SenderJid }}"
             },
             {
               "name": "mediatype",
@@ -2073,7 +1936,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1136,
+        1344,
         3184
       ],
       "id": "2850942a-8f69-470d-9429-b4171f0e7933",
@@ -2090,7 +1953,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        592,
+        800,
         3184
       ],
       "id": "ac73b40d-3aae-4392-91f7-5acec3898206",
@@ -2105,7 +1968,7 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        800,
+        1008,
         3184
       ],
       "id": "36908d8e-6adb-4575-9d94-e7e04636f6d9",
@@ -2131,7 +1994,7 @@
             },
             {
               "fieldId": "platform_timestamp",
-              "fieldValue": "={{ $('Edit Fields').first().json.Timestamp }}"
+              "fieldValue": "={{ $('Edit Fields2').first().json.Timestamp }}"
             },
             {
               "fieldId": "client_id",
@@ -2147,7 +2010,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1424,
+        1632,
         3184
       ],
       "id": "f5802435-aefb-4690-aab3-5c828752e24b",
@@ -2164,13 +2027,13 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n  c.*,\n\n  -- Active Products with full details\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', p.id,\n        'name', p.name,\n        'price', p.price,\n        'images', p.images,\n        'notes', p.notes,\n        'type', p.type,\n        'availableAtHome', p.\"availableAtHome\",\n        'availableAtSalon', p.\"availableAtSalon\",\n        'durationMinutes', p.\"durationMinutes\",\n        'durationMode', p.\"durationMode\",\n        'maxSlots', p.\"maxSlots\",\n        'depositAmount', p.\"depositAmount\",\n        'branchId', p.\"branchId\",\n        'category', p.category\n      )\n    )\n    FROM public.\"Product\" p\n    WHERE p.\"isAvailable\" = true\n      AND (p.\"publishAt\" IS NULL OR p.\"publishAt\" <= NOW())\n  ) as active_products,\n\n  -- System Settings\n  (\n    SELECT json_object_agg(key, value)\n    FROM public.\"SystemSetting\"\n  ) as system_settings,\n\n  -- Active Branches\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', b.id,\n        'name', b.name,\n        'nameAr', b.\"nameAr\",\n        'address', b.address,\n        'phone', b.phone,\n        'whatsapp', b.whatsapp\n      )\n    )\n    FROM public.\"Branch\" b\n    WHERE b.\"isActive\" = true\n  ) as active_branches,\n\n  -- Active Staff\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', s.id,\n        'name', s.name,\n        'role', s.role,\n        'branchId', s.\"branchId\"\n      )\n    )\n    FROM public.\"Staff\" s\n    WHERE s.\"isActive\" = true\n  ) as active_staff,\n\n  -- Staff ↔ Service assignments\n  (\n    SELECT json_agg(\n      json_build_object(\n        'staff_id', ss.staff_id,\n        'product_id', ss.product_id\n      )\n    )\n    FROM public.\"StaffService\" ss\n    INNER JOIN public.\"Staff\" s ON s.id = ss.staff_id\n    WHERE s.\"isActive\" = true\n  ) as staff_services,\n\n  -- Bot-specific offers\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', o.id,\n        'product_id', o.product_id,\n        'discountType', o.\"discountType\",\n        'discountValue', o.\"discountValue\",\n        'channel', o.channel,\n        'productName', p.name,\n        'originalPrice', p.price\n      )\n    )\n    FROM public.\"Offer\" o\n    INNER JOIN public.\"Product\" p ON p.id = o.product_id\n    WHERE o.\"isActive\" = true\n      AND (o.channel IS NULL OR o.channel IN ('bot', 'both'))\n      AND (o.\"startDate\" IS NULL OR o.\"startDate\" <= CURRENT_DATE)\n      AND (o.\"endDate\" IS NULL OR o.\"endDate\" >= CURRENT_DATE)\n  ) as bot_offers,\n\n  -- Categories\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', cat.id,\n        'label', cat.label\n      )\n    )\n    FROM public.\"Category\" cat\n  ) as categories\n\nFROM public.\"Channel\" c\nWHERE c.name = '{{ $('Webhook').item.json.body.account.accountId }}'\nLIMIT 1;\n",
+        "query": "SELECT \n  c.*,\n\n  -- Active Products with full details & branch name\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', p.id,\n        'name', p.name,\n        'price', p.price,\n        'images', p.images,\n        'notes', p.notes,\n        'type', p.type,\n        'availableAtHome', p.\"availableAtHome\",\n        'availableAtSalon', p.\"availableAtSalon\",\n        'durationMinutes', p.\"durationMinutes\",\n        'durationMode', p.\"durationMode\",\n        'maxSlots', p.\"maxSlots\",\n        'depositAmount', p.\"depositAmount\",\n        'branchId', p.\"branchId\",\n        'branchName', (SELECT TRIM(br.name) FROM public.\"Branch\" br WHERE br.id = p.\"branchId\"),\n        'category', p.category\n      )\n    )\n    FROM public.\"Product\" p\n    WHERE p.\"isAvailable\" = true\n      AND (p.\"publishAt\" IS NULL OR p.\"publishAt\" <= NOW())\n  ) as active_products,\n\n  -- System Settings\n  (\n    SELECT json_object_agg(key, value)\n    FROM public.\"SystemSetting\"\n  ) as system_settings,\n\n  -- Active Branches with Working Hours & Location\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', b.id,\n        'name', TRIM(b.name),\n        'nameAr', COALESCE(NULLIF(TRIM(b.\"nameAr\"), ''), TRIM(b.name)),\n        'address', b.address,\n        'phone', b.phone,\n        'whatsapp', b.whatsapp,\n        'googleMapsUrl', b.\"googleMapsUrl\",\n        'workingHours', COALESCE(b.\"workingHours\", '[]'::jsonb)\n      )\n    )\n    FROM public.\"Branch\" b\n    WHERE b.\"isActive\" = true\n  ) as active_branches,\n\n  -- Active Staff with branch name\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', s.id,\n        'name', s.name,\n        'role', s.role,\n        'branchId', s.\"branchId\",\n        'branchName', (SELECT TRIM(br.name) FROM public.\"Branch\" br WHERE br.id = s.\"branchId\")\n      )\n    )\n    FROM public.\"Staff\" s\n    WHERE s.\"isActive\" = true\n  ) as active_staff,\n\n  -- Staff ↔ Service assignments\n  (\n    SELECT json_agg(\n      json_build_object(\n        'staff_id', ss.staff_id,\n        'product_id', ss.product_id\n      )\n    )\n    FROM public.\"StaffService\" ss\n    INNER JOIN public.\"Staff\" s ON s.id = ss.staff_id\n    WHERE s.\"isActive\" = true\n  ) as staff_services,\n\n  -- Bot-specific offers\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', o.id,\n        'product_id', o.product_id,\n        'discountType', o.\"discountType\",\n        'discountValue', o.\"discountValue\",\n        'channel', o.channel,\n        'productName', p.name,\n        'originalPrice', p.price\n      )\n    )\n    FROM public.\"Offer\" o\n    INNER JOIN public.\"Product\" p ON p.id = o.product_id\n    WHERE o.\"isActive\" = true\n      AND (o.channel IS NULL OR o.channel IN ('bot', 'both'))\n      AND (o.\"startDate\" IS NULL OR o.\"startDate\" <= CURRENT_DATE)\n      AND (o.\"endDate\" IS NULL OR o.\"endDate\" >= CURRENT_DATE)\n  ) as bot_offers,\n\n  -- Categories\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', cat.id,\n        'label', cat.label\n      )\n    )\n    FROM public.\"Category\" cat\n  ) as categories\n\nFROM public.\"Channel\" c\nWHERE c.name = '{{ $('Webhook').item.json.body.account.accountId }}'\nLIMIT 1;\n",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -11328,
+        -11120,
         3264
       ],
       "id": "ae8622b4-ba58-4540-afbc-30c7502ea2d2",
@@ -2213,7 +2076,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10112,
+        -9904,
         2864
       ],
       "id": "1122cdd9-037b-47eb-828c-79bb84a119d3",
@@ -2246,11 +2109,12 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10656,
+        -10448,
         2864
       ],
       "id": "82bffb5c-82a8-40cf-b3ab-152065dae612",
       "name": "Get a row1",
+      "retryOnFail": true,
       "credentials": {
         "supabaseApi": {
           "id": "RHrj0bmwb6rI9r7s",
@@ -2267,7 +2131,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -11856,
+        -11648,
         2736
       ],
       "id": "aa98f454-00fb-4723-9dd4-2fa822ec5d22",
@@ -2281,12 +2145,12 @@
     },
     {
       "parameters": {
-        "amount": 5
+        "amount": 8
       },
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -5136,
+        -4928,
         3024
       ],
       "id": "188a5beb-51f6-4d7a-ab95-318a96201a4b",
@@ -2295,7 +2159,7 @@
     },
     {
       "parameters": {
-        "model": "google/gemini-3.5-flash",
+        "model": "openai/gpt-5-mini",
         "options": {
           "responseFormat": "json_object"
         }
@@ -2303,15 +2167,15 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        -3200,
-        3344
+        -2928,
+        3296
       ],
       "id": "b22f90a2-e426-4706-bd40-37684b686030",
       "name": "OpenRouter Chat Model",
       "credentials": {
         "openRouterApi": {
-          "id": "xO5F0O1S380M04Dv",
-          "name": "marka"
+          "id": "dCnPsOIN99LfAxZj",
+          "name": "sallon"
         }
       }
     },
@@ -2325,7 +2189,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        -3360,
+        -3152,
         3296
       ],
       "id": "64da2738-c1a3-42bc-b46b-1f5ba21fb629",
@@ -2378,7 +2242,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -6064,
+        -5856,
         3040
       ],
       "id": "7e75ef7a-45e9-4add-9270-6f9fec0ad0eb",
@@ -2402,7 +2266,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -5696,
+        -5488,
         3328
       ],
       "id": "15c60269-260f-4c11-b1a5-abaf5eb59a2a",
@@ -2421,7 +2285,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -5440,
+        -5232,
         3328
       ],
       "id": "38983030-41a4-4fe6-86c3-d65163a81536",
@@ -2429,7 +2293,7 @@
     },
     {
       "parameters": {
-        "toolDescription": "Use this tool to check available time slots for a service with a specific staff member on a given date. Returns available time slots or the next queue number. If blocked=true, the staff is on leave. Parameters: staffId (UUID), serviceId (UUID), date (YYYY-MM-DD format).",
+        "toolDescription": "Use this tool to check available time slots for a service with a specific staff member on a given date. Returns an array of slots {time, booked}. CRITICAL: You must ONLY show and offer slots where booked=false. Slots where booked=true are ALREADY TAKEN (or in the past/before advance notice) and MUST NEVER be offered. If blocked=true, the staff is on leave. Parameters: staffId (UUID), serviceId (UUID), date (YYYY-MM-DD format).",
         "url": "https://salonnoon.net/api/availability",
         "sendQuery": true,
         "queryParameters": {
@@ -2453,7 +2317,7 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
       "position": [
-        -2992,
+        -2784,
         3296
       ],
       "id": "393379c3-3ba3-4047-b34e-57ba3494086a",
@@ -2461,7 +2325,7 @@
     },
     {
       "parameters": {
-        "toolDescription": "Use this tool to get the list of active salon branches with their names, addresses, and phone numbers. Call this when the customer wants to book and you need to ask which branch",
+        "toolDescription": "Use this tool AFTER the customer selects a branch. Pass branchId (UUID) to get all available services and their assigned specialists/staff at that branch.\n",
         "url": "https://salonnoon.net/api/services-with-staff",
         "sendQuery": true,
         "queryParameters": {
@@ -2477,7 +2341,7 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
       "position": [
-        -2800,
+        -2592,
         3296
       ],
       "id": "0b005dd7-54b3-42b7-b470-00fc1f7510f7",
@@ -2550,7 +2414,7 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
       "position": [
-        -2272,
+        -2160,
         3296
       ],
       "id": "93085219-d3d7-4f96-8444-9665a992e8fb",
@@ -2558,13 +2422,14 @@
     },
     {
       "parameters": {
+        "toolDescription": "Use this tool to get the list of active salon branches with their names, addresses, and UUIDs. Call this when a customer wants to book and you need to let them choose the branch.\n",
         "url": "https://salonnoon.net/api/branches?active=true",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
       "position": [
-        -2656,
+        -2448,
         3296
       ],
       "id": "126383e3-ff08-4f18-b1dd-583bbcdf32c6",
@@ -2609,7 +2474,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -160,
+        48,
         2896
       ],
       "id": "06c26aad-decb-4c0f-89ca-f8ff859c7052",
@@ -2640,7 +2505,7 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
       "position": [
-        -2512,
+        -2304,
         3296
       ],
       "id": "fae428be-bb3c-4e92-882c-2e1828d9fa0b",
@@ -2653,7 +2518,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1216,
+        -1008,
         3600
       ],
       "id": "f64cab03-ea86-4bfe-a63e-6d01cc60f2d0",
@@ -2668,13 +2533,13 @@
           "parameters": [
             {
               "name": "=apikey",
-              "value": "={{ $('Edit Fields').first().json.Key }}"
+              "value": "={{ $('Edit Fields2').first().json.Key }}"
             }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n    \"number\": \"{{ $('Edit Fields').first().json.SenderJid }}\",\n    \"text\": \"{{ JSON.stringify($json.response).slice(1, -1) }}\",\n    \"delay\":{{ $json.typingAnalysis.calculatedTimeMs }}\n}",
+        "jsonBody": "={\n    \"number\": \"{{ $('Edit Fields2').first().json.SenderJid }}\",\n    \"text\": \"{{ JSON.stringify($json.response).slice(1, -1) }}\",\n    \"delay\":{{ $json.typingAnalysis.calculatedTimeMs }}\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -2725,7 +2590,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        320,
+        528,
         3600
       ],
       "id": "a6554884-d5a1-408c-8624-280baa79f2d4",
@@ -2759,7 +2624,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        736,
+        944,
         3600
       ],
       "id": "74e9a393-c2d6-4de2-9c91-137ab46c1311",
@@ -2796,7 +2661,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -960,
+        -752,
         2704
       ],
       "id": "a01fb6b2-c466-4e1d-9d5d-83d08cfabf1f",
@@ -2833,7 +2698,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -528,
+        -320,
         2912
       ],
       "id": "b83da5dd-1ae9-4390-92b2-73c4335decf4",
@@ -2870,161 +2735,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -816,
+        -608,
         3600
       ],
       "id": "6b045fa0-f449-4022-a40e-650ef69a613a",
       "name": "HTTP Request4"
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "saloon-payment",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
-      "position": [
-        -13184,
-        4160
-      ],
-      "id": "173420bc-c5fb-4c46-a046-3ba9e47011a7",
-      "name": "Webhook1",
-      "webhookId": "e1e52657-4fc7-4241-aec6-14ba166a2058"
-    },
-    {
-      "parameters": {
-        "jsCode": "const body = $input.first().json.body || $input.first().json;\nconst transaction = body.obj || body;\n\nconst merchantOrderId = transaction?.order?.merchant_order_id || transaction?.special_reference || '';\nconst isBooking = merchantOrderId.startsWith('BOOKING-');\nconst bookingId = isBooking ? merchantOrderId.replace('BOOKING-', '') : '';\nconst success = transaction?.success === true || transaction?.success === 'true';\nconst txnId = String(transaction?.id || '');\nconst amountCents = transaction?.amount_cents || 0;\n\nreturn [{\n  json: {\n    success,\n    isBooking,\n    bookingId,\n    txnId,\n    amountCents,\n    merchantOrderId\n  }\n}];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -12816,
-        4160
-      ],
-      "id": "b34200e6-3df4-4f46-82e3-5db69eb327a0",
-      "name": "Code in JavaScript4"
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT b.*, c.phone as client_phone, c.name as client_name\nFROM \"Booking\" b\nLEFT JOIN \"Client\" c ON b.client_id = c.id\nWHERE b.id = '{{ $json.bookingId }}'\nLIMIT 1\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -12016,
-        4080
-      ],
-      "id": "261773dc-473f-4714-a2bd-4369c7412a65",
-      "name": "Execute a SQL query3",
-      "credentials": {
-        "postgres": {
-          "id": "rxuf9Bq2tAFgouSi",
-          "name": "salloon"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "loose",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "509cc2e8-6374-4b2b-89b8-39f33e96e8dc",
-              "leftValue": "={{ $json.success }}",
-              "rightValue": "true",
-              "operator": {
-                "type": "boolean",
-                "operation": "true",
-                "singleValue": true
-              }
-            },
-            {
-              "id": "c6e5a67a-adad-438c-a0e3-7ff58a273ac4",
-              "leftValue": "={{ $json.isBooking }}",
-              "rightValue": "true",
-              "operator": {
-                "type": "boolean",
-                "operation": "true",
-                "singleValue": true
-              }
-            },
-            {
-              "id": "f3bbec53-1eb7-468f-a022-7e605921d842",
-              "leftValue": "={{ $json.bookingId }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "notEmpty",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "looseTypeValidation": true,
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        -12368,
-        4208
-      ],
-      "id": "ea53e76f-d772-4c02-b4c8-3ba03892f399",
-      "name": "If3"
-    },
-    {
-      "parameters": {
-        "operation": "update",
-        "tableId": "Booking",
-        "filters": {
-          "conditions": [
-            {
-              "keyName": "id",
-              "condition": "eq",
-              "keyValue": "={{ $json.id }}"
-            }
-          ]
-        },
-        "fieldsUi": {
-          "fieldValues": [
-            {
-              "fieldId": "depositStatus",
-              "fieldValue": "paid"
-            },
-            {
-              "fieldId": "status",
-              "fieldValue": "confirmed"
-            },
-            {
-              "fieldId": "paymobTxnId",
-              "fieldValue": "={{ $('Code in JavaScript4').item.json.txnId }}"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        -11808,
-        4080
-      ],
-      "id": "95867f55-9c5f-484c-9c09-43a953fa2aa1",
-      "name": "Update a row1",
-      "credentials": {
-        "supabaseApi": {
-          "id": "RHrj0bmwb6rI9r7s",
-          "name": "saloon"
-        }
-      }
     },
     {
       "parameters": {
@@ -3042,7 +2757,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -560,
+        -352,
         3616
       ],
       "id": "244ec10d-76fc-41d2-a52a-477bb594c3da",
@@ -3082,7 +2797,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -64,
+        144,
         3664
       ],
       "id": "6e472f9a-ff68-41d4-8dd4-3a00d3ee87ea",
@@ -3095,7 +2810,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -352,
+        -144,
         3616
       ],
       "id": "151bf80e-fae4-461f-b667-240087361bf8",
@@ -3140,7 +2855,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        320,
+        528,
         3776
       ],
       "id": "eff42318-2eca-4a65-8c59-7c01c18da28e",
@@ -3160,7 +2875,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -848,
+        -640,
         4096
       ],
       "id": "d39f6172-9166-4014-b334-befb61fe66a9",
@@ -3205,7 +2920,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        688,
+        896,
         4096
       ],
       "id": "de2a8c99-4223-4b52-a3d7-36a643958ac3",
@@ -3239,7 +2954,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1104,
+        1312,
         4096
       ],
       "id": "e1f3e7a6-221c-49b1-be46-b48debd0fbc6",
@@ -3276,7 +2991,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -448,
+        -240,
         4096
       ],
       "id": "7d99bef8-9724-4fee-9a98-bd31b284ced9",
@@ -3298,7 +3013,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -192,
+        16,
         4112
       ],
       "id": "d342e0fa-bb3e-4d8b-932f-318018a57192",
@@ -3338,7 +3053,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        304,
+        512,
         4160
       ],
       "id": "9b8a0f55-ccf5-48b5-aaa4-7808893737aa",
@@ -3351,7 +3066,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        16,
+        224,
         4112
       ],
       "id": "d474a7f2-324d-447d-abf7-153f7024facc",
@@ -3396,8 +3111,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        688,
-        4272
+        896,
+        4288
       ],
       "id": "a40277fe-3672-44da-aaef-685b6999a3bd",
       "name": "Supabase38",
@@ -3416,7 +3131,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -464,
+        -256,
         4576
       ],
       "id": "0bd4d901-f083-4207-91d5-0f558cdaa942",
@@ -3461,7 +3176,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1072,
+        1280,
         4576
       ],
       "id": "ecf1f68c-6c4a-4e73-9260-e37f842a754b",
@@ -3495,7 +3210,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1776,
+        1984,
         4592
       ],
       "id": "f1e821a1-d697-49d8-b052-40ce0e676086",
@@ -3532,7 +3247,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -64,
+        144,
         4576
       ],
       "id": "7eab426a-e678-4567-879c-11f53aabecb4",
@@ -3566,7 +3281,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        688,
+        896,
         4640
       ],
       "id": "b342f147-3432-4bb0-987d-6af8e91fef49",
@@ -3579,7 +3294,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        400,
+        608,
         4592
       ],
       "id": "1161c952-9755-4847-b887-473e48b486a9",
@@ -3624,7 +3339,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1072,
+        1280,
         4752
       ],
       "id": "1e32e916-f756-42e5-bf31-6566d5df9030",
@@ -3644,7 +3359,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1184,
+        -976,
         5104
       ],
       "id": "586813a0-2f98-4645-b100-043cf9619f0e",
@@ -3689,7 +3404,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -528,
+        -320,
         5088
       ],
       "id": "edff840a-61ee-4c1d-8845-6e3da2994a2c",
@@ -3733,7 +3448,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -864,
+        -656,
         5088
       ],
       "id": "13c3d280-2b8a-4de0-b6f6-7d0c45fab9f0",
@@ -3764,7 +3479,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -96,
+        112,
         5136
       ],
       "id": "53a213c5-379f-4857-bf2b-a37c0df616f5",
@@ -3804,8 +3519,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        208,
-        5312
+        464,
+        5280
       ],
       "id": "8a8874af-a2ea-4a61-9888-3eca3924bc09",
       "name": "If7"
@@ -3895,7 +3610,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        576,
+        784,
         5632
       ],
       "id": "17cca1e7-cccd-4aa4-abc7-335ef593c041",
@@ -3918,7 +3633,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        192,
+        400,
         4592
       ],
       "id": "6120c2f4-3247-419a-a710-15837eb5f05c",
@@ -3952,7 +3667,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1776,
+        1984,
         5312
       ],
       "id": "32bdf730-3f4b-47b0-a04e-1cae2c731bfd",
@@ -3986,7 +3701,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1472,
+        1680,
         5328
       ],
       "id": "622bd502-a7f4-4875-a796-b30370f71868",
@@ -3999,7 +3714,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1136,
+        1344,
         5344
       ],
       "id": "e7e4fc80-1338-4194-89a4-82a9b734fbac",
@@ -4022,7 +3737,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        928,
+        1136,
         5344
       ],
       "id": "fec981d4-f44c-48e3-8a7a-fec7b47ed4dc",
@@ -4063,7 +3778,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1456,
+        1664,
         5536
       ],
       "id": "5a32c499-abab-4278-9330-1ed8072da401",
@@ -4076,7 +3791,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1120,
+        1328,
         5552
       ],
       "id": "a5f2d713-774b-45e7-84b1-ff31af0d30f5",
@@ -4099,7 +3814,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        912,
+        1120,
         5552
       ],
       "id": "0e1ca075-af94-4784-b9b6-beb6d3dbbd6a",
@@ -4140,7 +3855,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1456,
+        1664,
         5792
       ],
       "id": "24fc2463-8535-4aa3-a027-5f2eaead769a",
@@ -4153,7 +3868,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1120,
+        1328,
         5776
       ],
       "id": "511a955f-219f-47f2-b37b-be83f4c454eb",
@@ -4176,7 +3891,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        912,
+        1120,
         5776
       ],
       "id": "3c72aa14-b64a-41c4-8b91-9367073fec12",
@@ -4210,7 +3925,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1792,
+        2000,
         5536
       ],
       "id": "95602968-41aa-44c6-b32e-20f7b236f21c",
@@ -4237,7 +3952,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1792,
+        2000,
         5776
       ],
       "id": "0a38ca3e-76c4-43d5-a913-31b20ec63493",
@@ -4245,107 +3960,18 @@
     },
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "61aad4de-9a8c-4c63-bbfa-41dad87866b8",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
-      "position": [
-        -13312,
-        5200
-      ],
-      "id": "13d7464f-9678-480b-a8ad-d848a6c133d6",
-      "name": "Webhook2",
-      "webhookId": "61aad4de-9a8c-4c63-bbfa-41dad87866b8"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://zernio.com/api/v1/inbox/conversations/{{ $json.id }}/messages ",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{ $('Webhook2').item.json.body.channel.credentials.evolution_api }}"
-            }
-          ]
-        },
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "=accountId",
-              "value": "={{ $json.accountId }}"
-            },
-            {
-              "name": "message",
-              "value": "={{ $('Webhook2').item.json.body.message.text_content }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [
-        -11952,
-        5296
-      ],
-      "id": "d3409816-d8b9-45ff-8f5c-e3c1d0e98727",
-      "name": "HTTP Request17"
-    },
-    {
-      "parameters": {
-        "url": "https://zernio.com/api/v1/inbox/conversations",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "accountId",
-              "value": "6a4a53109d9472faae8493e7"
-            },
-            {
-              "name": "limit",
-              "value": "500"
-            }
-          ]
-        },
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer sk_dbb52d55c857d3083ac169d156a86825d7d138813939d3ef427202368fcb454d"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [
-        -12896,
-        5056
-      ],
-      "id": "ed01bcd8-d028-452e-a751-82d04dd0f352",
-      "name": "HTTP Request19"
-    },
-    {
-      "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
             "leftValue": "",
-            "typeValidation": "loose",
+            "typeValidation": "strict",
             "version": 3
           },
           "conditions": [
             {
-              "id": "c4531c94-954a-43b6-8062-5cd19794a1f5",
-              "leftValue": "={{ $('Webhook2').item.json.body.client.phone }}",
-              "rightValue": "={{ $json.participantId }}",
+              "id": "49261177-d75a-47d6-90bf-2d8acc3a3ded",
+              "leftValue": "={{ $json.body.account.platform }}",
+              "rightValue": "=instagram",
               "operator": {
                 "type": "string",
                 "operation": "equals"
@@ -4354,31 +3980,407 @@
           ],
           "combinator": "and"
         },
-        "looseTypeValidation": true,
         "options": {}
       },
-      "type": "n8n-nodes-base.filter",
+      "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -12272,
-        5280
+        -12176,
+        3264
       ],
-      "id": "30575a10-27f6-40b0-b468-1597131ba3c7",
-      "name": "Filter"
+      "id": "d46c7789-86cb-46f8-959a-06fef8001a03",
+      "name": "If11"
     },
     {
       "parameters": {
-        "fieldToSplitOut": "data",
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "49261177-d75a-47d6-90bf-2d8acc3a3ded",
+              "leftValue": "={{ $json.body.account.platform }}",
+              "rightValue": "=instagram",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
         "options": {}
       },
-      "type": "n8n-nodes-base.splitOut",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
       "position": [
-        -12592,
-        5088
+        -12448,
+        2896
       ],
-      "id": "3c60d776-7a7b-406d-89ae-51bd1d57c09c",
-      "name": "Split Out2"
+      "id": "95208303-63a3-451d-94a5-1224217049e0",
+      "name": "If12"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n  c.*,\n\n  -- Active Products with full details\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', p.id,\n        'name', p.name,\n        'price', p.price,\n        'images', p.images,\n        'notes', p.notes,\n        'type', p.type,\n        'availableAtHome', p.\"availableAtHome\",\n        'availableAtSalon', p.\"availableAtSalon\",\n        'durationMinutes', p.\"durationMinutes\",\n        'durationMode', p.\"durationMode\",\n        'maxSlots', p.\"maxSlots\",\n        'depositAmount', p.\"depositAmount\",\n        'branchId', p.\"branchId\",\n        'category', p.category\n      )\n    )\n    FROM public.\"Product\" p\n    WHERE p.\"isAvailable\" = true\n      AND (p.\"publishAt\" IS NULL OR p.\"publishAt\" <= NOW())\n  ) as active_products,\n\n  -- System Settings\n  (\n    SELECT json_object_agg(key, value)\n    FROM public.\"SystemSetting\"\n  ) as system_settings,\n\n  -- Active Branches\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', b.id,\n        'name', b.name,\n        'nameAr', b.\"nameAr\",\n        'address', b.address,\n        'phone', b.phone,\n        'whatsapp', b.whatsapp\n      )\n    )\n    FROM public.\"Branch\" b\n    WHERE b.\"isActive\" = true\n  ) as active_branches,\n\n  -- Active Staff\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', s.id,\n        'name', s.name,\n        'role', s.role,\n        'branchId', s.\"branchId\"\n      )\n    )\n    FROM public.\"Staff\" s\n    WHERE s.\"isActive\" = true\n  ) as active_staff,\n\n  -- Staff ↔ Service assignments\n  (\n    SELECT json_agg(\n      json_build_object(\n        'staff_id', ss.staff_id,\n        'product_id', ss.product_id\n      )\n    )\n    FROM public.\"StaffService\" ss\n    INNER JOIN public.\"Staff\" s ON s.id = ss.staff_id\n    WHERE s.\"isActive\" = true\n  ) as staff_services,\n\n  -- Bot-specific offers\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', o.id,\n        'product_id', o.product_id,\n        'discountType', o.\"discountType\",\n        'discountValue', o.\"discountValue\",\n        'channel', o.channel,\n        'productName', p.name,\n        'originalPrice', p.price\n      )\n    )\n    FROM public.\"Offer\" o\n    INNER JOIN public.\"Product\" p ON p.id = o.product_id\n    WHERE o.\"isActive\" = true\n      AND (o.channel IS NULL OR o.channel IN ('bot', 'both'))\n      AND (o.\"startDate\" IS NULL OR o.\"startDate\" <= CURRENT_DATE)\n      AND (o.\"endDate\" IS NULL OR o.\"endDate\" >= CURRENT_DATE)\n  ) as bot_offers,\n\n  -- Categories\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', cat.id,\n        'label', cat.label\n      )\n    )\n    FROM public.\"Category\" cat\n  ) as categories\n\nFROM public.\"Channel\" c\nWHERE c.name = '{{ $('Webhook').item.json.body.account.accountId }}'\nLIMIT 1;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -11168,
+        3520
+      ],
+      "id": "0ffeb25a-6d27-4f87-b145-b9bc85abe7e2",
+      "name": "Execute a SQL query2",
+      "credentials": {
+        "postgres": {
+          "id": "rxuf9Bq2tAFgouSi",
+          "name": "salloon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n  c.*,\n\n  -- Active Products with full details & branch name\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', p.id,\n        'name', p.name,\n        'price', p.price,\n        'images', p.images,\n        'notes', p.notes,\n        'type', p.type,\n        'availableAtHome', p.\"availableAtHome\",\n        'availableAtSalon', p.\"availableAtSalon\",\n        'durationMinutes', p.\"durationMinutes\",\n        'durationMode', p.\"durationMode\",\n        'maxSlots', p.\"maxSlots\",\n        'depositAmount', p.\"depositAmount\",\n        'branchId', p.\"branchId\",\n        'branchName', (SELECT TRIM(br.name) FROM public.\"Branch\" br WHERE br.id = p.\"branchId\"),\n        'category', p.category\n      )\n    )\n    FROM public.\"Product\" p\n    WHERE p.\"isAvailable\" = true\n      AND (p.\"publishAt\" IS NULL OR p.\"publishAt\" <= NOW())\n  ) as active_products,\n\n  -- System Settings\n  (\n    SELECT json_object_agg(key, value)\n    FROM public.\"SystemSetting\"\n  ) as system_settings,\n\n  -- Active Branches with Working Hours & Location\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', b.id,\n        'name', TRIM(b.name),\n        'nameAr', COALESCE(NULLIF(TRIM(b.\"nameAr\"), ''), TRIM(b.name)),\n        'address', b.address,\n        'phone', b.phone,\n        'whatsapp', b.whatsapp,\n        'googleMapsUrl', b.\"googleMapsUrl\",\n        'workingHours', COALESCE(b.\"workingHours\", '[]'::jsonb)\n      )\n    )\n    FROM public.\"Branch\" b\n    WHERE b.\"isActive\" = true\n  ) as active_branches,\n\n  -- Active Staff with branch name\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', s.id,\n        'name', s.name,\n        'role', s.role,\n        'branchId', s.\"branchId\",\n        'branchName', (SELECT TRIM(br.name) FROM public.\"Branch\" br WHERE br.id = s.\"branchId\")\n      )\n    )\n    FROM public.\"Staff\" s\n    WHERE s.\"isActive\" = true\n  ) as active_staff,\n\n  -- Staff ↔ Service assignments\n  (\n    SELECT json_agg(\n      json_build_object(\n        'staff_id', ss.staff_id,\n        'product_id', ss.product_id\n      )\n    )\n    FROM public.\"StaffService\" ss\n    INNER JOIN public.\"Staff\" s ON s.id = ss.staff_id\n    WHERE s.\"isActive\" = true\n  ) as staff_services,\n\n  -- Bot-specific offers\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', o.id,\n        'product_id', o.product_id,\n        'discountType', o.\"discountType\",\n        'discountValue', o.\"discountValue\",\n        'channel', o.channel,\n        'productName', p.name,\n        'originalPrice', p.price\n      )\n    )\n    FROM public.\"Offer\" o\n    INNER JOIN public.\"Product\" p ON p.id = o.product_id\n    WHERE o.\"isActive\" = true\n      AND (o.channel IS NULL OR o.channel IN ('bot', 'both'))\n      AND (o.\"startDate\" IS NULL OR o.\"startDate\" <= CURRENT_DATE)\n      AND (o.\"endDate\" IS NULL OR o.\"endDate\" >= CURRENT_DATE)\n  ) as bot_offers,\n\n  -- Categories\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', cat.id,\n        'label', cat.label\n      )\n    )\n    FROM public.\"Category\" cat\n  ) as categories\n\nFROM public.\"Channel\" c\nWHERE c.name = '{{ $('Webhook').item.json.body.account.accountId }}'\nLIMIT 1;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -10608,
+        3616
+      ],
+      "id": "93a77389-182b-4f18-8926-f5baa8c1c15e",
+      "name": "Execute a SQL query5",
+      "credentials": {
+        "postgres": {
+          "id": "rxuf9Bq2tAFgouSi",
+          "name": "salloon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0fceb1bb-c0de-4e6c-880f-062704739f1e",
+              "name": "SenderJid",
+              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
+              "type": "string"
+            },
+            {
+              "id": "04ac662e-9deb-4d63-ac8f-cafab77e0f7b",
+              "name": "SenderName",
+              "value": "={{ $('Code in JavaScript6').item.json.SenderName }}",
+              "type": "string"
+            },
+            {
+              "id": "f812ad17-d60f-4c5d-b1d4-7820238fe0e3",
+              "name": "Timestamp",
+              "value": "={{ $('Code in JavaScript6').item.json.Timestamp }}",
+              "type": "string"
+            },
+            {
+              "id": "3c3fdb3c-de14-4bcc-8d9a-68cc2ed0d1c8",
+              "name": "MsgType",
+              "value": "={{ $('Code in JavaScript6').item.json.MsgType }}",
+              "type": "string"
+            },
+            {
+              "id": "e0595c23-53c7-4eb9-aea2-4de3fa76e7db",
+              "name": "Msg",
+              "value": "={{ $('Code in JavaScript6').item.json.Msg }}",
+              "type": "string"
+            },
+            {
+              "id": "5f1ca696-9ad5-4f22-accd-435a5c8c6ced",
+              "name": "Media",
+              "value": "={{ $('Code in JavaScript6').item.json.Media }}",
+              "type": "string"
+            },
+            {
+              "id": "eb5b8516-cc5f-43b3-a578-2d8b15b7b51d",
+              "name": "Instance",
+              "value": "={{ $('Code in JavaScript6').item.json.Instance }}",
+              "type": "string"
+            },
+            {
+              "id": "8c6ec75c-45c6-44de-a860-84baa4832602",
+              "name": "Key",
+              "value": "={{ $('Code in JavaScript6').item.json.Key }}",
+              "type": "string"
+            },
+            {
+              "id": "08edec4e-32c4-466d-8d66-261a8ede1abc",
+              "name": "phonenumber",
+              "value": "={{ $('Code in JavaScript6').item.json.phonenumber }}",
+              "type": "string"
+            },
+            {
+              "id": "d05f492e-26b3-49e9-b366-96947a6906bc",
+              "name": "message_platform_id",
+              "value": "={{ $('Code in JavaScript6').item.json.MessageId }}",
+              "type": "string"
+            },
+            {
+              "id": "56f0bdfb-bc93-43e9-9230-f4a24b9594b6",
+              "name": "platform",
+              "value": "whatsapp",
+              "type": "string"
+            },
+            {
+              "id": "d65150c6-4c63-4b37-b9f6-befcded648c6",
+              "name": "platform_user_id",
+              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
+              "type": "string"
+            },
+            {
+              "id": "5d001d0f-4c7e-42de-bd22-2316d7e6b81c",
+              "name": "valrables",
+              "value": "={{ $json.variables }}",
+              "type": "object"
+            },
+            {
+              "id": "90b066dd-8ee7-4976-836f-48f44e0cb86b",
+              "name": "image_sets",
+              "value": "={{ $json.imageSets.map(set => set.name).join(', ') }}",
+              "type": "string"
+            },
+            {
+              "id": "651518d7-67d7-4d14-a53e-ebb85303b642",
+              "name": "active_products",
+              "value": "={{ $json.active_products }}",
+              "type": "array"
+            },
+            {
+              "id": "20e51a52-8afc-425d-8303-9a50777c39ff",
+              "name": "active_branches",
+              "value": "={{ JSON.stringify( $json.active_branches) }}",
+              "type": "string"
+            },
+            {
+              "id": "15a35cb5-93ae-4316-bb66-1790823f706d",
+              "name": "active_staff",
+              "value": "={{ JSON.stringify( $json.active_staff) }}",
+              "type": "string"
+            },
+            {
+              "id": "d969e061-0f0a-4eee-9d7b-74854d78512d",
+              "name": "staff_services",
+              "value": "={{ JSON.stringify( $json.staff_services) }}",
+              "type": "string"
+            },
+            {
+              "id": "31818ca5-0e28-497e-96db-1e2dcabfb755",
+              "name": "bot_offers",
+              "value": "={{ JSON.stringify( $json.bot_offers) }}",
+              "type": "string"
+            },
+            {
+              "id": "e4f6744f-5cde-4532-bd50-99a445f7fcd2",
+              "name": "categories",
+              "value": "={{ JSON.stringify( $json.categories) }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-conversationid",
+              "name": "ConversationId",
+              "value": "={{ $('Code in JavaScript6').item.json.ConversationId }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-accountid",
+              "name": "AccountId",
+              "value": "={{ $('Code in JavaScript6').item.json.AccountId }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-messageid",
+              "name": "MessageId",
+              "value": "={{ $('Code in JavaScript6').item.json.MessageId }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-platformmessageid",
+              "name": "PlatformMessageId",
+              "value": "={{ $('Code in JavaScript6').item.json.PlatformMessageId }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-branch-schedules",
+              "name": "branch_schedules_text",
+              "value": "={{ $json.active_branches.map(b => b.name.trim() + ':\\n' + (b.workingHours || []).map(d => '• ' + d.dayNameAr + ': ' + (d.isOpen ? 'من ' + d.open + ' إلى ' + d.close : 'مغلق')).join('\\n')).join('\\n\\n') }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-system-settings",
+              "name": "system_settings",
+              "value": "={{ $json.system_settings }}",
+              "type": "object"
+            },
+            {
+              "id": "assign-bot-services-text",
+              "name": "bot_services_text",
+              "value": "={{ $json.system_settings.bot_services_text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -10736,
+        3280
+      ],
+      "id": "0d8281b0-ba39-4e65-bd6b-fb2e27ae585c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0fceb1bb-c0de-4e6c-880f-062704739f1e",
+              "name": "SenderJid",
+              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
+              "type": "string"
+            },
+            {
+              "id": "04ac662e-9deb-4d63-ac8f-cafab77e0f7b",
+              "name": "SenderName",
+              "value": "={{ $('Code in JavaScript6').item.json.SenderName }}",
+              "type": "string"
+            },
+            {
+              "id": "f812ad17-d60f-4c5d-b1d4-7820238fe0e3",
+              "name": "Timestamp",
+              "value": "={{ $('Code in JavaScript6').item.json.Timestamp }}",
+              "type": "string"
+            },
+            {
+              "id": "3c3fdb3c-de14-4bcc-8d9a-68cc2ed0d1c8",
+              "name": "MsgType",
+              "value": "={{ $('Code in JavaScript6').item.json.MsgType }}",
+              "type": "string"
+            },
+            {
+              "id": "e0595c23-53c7-4eb9-aea2-4de3fa76e7db",
+              "name": "Msg",
+              "value": "={{ $('Code in JavaScript6').item.json.Msg }}",
+              "type": "string"
+            },
+            {
+              "id": "5f1ca696-9ad5-4f22-accd-435a5c8c6ced",
+              "name": "Media",
+              "value": "={{ $json.body.data.message.base64 }}",
+              "type": "string"
+            },
+            {
+              "id": "eb5b8516-cc5f-43b3-a578-2d8b15b7b51d",
+              "name": "Instance",
+              "value": "={{ $('Code in JavaScript6').item.json.Instance }}",
+              "type": "string"
+            },
+            {
+              "id": "8c6ec75c-45c6-44de-a860-84baa4832602",
+              "name": "Key",
+              "value": "={{ $('Code in JavaScript6').item.json.Key }}",
+              "type": "string"
+            },
+            {
+              "id": "08edec4e-32c4-466d-8d66-261a8ede1abc",
+              "name": "phonenumber",
+              "value": "={{ $('Code in JavaScript6').item.json.phonenumber }}",
+              "type": "string"
+            },
+            {
+              "id": "d05f492e-26b3-49e9-b366-96947a6906bc",
+              "name": "message_platform_id",
+              "value": "={{ $('Code in JavaScript6').item.json.MessageId }}",
+              "type": "string"
+            },
+            {
+              "id": "56f0bdfb-bc93-43e9-9230-f4a24b9594b6",
+              "name": "platform",
+              "value": "whatsapp",
+              "type": "string"
+            },
+            {
+              "id": "d65150c6-4c63-4b37-b9f6-befcded648c6",
+              "name": "platform_user_id",
+              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
+              "type": "string"
+            },
+            {
+              "id": "5d001d0f-4c7e-42de-bd22-2316d7e6b81c",
+              "name": "valrables",
+              "value": "={{ $json.variables }}",
+              "type": "object"
+            },
+            {
+              "id": "90b066dd-8ee7-4976-836f-48f44e0cb86b",
+              "name": "image_sets",
+              "value": "={{ $json.imageSets.map(set => set.name).join(', ') }}",
+              "type": "string"
+            },
+            {
+              "id": "651518d7-67d7-4d14-a53e-ebb85303b642",
+              "name": "active_products",
+              "value": "={{ $json.active_products }}",
+              "type": "array"
+            },
+            {
+              "id": "20e51a52-8afc-425d-8303-9a50777c39ff",
+              "name": "active_branches",
+              "value": "={{ JSON.stringify( $json.active_branches) }}",
+              "type": "string"
+            },
+            {
+              "id": "15a35cb5-93ae-4316-bb66-1790823f706d",
+              "name": "active_staff",
+              "value": "={{ JSON.stringify( $json.active_staff) }}",
+              "type": "string"
+            },
+            {
+              "id": "d969e061-0f0a-4eee-9d7b-74854d78512d",
+              "name": "staff_services",
+              "value": "={{ JSON.stringify( $json.staff_services) }}",
+              "type": "string"
+            },
+            {
+              "id": "31818ca5-0e28-497e-96db-1e2dcabfb755",
+              "name": "bot_offers",
+              "value": "={{ JSON.stringify( $json.bot_offers) }}",
+              "type": "string"
+            },
+            {
+              "id": "e4f6744f-5cde-4532-bd50-99a445f7fcd2",
+              "name": "categories",
+              "value": "={{ JSON.stringify( $json.categories) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -10208,
+        3584
+      ],
+      "id": "7a7fc120-675a-4ca4-9883-ad1ad33a5691",
+      "name": "Edit Fields2"
     }
   ],
   "connections": {
@@ -4397,14 +4399,14 @@
       "main": [
         [
           {
-            "node": "Code in JavaScript",
+            "node": "If12",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Code in JavaScript6",
+            "node": "If11",
             "type": "main",
             "index": 0
           }
@@ -4416,17 +4418,6 @@
         [
           {
             "node": "Execute a SQL query",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields": {
-      "main": [
-        [
-          {
-            "node": "find contact",
             "type": "main",
             "index": 0
           }
@@ -5255,50 +5246,6 @@
         ]
       ]
     },
-    "Webhook1": {
-      "main": [
-        [
-          {
-            "node": "Code in JavaScript4",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code in JavaScript4": {
-      "main": [
-        [
-          {
-            "node": "If3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Execute a SQL query3": {
-      "main": [
-        [
-          {
-            "node": "Update a row1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If3": {
-      "main": [
-        [
-          {
-            "node": "Execute a SQL query3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Get a row": {
       "main": [
         [
@@ -5666,53 +5613,49 @@
         ]
       ]
     },
-    "Webhook2": {
+    "If11": {
       "main": [
+        [],
         [
           {
-            "node": "HTTP Request19",
+            "node": "Code in JavaScript6",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request17": {
+    "If12": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query5": {
       "main": [
         []
       ]
     },
-    "HTTP Request19": {
+    "Edit Fields": {
       "main": [
         [
           {
-            "node": "Split Out2",
+            "node": "find contact",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Filter": {
+    "Edit Fields2": {
       "main": [
-        [
-          {
-            "node": "HTTP Request17",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Split Out2": {
-      "main": [
-        [
-          {
-            "node": "Filter",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     }
   },
@@ -5721,52 +5664,54 @@
       {
         "headers": {
           "host": "n8n.marka.giize.com",
-          "x-real-ip": "172.71.147.149",
-          "x-forwarded-for": "2a06:98c0:3600::103, 172.71.147.149",
+          "x-real-ip": "172.71.158.88",
+          "x-forwarded-for": "2a06:98c0:3600::103, 172.71.158.88",
           "x-forwarded-proto": "https",
           "connection": "Upgrade",
-          "content-length": "992",
+          "content-length": "1347",
+          "accept-encoding": "gzip",
           "content-type": "application/json",
-          "cf-ray": "a191dd18cf4534ef-SEA",
-          "x-zernio-event-id": "fdc4dfc7-6a82-47f7-89c0-487a3d94e6f2",
-          "x-zernio-event": "message.sent",
+          "cf-ray": "a414cf24d91aefbd-SJC",
+          "x-zernio-event-id": "db3401f6-ec88-4977-aa5d-6808e22ae6bc",
+          "x-zernio-event": "message.received",
           "user-agent": "Zernio-Webhooks/1.0",
-          "x-late-event": "message.sent",
-          "x-late-event-id": "fdc4dfc7-6a82-47f7-89c0-487a3d94e6f2",
+          "x-late-event": "message.received",
+          "x-late-event-id": "db3401f6-ec88-4977-aa5d-6808e22ae6bc",
           "cf-worker": "miki-palet.workers.dev",
-          "cf-visitor": "{\"scheme\":\"https\"}",
-          "accept-encoding": "gzip"
+          "cf-visitor": "{\"scheme\":\"https\"}"
         },
         "params": {},
         "query": {},
         "body": {
-          "id": "fdc4dfc7-6a82-47f7-89c0-487a3d94e6f2",
-          "event": "message.sent",
+          "id": "db3401f6-ec88-4977-aa5d-6808e22ae6bc",
+          "event": "message.received",
           "message": {
-            "id": "6a514369759c7c5c9999236d",
-            "conversationId": "6a4a5dd618eebb5f27753c56",
+            "id": "6ab8227b05713df823969ecc",
+            "conversationId": "6aa6e1767fbf31127120ee59",
             "platform": "whatsapp",
-            "platformMessageId": "wamid.HBgMOTcxNTA0Nzk4NzU5FQIAERgUQ0UxN0Y5NERENzI4Nzc4NzlGOUUA",
-            "direction": "outgoing",
-            "text": "test 1",
+            "platformMessageId": "wamid.HBgMOTY2NTQyNDE0NjEyFQIAEhggQUMzRTFDRTEyODUyODQxQTk0NUNGNTNCMDdFQkM0MzEA",
+            "direction": "incoming",
+            "text": "ممكن احد صاحي يرد بدل الAi\nهدى فين مكانها الحالي؟\nفي نفس فرع السنابل القديم لان في الموقع الالكتروني مكتوب ان تم نقلها للفرع الجديد \nواذا تم نقلها ارسلولي الموقع الجديد .",
             "attachments": [],
             "sender": {
-              "id": "2538223716305242",
-              "name": "صالون نون",
-              "username": "+966 53 048 6002",
-              "phoneNumber": "+966 53 048 6002"
+              "id": "966542414612",
+              "name": ".",
+              "phoneNumber": "+966542414612",
+              "businessScopedUserId": "SA.1396533418503892",
+              "contactId": "6aa6e17659c127aa8c773fc2"
             },
-            "sentAt": "2026-07-10T19:09:29.765Z",
-            "isRead": true
+            "sentAt": "2026-09-26T19:52:25.000Z",
+            "isRead": false,
+            "sentVia": null
           },
           "conversation": {
-            "id": "6a4a5dd618eebb5f27753c56",
-            "platformConversationId": "971504798759",
-            "participantId": "971504798759",
-            "participantName": "Dr Mostafa Alaa",
-            "participantUsername": "+971504798759",
+            "id": "6aa6e1767fbf31127120ee59",
+            "platformConversationId": "966542414612",
+            "participantId": "966542414612",
+            "participantName": ".",
+            "participantUsername": "+966542414612",
             "status": "active",
-            "contactId": "6a4a5dd618eebb5f27753c60"
+            "contactId": "6aa6e17659c127aa8c773fc2"
           },
           "account": {
             "id": "6a4a53109d9472faae8493e7",
@@ -5776,375 +5721,9 @@
             "profileId": "6a373dc194d2ecce6be2c40d",
             "accountId": "6a4a53109d9472faae8493e7"
           },
-          "timestamp": "2026-07-10T19:09:34.991Z"
+          "timestamp": "2026-09-26T19:52:27.309Z"
         },
         "webhookUrl": "https://n8n.marka.giize.com/webhook/21b02ede-05b5-4e7d-9675-8b9d95d0a0c5",
-        "executionMode": "production"
-      }
-    ],
-    "HTTP Request4": [
-      {
-        "success": true,
-        "data": {
-          "messageId": "wamid.HBgMOTcxNTA0Nzk4NzU5FQIAERgUQ0VGQ0QxQTM1NzI0RTYxN0MzQzIA",
-          "conversationId": "6a4a5dd618eebb5f27753c56"
-        }
-      }
-    ],
-    "Webhook1": [
-      {
-        "headers": {
-          "host": "n8n.asra3.com",
-          "x-real-ip": "172.70.216.41",
-          "x-forwarded-for": "150.230.246.207, 172.70.216.41",
-          "x-forwarded-proto": "https",
-          "connection": "Upgrade",
-          "content-length": "6518",
-          "user-agent": "python-requests/2.28.1",
-          "content-type": "application/json",
-          "accept": "*/*",
-          "cf-ray": "a0fb67d9bf0beda6-MXP",
-          "accept-encoding": "gzip, br",
-          "cdn-loop": "cloudflare; loops=1",
-          "cf-connecting-ip": "150.230.246.207",
-          "cf-ipcountry": "SA",
-          "cf-visitor": "{\"scheme\":\"https\"}"
-        },
-        "params": {},
-        "query": {
-          "hmac": "8e2b120d5f62837959cf483a1d6a1c9e533d7150c4a2342f13e5e6811a649134c49a66311cc0ea3c640c98ac46615eaf28511bd60596aef594ddbaa115fbde52"
-        },
-        "body": {
-          "type": "TRANSACTION",
-          "obj": {
-            "id": 6818560,
-            "pending": false,
-            "amount_cents": 5000,
-            "success": true,
-            "is_auth": false,
-            "is_capture": false,
-            "is_standalone_payment": true,
-            "is_voided": false,
-            "is_refunded": false,
-            "is_3d_secure": true,
-            "integration_id": 17717,
-            "profile_id": 12822,
-            "has_parent_transaction": false,
-            "order": {
-              "id": 6213733,
-              "created_at": "2026-06-22T15:53:59.886702+03:00",
-              "delivery_needed": false,
-              "merchant": {
-                "id": 12822,
-                "created_at": "2025-11-01T13:40:40.941748+03:00",
-                "phones": [
-                  "+966504624646"
-                ],
-                "company_emails": [
-                  "fofokasm30@gmail.com"
-                ],
-                "company_name": "salon noon",
-                "state": "",
-                "country": "SAU",
-                "city": "temp",
-                "postal_code": "",
-                "street": ""
-              },
-              "collector": null,
-              "amount_cents": 5000,
-              "shipping_data": {
-                "id": 5301400,
-                "first_name": "mostafa",
-                "last_name": "test",
-                "street": "NA",
-                "building": "NA",
-                "floor": "NA",
-                "apartment": "NA",
-                "city": "NA",
-                "state": "NA",
-                "country": "NA",
-                "email": "booking@salonnoon.net",
-                "phone_number": "0504798759",
-                "postal_code": "NA",
-                "extra_description": "",
-                "shipping_method": "UNK",
-                "order_id": 6213733,
-                "order": 6213733
-              },
-              "currency": "SAR",
-              "is_payment_locked": false,
-              "is_return": false,
-              "is_cancel": false,
-              "is_returned": false,
-              "is_canceled": false,
-              "merchant_order_id": "BOOKING-5701d9c9-9a3d-46fd-9f14-fb5f410ded93",
-              "wallet_notification": null,
-              "paid_amount_cents": 5000,
-              "notify_user_with_email": false,
-              "items": [],
-              "order_url": "NA",
-              "commission_fees": 0,
-              "delivery_fees_cents": 0,
-              "delivery_vat_cents": 0,
-              "payment_method": "tbc",
-              "merchant_staff_tag": null,
-              "api_source": "OTHER",
-              "data": {},
-              "payment_status": "PAID",
-              "terminal_version": null,
-              "payme_details": null
-            },
-            "created_at": "2026-06-22T15:54:35.745324+03:00",
-            "transaction_processed_callback_responses": [],
-            "currency": "SAR",
-            "source_data": {
-              "pan": "1111",
-              "type": "card",
-              "tenure": null,
-              "sub_type": "Visa"
-            },
-            "api_source": "OTHER",
-            "terminal_id": null,
-            "merchant_commission": 0,
-            "accept_fees": 0,
-            "installment": null,
-            "discount_details": [],
-            "amount_cents_bigint": 5000,
-            "is_void": false,
-            "is_refund": false,
-            "data": {
-              "gateway_integration_pk": 17717,
-              "klass": "MigsPayment",
-              "created_at": "2026-06-22T12:55:08.374234",
-              "amount": 5000,
-              "currency": "SAR",
-              "migs_order": {
-                "acceptPartialAmount": false,
-                "amount": 50,
-                "authenticationStatus": "AUTHENTICATION_SUCCESSFUL",
-                "chargeback": {
-                  "amount": 0,
-                  "currency": "SAR"
-                },
-                "creationTime": "2026-06-22T12:54:48.881Z",
-                "currency": "SAR",
-                "id": "aa6213733",
-                "lastUpdatedTime": "2026-06-22T12:55:08.301Z",
-                "merchantAmount": 50,
-                "merchantCategoryCode": "7372",
-                "merchantCurrency": "SAR",
-                "status": "CAPTURED",
-                "totalAuthorizedAmount": 50,
-                "totalCapturedAmount": 50,
-                "totalRefundedAmount": 0
-              },
-              "merchant": "TEST601108800",
-              "migs_result": "SUCCESS",
-              "migs_transaction": {
-                "acquirer": {
-                  "batch": 20260622,
-                  "date": "0622",
-                  "id": "NCB_S2I",
-                  "merchantId": "601108800",
-                  "settlementDate": "2026-06-22",
-                  "timeZone": "+0300",
-                  "transactionId": "123456789012345"
-                },
-                "amount": 50,
-                "authenticationStatus": "AUTHENTICATION_SUCCESSFUL",
-                "authorizationCode": "220353",
-                "currency": "SAR",
-                "id": "6818560",
-                "receipt": "617312220353",
-                "source": "INTERNET",
-                "stan": "220353",
-                "terminal": "NCBS2I02",
-                "type": "PAYMENT"
-              },
-              "txn_response_code": "APPROVED",
-              "acq_response_code": "00",
-              "message": "Approved",
-              "merchant_txn_ref": "6818560",
-              "order_info": "aa6213733",
-              "receipt_no": "617312220353",
-              "transaction_no": "123456789012345",
-              "batch_no": 20260622,
-              "authorize_id": "220353",
-              "card_type": "VISA",
-              "card_num": "411111xxxxxx1111",
-              "secure_hash": "",
-              "avs_result_code": "",
-              "avs_acq_response_code": "00",
-              "captured_amount": 50,
-              "authorised_amount": 50,
-              "refunded_amount": 0,
-              "acs_eci": "05"
-            },
-            "is_hidden": false,
-            "payment_key_claims": {
-              "extra": {
-                "merchant_order_id": "BOOKING-5701d9c9-9a3d-46fd-9f14-fb5f410ded93"
-              },
-              "user_id": 14921,
-              "currency": "SAR",
-              "order_id": 6213733,
-              "created_by": 14921,
-              "is_partner": false,
-              "amount_cents": 5000,
-              "billing_data": {
-                "city": "NA",
-                "email": "booking@salonnoon.net",
-                "floor": "NA",
-                "state": "NA",
-                "street": "NA",
-                "country": "NA",
-                "building": "NA",
-                "apartment": "NA",
-                "last_name": "test",
-                "first_name": "mostafa",
-                "postal_code": "NA",
-                "phone_number": "0504798759",
-                "extra_description": "NA"
-              },
-              "redirect_url": "https://ksa.paymob.com/unifiedcheckout/payment-status?payment_token=ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SjFjMlZ5WDJsa0lqb3hORGt5TVN3aVlXMXZkVzUwWDJObGJuUnpJam8xTURBd0xDSmpkWEp5Wlc1amVTSTZJbE5CVWlJc0ltbHVkR1ZuY21GMGFXOXVYMmxrSWpveE56Y3hOeXdpYjNKa1pYSmZhV1FpT2pZeU1UTTNNek1zSW1KcGJHeHBibWRmWkdGMFlTSTZleUptYVhKemRGOXVZVzFsSWpvaWJXOXpkR0ZtWVNJc0lteGhjM1JmYm1GdFpTSTZJblJsYzNRaUxDSnpkSEpsWlhRaU9pSk9RU0lzSW1KMWFXeGthVzVuSWpvaVRrRWlMQ0ptYkc5dmNpSTZJazVCSWl3aVlYQmhjblJ0Wlc1MElqb2lUa0VpTENKamFYUjVJam9pVGtFaUxDSnpkR0YwWlNJNklrNUJJaXdpWTI5MWJuUnllU0k2SWs1Qklpd2laVzFoYVd3aU9pSmliMjlyYVc1blFITmhiRzl1Ym05dmJpNXVaWFFpTENKd2FHOXVaVjl1ZFcxaVpYSWlPaUl3TlRBME56azROelU1SWl3aWNHOXpkR0ZzWDJOdlpHVWlPaUpPUVNJc0ltVjRkSEpoWDJSbGMyTnlhWEIwYVc5dUlqb2lUa0VpZlN3aWJHOWphMTl2Y21SbGNsOTNhR1Z1WDNCaGFXUWlPbVpoYkhObExDSmxlSFJ5WVNJNmV5SnRaWEpqYUdGdWRGOXZjbVJsY2w5cFpDSTZJa0pQVDB0SlRrY3ROVGN3TVdRNVl6a3RPV0V6WkMwME5tWmtMVGxtTVRRdFptSTFaalF4TUdSbFpEa3pJbjBzSW5KbFpHbHlaV04wYVc5dVgzVnliQ0k2SW1oMGRIQnpPaTh2YzJGc2IyNXViMjl1TG01bGRDOWliMjlyYVc1bkwzTjFZMk5sYzNNX1kyOWtaVDFPVDA5T0xUWXhOVEVpTENKemFXNW5iR1ZmY0dGNWJXVnVkRjloZEhSbGJYQjBJanBtWVd4elpTd2lZM0psWVhSbFpGOWllU0k2TVRRNU1qRXNJbWx6WDNCaGNuUnVaWElpT21aaGJITmxMQ0p1WlhoMFgzQmhlVzFsYm5SZmFXNTBaVzUwYVc5dUlqb2ljR2xmZEdWemRGOWtOamswTkRKa05HTTVZV00wTmpBek9XWXpPRFl6WVdJNE9UZzFNV05pWkNKOS5ObWpyWURYR0Fsck1SSGFIQUxrU2NtR2FuUDVUWmRXeFdMbXFiN0dXN1NNeVVDX2tzLUlJUmxQdmxFTmdGV2gzRkN2SWp2VTN1N0IwWWxnZ1J2alhKdw==&trx_id=6818560",
-              "integration_id": 17717,
-              "redirection_url": "https://salonnoon.net/booking/success?code=NOON-6151",
-              "lock_order_when_paid": false,
-              "next_payment_intention": "pi_test_d69442d4c9ac46039f3863ab89851cbd",
-              "single_payment_attempt": false
-            },
-            "error_occured": false,
-            "is_live": false,
-            "other_endpoint_reference": null,
-            "refunded_amount_cents": 0,
-            "refunded_amount_cents_bigint": 0,
-            "source_id": -1,
-            "is_captured": false,
-            "captured_amount": 0,
-            "captured_amount_bigint": 0,
-            "settlement_amount_cents_bigint": 0,
-            "merchant_staff_tag": null,
-            "accept_fees_cents_bigint": 0,
-            "vat_cents_bigint": 0,
-            "vat_cents_float": null,
-            "updated_at": "2026-06-22T15:55:08.381657+03:00",
-            "is_settled": false,
-            "bill_balanced": false,
-            "is_bill": false,
-            "owner": 14921,
-            "parent_transaction": null
-          },
-          "accept_fees": 0,
-          "issuer_bank": null,
-          "transaction_processed_callback_responses": ""
-        },
-        "webhookUrl": "https://n8n.asra3.com/webhook/saloon-payment",
-        "executionMode": "production"
-      }
-    ],
-    "Get a row": [
-      {
-        "id": "ceac790f-7284-4d8e-816d-04c35aa0e5d0",
-        "type": "customer_service",
-        "title": "طلب تواصل مع موظف 🧑‍💻",
-        "body": "العميلة Dr Mostafa Alaa تطلب التحدث مع خدمة العملاء. رقم الهاتف: 971504798759",
-        "client_id": "59ce30e6-e06d-4de7-9833-4ba84b77921a",
-        "isRead": false,
-        "createdAt": "2026-07-07T12:56:52.549604+00:00"
-      },
-      {
-        "id": "71eacaed-3970-4cd8-8c10-fa6f862238cf",
-        "type": "customer_service",
-        "title": "طلب تواصل مع موظف 🧑‍💻",
-        "body": "العميلة Dr Mostafa Alaa تطلب التحدث مع خدمة العملاء. رقم الهاتف: 971504798759",
-        "client_id": "59ce30e6-e06d-4de7-9833-4ba84b77921a",
-        "isRead": false,
-        "createdAt": "2026-07-07T12:57:47.450064+00:00"
-      },
-      {
-        "id": "874f0fa9-ed79-4565-87a9-b3da51d2baf5",
-        "type": "customer_service",
-        "title": "طلب تواصل مع موظف 🧑‍💻",
-        "body": "العميلة Dr Mostafa Alaa تطلب التحدث مع خدمة العملاء. رقم الهاتف: 971504798759",
-        "client_id": "59ce30e6-e06d-4de7-9833-4ba84b77921a",
-        "isRead": false,
-        "createdAt": "2026-07-07T12:59:28.966763+00:00"
-      }
-    ],
-    "Webhook2": [
-      {
-        "headers": {
-          "host": "n8n.marka.giize.com",
-          "x-real-ip": "109.123.240.106",
-          "x-forwarded-for": "109.123.240.106",
-          "x-forwarded-proto": "https",
-          "connection": "Upgrade",
-          "content-length": "1407",
-          "content-type": "application/json",
-          "accept": "*/*",
-          "accept-language": "*",
-          "sec-fetch-mode": "cors",
-          "user-agent": "node",
-          "accept-encoding": "br, gzip, deflate"
-        },
-        "params": {},
-        "query": {},
-        "body": {
-          "event": "message.sent",
-          "message": {
-            "id": "37166456-5adc-4395-9057-8cac602e1b6c",
-            "channel_id": null,
-            "client_id": "59ce30e6-e06d-4de7-9833-4ba84b77921a",
-            "message_platform_id": null,
-            "sender_type": "agent",
-            "content_type": "text",
-            "text_content": "hi",
-            "attachment_url": "",
-            "is_read_by_agent": false,
-            "sent_at": "2026-07-10T16:43:23.979497+00:00",
-            "platform_timestamp": "2026-07-10T16:43:23.807+00:00"
-          },
-          "client": {
-            "id": "59ce30e6-e06d-4de7-9833-4ba84b77921a",
-            "name": "مصطفى علاء",
-            "phone": "971504798759",
-            "address": "",
-            "notes": "",
-            "createdAt": "2026-07-05T21:19:05.627308+00:00",
-            "updatedAt": "2026-07-10T16:43:23.979497+00:00",
-            "channel_id": "0b77fb93-2dd9-419f-9053-0a025107f8ad",
-            "platform": "whatsapp",
-            "platform_user_id": "971504798759@s.whatsapp.net",
-            "avatar_url": null,
-            "last_interaction_at": "2026-07-10T16:43:23.979497+00:00",
-            "last_message_preview": "hi",
-            "unread_count": 0,
-            "status": "active",
-            "ai_enabled": true,
-            "tags": [],
-            "email": "",
-            "auth_user_id": null
-          },
-          "channel": {
-            "id": "0b77fb93-2dd9-419f-9053-0a025107f8ad",
-            "name": "6a4a53109d9472faae8493e7",
-            "type": "whatsapp",
-            "isActive": true,
-            "credentials": {
-              "evolution_api": "sk_dbb52d55c857d3083ac169d156a86825d7d138813939d3ef427202368fcb454d"
-            },
-            "variables": {
-              "delay": "15",
-              "bot-on": "**",
-              "bot-off": "##"
-            },
-            "imageSets": [],
-            "createdAt": "2026-07-05T20:43:56.707661+00:00",
-            "updatedAt": "2026-07-10T16:42:57.219238+00:00",
-            "webhookUrl": "https://n8n.marka.giize.com/webhook/61aad4de-9a8c-4c63-bbfa-41dad87866b8"
-          }
-        },
-        "webhookUrl": "https://n8n.marka.giize.com/webhook/61aad4de-9a8c-4c63-bbfa-41dad87866b8",
         "executionMode": "production"
       }
     ]
