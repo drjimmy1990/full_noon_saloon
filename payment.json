@@ -1,0 +1,185 @@
+{
+  "name": "saloooon-payment-webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "saloooon-payment",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "id": "webhook-paymob-payment",
+      "name": "Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json;\nconst transaction = body.obj || body;\n\n// Extract booking reference\nconst merchantOrderId = transaction?.order?.merchant_order_id || '';\nconst isBooking = merchantOrderId.startsWith('BOOKING-');\nconst bookingId = isBooking ? merchantOrderId.replace('BOOKING-', '').trim() : '';\nconst success = transaction?.success === true || transaction?.success === 'true';\nconst txnId = transaction?.id ? String(transaction.id) : '';\n\nreturn [{\n  json: {\n    success,\n    isBooking,\n    bookingId,\n    txnId,\n    merchantOrderId,\n    hmac: body.hmac || ''\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 0],
+      "id": "code-parse-payment",
+      "name": "Parse Payment"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.success }}",
+              "value2": true
+            },
+            {
+              "value1": "={{ $json.isBooking }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [440, 0],
+      "id": "if-success-booking",
+      "name": "IF Success & Booking"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n  b.*, \n  c.phone as client_phone, \n  c.name as client_name, \n  s.name as staff_name,\n  (SELECT string_agg(b2.\"bookingCode\", '، ') FROM \"Booking\" b2 WHERE (b2.\"paymobIntentionId\" = b.\"paymobIntentionId\" AND b.\"paymobIntentionId\" IS NOT NULL) OR b2.id = b.id) as all_booking_codes,\n  (SELECT count(*) FROM \"Booking\" b2 WHERE (b2.\"paymobIntentionId\" = b.\"paymobIntentionId\" AND b.\"paymobIntentionId\" IS NOT NULL) OR b2.id = b.id) as group_count\nFROM \"Booking\" b\nLEFT JOIN \"Client\" c ON b.client_id = c.id\nLEFT JOIN \"Staff\" s ON b.staff_id = s.id\nWHERE b.id = '{{ $json.bookingId }}'\nLIMIT 1;"
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [660, 0],
+      "id": "sql-get-booking",
+      "name": "Get Booking"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.depositStatus }}",
+              "operation": "notEqual",
+              "value2": "paid"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [880, 0],
+      "id": "if-not-already-paid",
+      "name": "IF Not Paid"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id FROM \"Booking\"\nWHERE staff_id = '{{ $json.staff_id }}'\n  AND status = 'confirmed'\n  AND id != '{{ $json.id }}'\n  AND \"bookingDate\" >= '{{ $json.bookingDate.substring(0,10) }}T00:00:00'\n  AND \"bookingDate\" < '{{ $json.bookingDate.substring(0,10) }}T23:59:59'\n  AND (\n    (\"bookingDate\" < '{{ $json.endTime }}' AND \"endTime\" > '{{ $json.bookingDate }}')\n  );"
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1100, 0],
+      "id": "sql-check-conflict",
+      "name": "Check Slot Conflict"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE \"Booking\"\nSET status = 'confirmed',\n    \"depositStatus\" = 'paid',\n    \"paymobTxnId\" = '{{ $('Parse Payment').item.json.txnId }}'\nWHERE (\"paymobIntentionId\" IS NOT NULL AND \"paymobIntentionId\" = '{{ $('Get Booking').item.json.paymobIntentionId }}')\n   OR id = '{{ $('Get Booking').item.json.id }}';"
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1320, -100],
+      "id": "sql-confirm-all-group-bookings",
+      "name": "Confirm All Group Bookings"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE \"Booking\"\nSET status = 'cancelled',\n    \"depositStatus\" = 'paid',\n    \"paymobTxnId\" = '{{ $('Parse Payment').item.json.txnId }}',\n    notes = COALESCE(notes, '') || ' - تعارض في الموعد بعد الدفع، يحتاج استرداد العربون'\nWHERE (\"paymobIntentionId\" IS NOT NULL AND \"paymobIntentionId\" = '{{ $('Get Booking').item.json.paymobIntentionId }}')\n   OR id = '{{ $('Get Booking').item.json.id }}';"
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1320, 100],
+      "id": "sql-cancel-conflict-bookings",
+      "name": "Cancel Conflicting Bookings"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Payment": {
+      "main": [
+        [
+          {
+            "node": "IF Success & Booking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Success & Booking": {
+      "main": [
+        [
+          {
+            "node": "Get Booking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Booking": {
+      "main": [
+        [
+          {
+            "node": "IF Not Paid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Not Paid": {
+      "main": [
+        [
+          {
+            "node": "Check Slot Conflict",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Slot Conflict": {
+      "main": [
+        [
+          {
+            "node": "Confirm All Group Bookings",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cancel Conflicting Bookings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
