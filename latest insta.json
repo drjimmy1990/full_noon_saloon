@@ -2551,6 +2551,10 @@
             {
               "name": "personsCount",
               "value": "={{ $fromAI('personsCount', '1', 'string') }}"
+            },
+            {
+              "name": "times",
+              "value": "={{ $fromAI('times', '', 'string') }}"
             }
           ]
         },
@@ -2647,7 +2651,8 @@
             }
           ]
         },
-        "options": {}
+        "options": {},
+        "description": "Use this tool to check or verify an existing reservation for a customer by passing their phone number. Returns the list of active bookings with booking code, service name, staff name, branch, date, time, and status."
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
