@@ -2395,7 +2395,7 @@
               "value": "={{ $fromAI('durationMode', '', 'string') }}"
             },
             {
-              "name": "=durationMinutes",
+              "name": "durationMinutes",
               "value": "={{ $fromAI('durationMinutes', '', 'string') }}"
             },
             {
