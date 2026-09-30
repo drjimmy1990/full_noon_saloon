@@ -3,18 +3,18 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "21b02ede-05b5-4e7d-9675-8b9d95d0a0c5",
+        "path": "1fcaade3-3236-44c1-87cc-235e664bb2fc",
         "options": {}
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -13504,
-        3296
+        -15904,
+        -2112
       ],
-      "id": "f99438d1-e727-43db-87db-c9a8f815bd38",
+      "id": "5420a0ca-4deb-4d7b-b343-99c7259240e1",
       "name": "Webhook",
-      "webhookId": "21b02ede-05b5-4e7d-9675-8b9d95d0a0c5"
+      "webhookId": "1fcaade3-3236-44c1-87cc-235e664bb2fc"
     },
     {
       "parameters": {
@@ -52,24 +52,161 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -12688,
-        3296
+        -15376,
+        -2192
       ],
-      "id": "721a6ea3-5532-498c-b4a1-e31a395cb9c4",
+      "id": "0140041d-ff2c-4842-a44d-8eafb9251609",
       "name": "If1"
     },
     {
       "parameters": {
-        "jsCode": "// Loop through all incoming items\nfor (const item of items) {\n  const body = item.json.body || {};\n  const message = body.message || {};\n  const sender = message.sender || {};\n  const conversation = body.conversation || {};\n  const account = body.account || {};\n\n  // 1. Always use the CUSTOMER phone from conversation (safe for both directions)\n  const rawPhone = conversation.participantUsername || conversation.participantId || '';\n  const phoneNumber = rawPhone.replace(/^\\+/, ''); // \"201099160912\"\n  const senderJid = phoneNumber ? `${phoneNumber}@s.whatsapp.net` : '';\n\n  // 2. Sender display name (the customer)\n  const senderName = conversation.participantName || sender.name || '';\n\n  // 3. Timestamp — ISO 8601 string, offset to UTC+3\n  let formattedTime = '';\n  const rawTimestamp = message.sentAt || body.timestamp || '';\n  if (rawTimestamp) {\n    const date = new Date(rawTimestamp);\n    const utc3Date = new Date(date.getTime() + 10800000);\n    formattedTime = utc3Date.toISOString().replace('T', ' ').replace('Z', '');\n  }\n\n  // 4. Message type\n  let msgType = 'text';\n  if (message.attachments && message.attachments.length > 0) {\n    msgType = message.attachments[0].type || 'media';\n  }\n\n  // 5. Media (first attachment if any)\n  const media = (message.attachments && message.attachments.length > 0)\n    ? (message.attachments[0].url || message.attachments[0].base64 || null)\n    : null;\n\n  // 6. Output\n  item.json = {\n    SenderJid:      senderJid,\n    SenderName:     senderName,\n    Timestamp:      formattedTime,\n    MsgType:        msgType,\n    Msg:            message.text || '',\n    Media:          media,\n    Instance:       account.displayName || account.username || '',\n    Key:            body.id || '',\n    phonenumber:    phoneNumber,\n    ConversationId: message.conversationId || conversation.id || '',\n    Direction:      message.direction || '',\n    Event:          body.event || '',\n    AccountId:      account.id || account.accountId || '',\n    MessageId:      message.id || ''   // ← NEW → \"6a4a5e6f9d9472faae8534e6\"\n  };\n\n\n}\n\nreturn items;\n"
+        "jsCode": "// Loop through all incoming items\nfor (const item of items) {\n  const body = item.json.body || {};\n  const message = body.message || {};\n  const sender = message.sender || {};\n  const conversation = body.conversation || {};\n  const account = body.account || {};\n\n  // 1. Instagram: use participantId as unique identifier (no phone number)\n  const participantId = conversation.participantId || conversation.platformConversationId || '';\n  const senderJid = participantId; // Raw Instagram ID, e.g. \"1322499536539094\"\n\n  // 2. Sender display name (the customer)\n  const senderName = conversation.participantName || '';\n\n  // 3. Timestamp — ISO 8601 string, offset to UTC+3\n  let formattedTime = '';\n  const rawTimestamp = message.sentAt || body.timestamp || '';\n  if (rawTimestamp) {\n    const date = new Date(rawTimestamp);\n    const utc3Date = new Date(date.getTime() + 10800000);\n    formattedTime = utc3Date.toISOString().replace('T', ' ').replace('Z', '');\n  }\n\n  // 4. Message type\n  let msgType = 'text';\n  if (message.attachments && message.attachments.length > 0) {\n    msgType = message.attachments[0].type || 'media';\n  }\n\n  // 5. Media (first attachment URL if any)\n  const media = (message.attachments && message.attachments.length > 0)\n    ? (message.attachments[0].url || null)\n    : null;\n\n  // 6. Output\n  item.json = {\n    SenderJid:      senderJid,\n    SenderName:     senderName,\n    Timestamp:      formattedTime,\n    MsgType:        msgType,\n    Msg:            message.text || '',\n    Media:          media,\n    Instance:       account.displayName || account.username || '',\n    Key:            body.id || '',\n    phonenumber:    '',              // Instagram has no phone number\n    ConversationId: message.conversationId || conversation.id || '',\n    Direction:      message.direction || '',\n    Event:          body.event || '',\n    AccountId:      account.id || account.accountId || '',\n    MessageId:      message.id || ''   // ← \"6a4a5e6f9d9472faae8534e6\"\n  };\n\n}\n\nreturn items;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -11760,
-        3264
+        -14656,
+        -2224
       ],
-      "id": "d8f07580-d1d8-480f-9ec2-b92e9f62bebd",
+      "id": "8215819b-395e-41ad-b74f-f9626ea3a40e",
       "name": "Code in JavaScript6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0fceb1bb-c0de-4e6c-880f-062704739f1e",
+              "name": "SenderJid",
+              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
+              "type": "string"
+            },
+            {
+              "id": "04ac662e-9deb-4d63-ac8f-cafab77e0f7b",
+              "name": "SenderName",
+              "value": "={{ $('Code in JavaScript6').item.json.SenderName }}",
+              "type": "string"
+            },
+            {
+              "id": "f812ad17-d60f-4c5d-b1d4-7820238fe0e3",
+              "name": "Timestamp",
+              "value": "={{ $('Code in JavaScript6').item.json.Timestamp }}",
+              "type": "string"
+            },
+            {
+              "id": "3c3fdb3c-de14-4bcc-8d9a-68cc2ed0d1c8",
+              "name": "MsgType",
+              "value": "={{ $('Code in JavaScript6').item.json.MsgType }}",
+              "type": "string"
+            },
+            {
+              "id": "e0595c23-53c7-4eb9-aea2-4de3fa76e7db",
+              "name": "Msg",
+              "value": "={{ $('Code in JavaScript6').item.json.Msg }}",
+              "type": "string"
+            },
+            {
+              "id": "5f1ca696-9ad5-4f22-accd-435a5c8c6ced",
+              "name": "Media",
+              "value": "={{ $('Code in JavaScript6').item.json.Media }}",
+              "type": "string"
+            },
+            {
+              "id": "eb5b8516-cc5f-43b3-a578-2d8b15b7b51d",
+              "name": "Instance",
+              "value": "={{ $('Code in JavaScript6').item.json.Instance }}",
+              "type": "string"
+            },
+            {
+              "id": "8c6ec75c-45c6-44de-a860-84baa4832602",
+              "name": "Key",
+              "value": "={{ $('Code in JavaScript6').item.json.Key }}",
+              "type": "string"
+            },
+            {
+              "id": "08edec4e-32c4-466d-8d66-261a8ede1abc",
+              "name": "phonenumber",
+              "value": "={{ $('Code in JavaScript6').item.json.phonenumber }}",
+              "type": "string"
+            },
+            {
+              "id": "d05f492e-26b3-49e9-b366-96947a6906bc",
+              "name": "message_platform_id",
+              "value": "={{ $('Code in JavaScript6').item.json.MessageId }}",
+              "type": "string"
+            },
+            {
+              "id": "56f0bdfb-bc93-43e9-9230-f4a24b9594b6",
+              "name": "platform",
+              "value": "={{ $json.type }}",
+              "type": "string"
+            },
+            {
+              "id": "d65150c6-4c63-4b37-b9f6-befcded648c6",
+              "name": "platform_user_id",
+              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
+              "type": "string"
+            },
+            {
+              "id": "5d001d0f-4c7e-42de-bd22-2316d7e6b81c",
+              "name": "valrables",
+              "value": "={{ $json.variables }}",
+              "type": "object"
+            },
+            {
+              "id": "90b066dd-8ee7-4976-836f-48f44e0cb86b",
+              "name": "image_sets",
+              "value": "={{ $json.imageSets.map(set => set.name).join(', ') }}",
+              "type": "string"
+            },
+            {
+              "id": "651518d7-67d7-4d14-a53e-ebb85303b642",
+              "name": "active_products",
+              "value": "={{ $json.active_products }}",
+              "type": "array"
+            },
+            {
+              "id": "20e51a52-8afc-425d-8303-9a50777c39ff",
+              "name": "active_branches",
+              "value": "={{ JSON.stringify( $json.active_branches) }}",
+              "type": "string"
+            },
+            {
+              "id": "15a35cb5-93ae-4316-bb66-1790823f706d",
+              "name": "active_staff",
+              "value": "={{ JSON.stringify( $json.active_staff) }}",
+              "type": "string"
+            },
+            {
+              "id": "d969e061-0f0a-4eee-9d7b-74854d78512d",
+              "name": "staff_services",
+              "value": "={{ JSON.stringify( $json.staff_services) }}",
+              "type": "string"
+            },
+            {
+              "id": "31818ca5-0e28-497e-96db-1e2dcabfb755",
+              "name": "bot_offers",
+              "value": "={{ JSON.stringify( $json.bot_offers) }}",
+              "type": "string"
+            },
+            {
+              "id": "e4f6744f-5cde-4532-bd50-99a445f7fcd2",
+              "name": "categories",
+              "value": "={{ JSON.stringify( $json.categories) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -13568,
+        -2224
+      ],
+      "id": "215a00a8-4c37-4f20-bdf2-4139f545d329",
+      "name": "Edit Fields"
     },
     {
       "parameters": {
@@ -100,10 +237,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -9840,
-        3296
+        -12736,
+        -2192
       ],
-      "id": "f31df9d4-d99e-41c3-a1e5-c3a6b45d3afd",
+      "id": "765864a5-c060-49cb-9d4c-ad158e1e1e03",
       "name": "If19"
     },
     {
@@ -121,7 +258,7 @@
             },
             {
               "fieldId": "name",
-              "fieldValue": "={{ $('Edit Fields').first().json.SenderName ?? '' }}\n"
+              "fieldValue": "={{ $('Edit Fields').first().json.SenderName ?? '' }}"
             },
             {
               "fieldId": "phone",
@@ -129,7 +266,7 @@
             },
             {
               "fieldId": "platform",
-              "fieldValue": "whatsapp"
+              "fieldValue": "={{ $('Webhook').item.json.body.account.platform }}"
             },
             {
               "fieldId": "channel_id",
@@ -141,10 +278,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -9440,
-        3152
+        -12336,
+        -2336
       ],
-      "id": "cf318739-b953-4485-8a3e-c14b51efc0bc",
+      "id": "7a8e2255-e28d-4bbd-94de-1138630670f2",
       "name": "Supabase20",
       "retryOnFail": true,
       "credentials": {
@@ -178,10 +315,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -8976,
-        3312
+        -11872,
+        -2176
       ],
-      "id": "7a80f754-f95b-4056-bcbb-5dbad6160fe4",
+      "id": "6820a8bb-0276-4d9c-9185-cde9d6eb7e70",
       "name": "Edit Fields13"
     },
     {
@@ -208,10 +345,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10256,
-        3296
+        -13152,
+        -2192
       ],
-      "id": "f7cd5fda-898b-41c5-b73b-7787d135af71",
+      "id": "5e24b201-1ce2-4b9b-9264-6c3763a008bb",
       "name": "find contact",
       "alwaysOutputData": true,
       "retryOnFail": true,
@@ -262,7 +399,7 @@
                 "conditions": [
                   {
                     "leftValue": "={{ $('Edit Fields').item.json.MsgType }}",
-                    "rightValue": "audio",
+                    "rightValue": "audioMessage",
                     "operator": {
                       "type": "string",
                       "operation": "equals"
@@ -287,7 +424,7 @@
                   {
                     "id": "c2c4a950-10f3-4d58-84a8-dba2dfc64741",
                     "leftValue": "={{ $('Edit Fields').item.json.MsgType }}",
-                    "rightValue": "image",
+                    "rightValue": "imageMessage",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -358,10 +495,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -8576,
-        3216
+        -11472,
+        -2272
       ],
-      "id": "65e42978-3fce-4bac-a954-a6850ff9586e",
+      "id": "fce93b09-219c-498c-8f59-e27cc5f395d7",
       "name": "Switch"
     },
     {
@@ -383,10 +520,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -6544,
-        2800
+        -9440,
+        -2688
       ],
-      "id": "b37042f3-5f4d-4700-a78b-dedf8d87b4d8",
+      "id": "a01b3844-d1ee-40cb-a661-66c230821a47",
       "name": "Create a row3",
       "credentials": {
         "supabaseApi": {
@@ -438,10 +575,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -7968,
-        2800
+        -10864,
+        -2688
       ],
-      "id": "671f39c9-1def-4a93-bd66-3b57a62e881f",
+      "id": "606d478a-6330-436f-8ca6-411f2ee43079",
       "name": "Supabase25",
       "retryOnFail": true,
       "credentials": {
@@ -462,10 +599,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -7664,
-        3136
+        -10560,
+        -2352
       ],
-      "id": "68cbb787-0e7e-48d9-b734-c33dbf5bc507",
+      "id": "3927920f-8a2c-417f-8bec-618f9ae32b27",
       "name": "Convert to File"
     },
     {
@@ -480,10 +617,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -7744,
-        3344
+        -10640,
+        -2144
       ],
-      "id": "ffbfba63-9fc8-4b18-9e2c-914af0906792",
+      "id": "b8ff6863-620b-4534-8713-6d99502fc289",
       "name": "Convert to File1"
     },
     {
@@ -511,10 +648,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -9856,
-        2256
+        -12752,
+        -3232
       ],
-      "id": "b20a3b8f-c43f-4325-a5bd-a2317f4b7e3a",
+      "id": "7d8d8021-a2e6-4854-895d-1879454bd3bc",
       "name": "Update a row3",
       "credentials": {
         "supabaseApi": {
@@ -584,10 +721,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.3,
       "position": [
-        -11376,
-        2656
+        -14272,
+        -2832
       ],
-      "id": "77050e35-e2a8-4e69-ab3a-e116c6a19f72",
+      "id": "92d656db-0af5-4295-a2d8-23493a07811c",
       "name": "Switch4"
     },
     {
@@ -615,10 +752,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -9824,
-        2608
+        -12720,
+        -2880
       ],
-      "id": "4c8553c9-5b96-480f-b8b7-f3ac18bf8114",
+      "id": "54dcb27f-ab27-4fa6-91f8-565bd3708fab",
       "name": "Update a row4",
       "credentials": {
         "supabaseApi": {
@@ -656,10 +793,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -10224,
-        2160
+        -13120,
+        -3328
       ],
-      "id": "cea180ff-ef94-47e9-a61d-369ae71998c6",
+      "id": "78d24882-a7e4-4730-824d-ab47c8c31dcb",
       "name": "If14"
     },
     {
@@ -682,10 +819,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10608,
-        2160
+        -13504,
+        -3328
       ],
-      "id": "43c9e3ee-e088-48e4-8b37-dda6f9fe50a8",
+      "id": "fdc90fe0-fdb8-4015-8014-7d3002f54f8b",
       "name": "Supabase101",
       "alwaysOutputData": true,
       "credentials": {
@@ -715,10 +852,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10640,
-        2512
+        -13536,
+        -2976
       ],
-      "id": "d7e8f2b9-e262-4a3d-b9fb-625657b1a30b",
+      "id": "41d409fa-e034-476d-9c6b-79696140fd2c",
       "name": "Supabase102",
       "alwaysOutputData": true,
       "credentials": {
@@ -757,10 +894,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -10320,
-        2512
+        -13216,
+        -2976
       ],
-      "id": "149d1de9-028f-4acd-93b1-842157df0977",
+      "id": "1e945e62-ddb8-4747-9f2d-f5059fb7f61b",
       "name": "If15"
     },
     {
@@ -770,7 +907,7 @@
           "fieldValues": [
             {
               "fieldId": "platform",
-              "fieldValue": "=whatsapp"
+              "fieldValue": "=instagram"
             },
             {
               "fieldId": "platform_user_id",
@@ -786,10 +923,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -9856,
-        2064
+        -12752,
+        -3424
       ],
-      "id": "76ee175b-624e-454c-96fc-1cbcd7ff45de",
+      "id": "c5b06c19-0dea-4737-ba04-e18f84d21fe7",
       "name": "Supabase17",
       "retryOnFail": true,
       "credentials": {
@@ -807,7 +944,7 @@
           "fieldValues": [
             {
               "fieldId": "platform",
-              "fieldValue": "=whatsapp"
+              "fieldValue": "=instagram"
             },
             {
               "fieldId": "platform_user_id",
@@ -823,10 +960,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -9824,
-        2432
+        -12720,
+        -3056
       ],
-      "id": "e4b95598-880a-41f3-9d84-e52165621767",
+      "id": "07cbfb4a-0346-4d7b-8181-e0b63b2e09b6",
       "name": "Supabase18",
       "retryOnFail": true,
       "credentials": {
@@ -839,15 +976,15 @@
     },
     {
       "parameters": {
-        "jsCode": "// Loop through all incoming items\nfor (const item of items) {\n  const body = item.json.body || {};\n  const message = body.message || {};\n  const sender = message.sender || {};\n  const conversation = body.conversation || {};\n  const account = body.account || {};\n\n  // 1. Always use the CUSTOMER phone from conversation (safe for both directions)\n  const rawPhone = conversation.participantUsername || conversation.participantId || '';\n  const phoneNumber = rawPhone.replace(/^\\+/, ''); // \"201099160912\"\n  const senderJid = phoneNumber ? `${phoneNumber}@s.whatsapp.net` : '';\n\n  // 2. Sender display name (the customer)\n  const senderName = conversation.participantName || sender.name || '';\n\n  // 3. Timestamp — ISO 8601 string, offset to UTC+3\n  let formattedTime = '';\n  const rawTimestamp = message.sentAt || body.timestamp || '';\n  if (rawTimestamp) {\n    const date = new Date(rawTimestamp);\n    const utc3Date = new Date(date.getTime() + 10800000);\n    formattedTime = utc3Date.toISOString().replace('T', ' ').replace('Z', '');\n  }\n\n  // 4. Message type\n  let msgType = 'text';\n  if (message.attachments && message.attachments.length > 0) {\n    msgType = message.attachments[0].type || 'media';\n  }\n\n  // 5. Media (first attachment if any)\n  const media = (message.attachments && message.attachments.length > 0)\n    ? (message.attachments[0].url || message.attachments[0].base64 || null)\n    : null;\n\n  // 6. Output\n  item.json = {\n    SenderJid:      senderJid,\n    SenderName:     senderName,\n    Timestamp:      formattedTime,\n    MsgType:        msgType,\n    Msg:            message.text || '',\n    Media:          media,\n    Instance:       account.displayName || account.username || '',\n    Key:            body.id || '',\n    phonenumber:    phoneNumber,\n    ConversationId: message.conversationId || conversation.id || '',\n    Direction:      message.direction || '',\n    Event:          body.event || '',\n    AccountId:      account.id || account.accountId || ''   // ← NEW\n  };\n\n}\n\nreturn items;\n"
+        "jsCode": "// Loop through all incoming items\nfor (const item of items) {\n  const body = item.json.body || {};\n  const message = body.message || {};\n  const sender = message.sender || {};\n  const conversation = body.conversation || {};\n  const account = body.account || {};\n\n  // 1. Instagram: use participantId as unique identifier (no phone number)\n  const participantId = conversation.participantId || conversation.platformConversationId || '';\n  const senderJid = participantId; // Raw Instagram ID, e.g. \"1322499536539094\"\n\n  // 2. Sender display name (the customer)\n  const senderName = conversation.participantName || '';\n\n  // 3. Timestamp — ISO 8601 string, offset to UTC+3\n  let formattedTime = '';\n  const rawTimestamp = message.sentAt || body.timestamp || '';\n  if (rawTimestamp) {\n    const date = new Date(rawTimestamp);\n    const utc3Date = new Date(date.getTime() + 10800000);\n    formattedTime = utc3Date.toISOString().replace('T', ' ').replace('Z', '');\n  }\n\n  // 4. Message type\n  let msgType = 'text';\n  if (message.attachments && message.attachments.length > 0) {\n    msgType = message.attachments[0].type || 'media';\n  }\n\n  // 5. Media (first attachment URL if any)\n  const media = (message.attachments && message.attachments.length > 0)\n    ? (message.attachments[0].url || null)\n    : null;\n\n  // 6. Output\n  item.json = {\n    SenderJid:      senderJid,\n    SenderName:     senderName,\n    Timestamp:      formattedTime,\n    MsgType:        msgType,\n    Msg:            message.text || '',\n    Media:          media,\n    Instance:       account.displayName || account.username || '',\n    Key:            body.id || '',\n    phonenumber:    '',              // Instagram has no phone number\n    ConversationId: message.conversationId || conversation.id || '',\n    Direction:      message.direction || '',\n    Event:          body.event || '',\n    AccountId:      account.id || account.accountId || ''\n  };\n\n}\n\nreturn items;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -11920,
-        2800
+        -14816,
+        -2688
       ],
-      "id": "d67c0401-b2bb-4a34-917d-6880548476bc",
+      "id": "b74ea6ba-39af-4dc0-975e-a2b55d6cf439",
       "name": "Code in JavaScript"
     },
     {
@@ -864,10 +1001,10 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        -3424,
-        2976
+        -6320,
+        -2512
       ],
-      "id": "e1840bbe-05a9-4ff0-9abf-eacf54f7cd44",
+      "id": "b6705f3f-9674-49c2-b28c-928aca9d330f",
       "name": "Aggregate4"
     },
     {
@@ -884,10 +1021,10 @@
       "type": "n8n-nodes-base.sort",
       "typeVersion": 1,
       "position": [
-        -4384,
-        3040
+        -7280,
+        -2448
       ],
-      "id": "ca1722d8-76c9-4601-9899-f8a08cbef20a",
+      "id": "c7e55db0-287e-48af-90e9-5ddba1d53360",
       "name": "Sort2"
     },
     {
@@ -908,10 +1045,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -4576,
-        3040
+        -7472,
+        -2448
       ],
-      "id": "307cd7ec-09f3-4168-830b-1f8228aa1f4b",
+      "id": "1792473d-598a-4671-8698-d1b4094aecba",
       "name": "Supabase5",
       "retryOnFail": true,
       "credentials": {
@@ -944,10 +1081,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -6064,
-        3040
+        -8960,
+        -2448
       ],
-      "id": "200fa533-fe5b-4dad-b56b-db1ac8369e9f",
+      "id": "91f877cd-e924-480c-8d54-1822157dc44d",
       "name": "Edit Fields15"
     },
     {
@@ -968,10 +1105,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -3856,
-        2976
+        -6752,
+        -2512
       ],
-      "id": "f15fe5e9-4ac8-4e86-95f4-712744bcd3c5",
+      "id": "19842275-c8a3-460f-bc37-3976c9e49589",
       "name": "Supabase23",
       "retryOnFail": true,
       "waitBetweenTries": 1000,
@@ -1011,10 +1148,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -4160,
-        3040
+        -7056,
+        -2448
       ],
-      "id": "256bda65-2d03-4ac2-ba6e-a70977e492b9",
+      "id": "0696ff69-c3b0-418d-a4da-45a892b61ea0",
       "name": "If23"
     },
     {
@@ -1024,10 +1161,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3104,
-        2992
+        -6000,
+        -2496
       ],
-      "id": "e86847eb-64f2-48e2-9985-68176552d0d2",
+      "id": "3eb8eba7-9e01-47c3-9ed1-6f1ee9b27ae7",
       "name": "Code2"
     },
     {
@@ -1035,10 +1172,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -3904,
-        3152
+        -6800,
+        -2336
       ],
-      "id": "09ff7aa2-58cd-4711-a151-7108e6f39aae",
+      "id": "067e99b6-9698-4d28-a97d-05fa33336d41",
       "name": "No Operation, do nothing"
     },
     {
@@ -1078,10 +1215,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -5360,
-        3024
+        -8256,
+        -2464
       ],
-      "id": "e986f134-3dd0-4bb1-8f05-83efd84c249b",
+      "id": "f1edc915-9b6d-4aa7-8dd4-8a662d9ef986",
       "name": "If2"
     },
     {
@@ -1094,7 +1231,7 @@
             {
               "keyName": "sender_id",
               "condition": "eq",
-              "keyValue": "={{ $('Edit Fields2').item.json.SenderJid }}"
+              "keyValue": "={{ $('Edit Fields').item.json.SenderJid }}"
             }
           ]
         }
@@ -1102,10 +1239,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -4848,
-        3328
+        -7744,
+        -2160
       ],
-      "id": "0a595be3-0b96-4a14-892d-0eadde98c046",
+      "id": "aaa3e24b-6ffd-4d35-bc30-561b5ee970cb",
       "name": "Supabase24",
       "retryOnFail": true,
       "waitBetweenTries": 1000,
@@ -1121,10 +1258,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -4576,
-        3296
+        -7472,
+        -2192
       ],
-      "id": "e4a3069d-605c-48f5-8b86-82a6f7296c30",
+      "id": "87950938-c175-473e-ad32-6129c1131c13",
       "name": "No Operation, do nothing1"
     },
     {
@@ -1166,10 +1303,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -6720,
-        3360
+        -9616,
+        -2128
       ],
-      "id": "2fcd3bc2-f92f-401d-8e3b-7cb9ef8a0467",
+      "id": "5147a881-ce4f-4c2c-8503-47711d3057ca",
       "name": "Supabase1",
       "retryOnFail": true,
       "credentials": {
@@ -1198,10 +1335,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -6464,
-        3360
+        -9360,
+        -2128
       ],
-      "id": "a858d143-f5ca-44bf-8e1d-35f5a89f1928",
+      "id": "ac228d7b-7e12-4952-82e6-d6b593f45611",
       "name": "Create a row12",
       "credentials": {
         "supabaseApi": {
@@ -1236,10 +1373,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -7088,
-        3360
+        -9984,
+        -2128
       ],
-      "id": "1a117f1a-1174-4d84-8c2d-6b87664771ff",
+      "id": "6c0bb2cb-9903-43d8-aaf2-aabe20b41dce",
       "name": "Edit Fields5"
     },
     {
@@ -1285,10 +1422,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -6720,
-        3152
+        -9616,
+        -2336
       ],
-      "id": "90904a80-ff18-49fe-8b82-7069fc14e713",
+      "id": "1125ee35-419e-4363-bd4f-b12ba4960dbe",
       "name": "Supabase",
       "retryOnFail": true,
       "credentials": {
@@ -1317,10 +1454,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -6544,
-        3152
+        -9440,
+        -2336
       ],
-      "id": "0a6f989b-9039-46b8-990b-7a52ab1ce210",
+      "id": "0e453de5-9fd1-4928-9588-d4ae334758c8",
       "name": "Create a row10",
       "credentials": {
         "supabaseApi": {
@@ -1355,10 +1492,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -7152,
-        3136
+        -10048,
+        -2352
       ],
-      "id": "0f8d4e6a-9eef-4bc2-8d07-df512c16e020",
+      "id": "118ed24e-b681-490e-9c96-986de7870e42",
       "name": "Edit Fields3"
     },
     {
@@ -1384,10 +1521,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -8144,
-        3296
+        -11040,
+        -2192
       ],
-      "id": "b845c085-0b3c-4c9b-acba-2c48c7d00242",
+      "id": "0b8ab73e-7cc9-4092-b218-6d28978d525a",
       "name": "HTTP Request5"
     },
     {
@@ -1399,10 +1536,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -7392,
-        3344
+        -10288,
+        -2144
       ],
-      "id": "0dc6adcf-cf90-4ea7-afe8-3ede60f9517b",
+      "id": "94f7b4a3-db59-442e-8e49-4f2466e2b101",
       "name": "Read/Write Files from Disk1"
     },
     {
@@ -1428,10 +1565,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -8048,
-        3120
+        -10944,
+        -2368
       ],
-      "id": "6cf3d755-2579-4870-b187-eaeeb5810dcb",
+      "id": "1a80e861-63ce-4aa3-ac4b-fa0b24fd0bb0",
       "name": "HTTP Request6"
     },
     {
@@ -1443,10 +1580,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -7392,
-        3136
+        -10288,
+        -2352
       ],
-      "id": "f5a44824-20b0-4123-97e0-5ec7f60fd4a9",
+      "id": "b35ef0f6-1a94-426c-b8c6-afbaf319661e",
       "name": "Read/Write Files from Disk"
     },
     {
@@ -1466,10 +1603,10 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -6944,
-        3136
+        -9840,
+        -2352
       ],
-      "id": "6a018c3d-810f-49dc-bda0-af4d29c098a4",
+      "id": "23a8eeb3-00b8-4ec6-9594-1535e71727aa",
       "name": "Analyze audio",
       "credentials": {
         "googlePalmApi": {
@@ -1687,10 +1824,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -1776,
-        3536
+        -4640,
+        -1344
       ],
-      "id": "f856ab19-0fbd-4531-9df5-6709187e1e05",
+      "id": "a25aaff6-c05f-487d-ac62-dbce193e5379",
       "name": "Switch2"
     },
     {
@@ -1700,10 +1837,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1072,
-        2720
+        -3968,
+        -2768
       ],
-      "id": "37eb7f69-8ecf-44dc-9c73-d7a8b5a15d8d",
+      "id": "3b1b1010-2d18-4901-abeb-e514bf2d01b3",
       "name": "Code1"
     },
     {
@@ -1713,10 +1850,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -208,
-        3184
+        -3104,
+        -2304
       ],
-      "id": "36dbad86-e39c-4f22-837e-a069ae9dc7ed",
+      "id": "c6970871-677d-435a-9d33-696db68de9da",
       "name": "Code3",
       "disabled": true
     },
@@ -1727,10 +1864,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -736,
-        2880
+        -3632,
+        -2608
       ],
-      "id": "1de0101a-651e-4cb9-9d37-36cbf71d0dd9",
+      "id": "6694e97a-98d6-4da4-bec5-007aa135719e",
       "name": "Code"
     },
     {
@@ -1740,10 +1877,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1968,
-        3120
+        -4864,
+        -2368
       ],
-      "id": "d499a7a2-73b4-48ff-a53e-1f74833930ad",
+      "id": "9a8f0002-644e-40a9-9b67-7e1d4c845ff1",
       "name": "Code in JavaScript2",
       "executeOnce": false
     },
@@ -1758,10 +1895,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        -2432,
-        2976
+        -5328,
+        -2512
       ],
-      "id": "fd84bf74-e042-4d0d-b13d-4cf9617cda0c",
+      "id": "efb78eda-86b2-42fc-8077-6f81e2cd297d",
       "name": "AI Agent1"
     },
     {
@@ -1803,10 +1940,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -416,
-        2704
+        -3312,
+        -2784
       ],
-      "id": "330d1994-21c0-4fdc-9db0-60b90da6b9c0",
+      "id": "4e24e350-4554-4b0f-b873-662ce93c576f",
       "name": "Supabase27",
       "retryOnFail": true,
       "credentials": {
@@ -1825,22 +1962,22 @@
           "parameters": [
             {
               "name": "=apikey",
-              "value": "={{ $('Edit Fields2').item.json.Key }}"
+              "value": "={{ $('Edit Fields').item.json.Key }}"
             }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n    \"number\": \"{{ $('Edit Fields2').item.json.SenderJid }}\",\n    \"text\": \"{{ JSON.stringify($json.response).slice(1, -1) }}\",\n    \"delay\":{{ $json.typingAnalysis.calculatedTimeMs }}\n}",
+        "jsonBody": "={\n    \"number\": \"{{ $('Edit Fields').item.json.SenderJid }}\",\n    \"text\": \"{{ JSON.stringify($json.response).slice(1, -1) }}\",\n    \"delay\":{{ $json.typingAnalysis.calculatedTimeMs }}\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        208,
-        3184
+        -2688,
+        -2304
       ],
-      "id": "46bf4ea1-371f-4728-95d7-c1bf0e508f32",
+      "id": "321bb941-356b-48f5-b1e4-620d8e1dbeb5",
       "name": "send txt1",
       "disabled": true
     },
@@ -1863,7 +2000,7 @@
             },
             {
               "fieldId": "platform_timestamp",
-              "fieldValue": "={{ $('Edit Fields2').first().json.Timestamp }}"
+              "fieldValue": "={{ $('Edit Fields').first().json.Timestamp }}"
             },
             {
               "fieldId": "text_content",
@@ -1879,10 +2016,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        480,
-        3184
+        -2416,
+        -2304
       ],
-      "id": "7b5226cc-8641-4b7e-9e26-96dc11440185",
+      "id": "389a8f2d-e6a8-4339-ae41-40f60958e15c",
       "name": "Supabase28",
       "retryOnFail": true,
       "credentials": {
@@ -1896,13 +2033,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://evo.hillhousevilla.com/message/sendMedia/{{ $('Edit Fields2').first().json.Instance }}",
+        "url": "=https://evo.hillhousevilla.com/message/sendMedia/{{ $('Edit Fields').first().json.Instance }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "apikey",
-              "value": "={{ $('Edit Fields2').first().json.Key }}"
+              "value": "={{ $('Edit Fields').first().json.Key }}"
             }
           ]
         },
@@ -1911,7 +2048,7 @@
           "parameters": [
             {
               "name": "number",
-              "value": "={{ $('Edit Fields2').item.json.SenderJid }}"
+              "value": "={{ $('Edit Fields').item.json.SenderJid }}"
             },
             {
               "name": "mediatype",
@@ -1936,10 +2073,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1344,
-        3184
+        -1552,
+        -2304
       ],
-      "id": "2850942a-8f69-470d-9429-b4171f0e7933",
+      "id": "539b8b57-e578-4e5c-b387-d17ec14e5664",
       "name": "HTTP Request12",
       "retryOnFail": true,
       "waitBetweenTries": 5000,
@@ -1953,10 +2090,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        800,
-        3184
+        -2096,
+        -2304
       ],
-      "id": "ac73b40d-3aae-4392-91f7-5acec3898206",
+      "id": "2129ba54-bdd3-418f-a5df-03b8bff98246",
       "name": "Code in JavaScript1",
       "disabled": true
     },
@@ -1968,10 +2105,10 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        1008,
-        3184
+        -1888,
+        -2304
       ],
-      "id": "36908d8e-6adb-4575-9d94-e7e04636f6d9",
+      "id": "f373527b-8772-4dbc-bccd-597b0d6603d3",
       "name": "Split Out",
       "disabled": true
     },
@@ -1994,7 +2131,7 @@
             },
             {
               "fieldId": "platform_timestamp",
-              "fieldValue": "={{ $('Edit Fields2').first().json.Timestamp }}"
+              "fieldValue": "={{ $('Edit Fields').first().json.Timestamp }}"
             },
             {
               "fieldId": "client_id",
@@ -2010,10 +2147,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1632,
-        3184
+        -1152,
+        -2336
       ],
-      "id": "f5802435-aefb-4690-aab3-5c828752e24b",
+      "id": "13eae469-f102-4971-b281-dbaf7d6088f1",
       "name": "Supabase29",
       "retryOnFail": true,
       "credentials": {
@@ -2027,16 +2164,16 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n  c.*,\n\n  -- Active Products with full details & branch name\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', p.id,\n        'name', p.name,\n        'price', p.price,\n        'images', p.images,\n        'notes', p.notes,\n        'type', p.type,\n        'availableAtHome', p.\"availableAtHome\",\n        'availableAtSalon', p.\"availableAtSalon\",\n        'durationMinutes', p.\"durationMinutes\",\n        'durationMode', p.\"durationMode\",\n        'maxSlots', p.\"maxSlots\",\n        'depositAmount', p.\"depositAmount\",\n        'branchId', p.\"branchId\",\n        'branchName', (SELECT TRIM(br.name) FROM public.\"Branch\" br WHERE br.id = p.\"branchId\"),\n        'category', p.category\n      )\n    )\n    FROM public.\"Product\" p\n    WHERE p.\"isAvailable\" = true\n      AND (p.\"publishAt\" IS NULL OR p.\"publishAt\" <= NOW())\n  ) as active_products,\n\n  -- System Settings\n  (\n    SELECT json_object_agg(key, value)\n    FROM public.\"SystemSetting\"\n  ) as system_settings,\n\n  -- Active Branches with Working Hours & Location\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', b.id,\n        'name', TRIM(b.name),\n        'nameAr', COALESCE(NULLIF(TRIM(b.\"nameAr\"), ''), TRIM(b.name)),\n        'address', b.address,\n        'phone', b.phone,\n        'whatsapp', b.whatsapp,\n        'googleMapsUrl', b.\"googleMapsUrl\",\n        'workingHours', COALESCE(b.\"workingHours\", '[]'::jsonb)\n      )\n    )\n    FROM public.\"Branch\" b\n    WHERE b.\"isActive\" = true\n  ) as active_branches,\n\n  -- Active Staff with branch name\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', s.id,\n        'name', s.name,\n        'role', s.role,\n        'branchId', s.\"branchId\",\n        'branchName', (SELECT TRIM(br.name) FROM public.\"Branch\" br WHERE br.id = s.\"branchId\")\n      )\n    )\n    FROM public.\"Staff\" s\n    WHERE s.\"isActive\" = true\n  ) as active_staff,\n\n  -- Staff ↔ Service assignments\n  (\n    SELECT json_agg(\n      json_build_object(\n        'staff_id', ss.staff_id,\n        'product_id', ss.product_id\n      )\n    )\n    FROM public.\"StaffService\" ss\n    INNER JOIN public.\"Staff\" s ON s.id = ss.staff_id\n    WHERE s.\"isActive\" = true\n  ) as staff_services,\n\n  -- Bot-specific offers\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', o.id,\n        'product_id', o.product_id,\n        'discountType', o.\"discountType\",\n        'discountValue', o.\"discountValue\",\n        'channel', o.channel,\n        'productName', p.name,\n        'originalPrice', p.price\n      )\n    )\n    FROM public.\"Offer\" o\n    INNER JOIN public.\"Product\" p ON p.id = o.product_id\n    WHERE o.\"isActive\" = true\n      AND (o.channel IS NULL OR o.channel IN ('bot', 'both'))\n      AND (o.\"startDate\" IS NULL OR o.\"startDate\" <= CURRENT_DATE)\n      AND (o.\"endDate\" IS NULL OR o.\"endDate\" >= CURRENT_DATE)\n  ) as bot_offers,\n\n  -- Categories\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', cat.id,\n        'label', cat.label\n      )\n    )\n    FROM public.\"Category\" cat\n  ) as categories\n\nFROM public.\"Channel\" c\nWHERE c.name = '{{ $('Webhook').item.json.body.account.accountId }}'\nLIMIT 1;\n",
+        "query": "SELECT \n  c.*,\n\n  -- Active Products with full details\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', p.id,\n        'name', p.name,\n        'price', p.price,\n        'images', p.images,\n        'notes', p.notes,\n        'type', p.type,\n        'availableAtHome', p.\"availableAtHome\",\n        'availableAtSalon', p.\"availableAtSalon\",\n        'durationMinutes', p.\"durationMinutes\",\n        'durationMode', p.\"durationMode\",\n        'maxSlots', p.\"maxSlots\",\n        'depositAmount', p.\"depositAmount\",\n        'branchId', p.\"branchId\",\n        'category', p.category\n      )\n    )\n    FROM public.\"Product\" p\n    WHERE p.\"isAvailable\" = true\n      AND (p.\"publishAt\" IS NULL OR p.\"publishAt\" <= NOW())\n  ) as active_products,\n\n  -- System Settings\n  (\n    SELECT json_object_agg(key, value)\n    FROM public.\"SystemSetting\"\n  ) as system_settings,\n\n  -- Active Branches\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', b.id,\n        'name', b.name,\n        'nameAr', b.\"nameAr\",\n        'address', b.address,\n        'phone', b.phone,\n        'whatsapp', b.whatsapp\n      )\n    )\n    FROM public.\"Branch\" b\n    WHERE b.\"isActive\" = true\n  ) as active_branches,\n\n  -- Active Staff\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', s.id,\n        'name', s.name,\n        'role', s.role,\n        'branchId', s.\"branchId\"\n      )\n    )\n    FROM public.\"Staff\" s\n    WHERE s.\"isActive\" = true\n  ) as active_staff,\n\n  -- Staff ↔ Service assignments\n  (\n    SELECT json_agg(\n      json_build_object(\n        'staff_id', ss.staff_id,\n        'product_id', ss.product_id\n      )\n    )\n    FROM public.\"StaffService\" ss\n    INNER JOIN public.\"Staff\" s ON s.id = ss.staff_id\n    WHERE s.\"isActive\" = true\n  ) as staff_services,\n\n  -- Bot-specific offers\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', o.id,\n        'product_id', o.product_id,\n        'discountType', o.\"discountType\",\n        'discountValue', o.\"discountValue\",\n        'channel', o.channel,\n        'productName', p.name,\n        'originalPrice', p.price\n      )\n    )\n    FROM public.\"Offer\" o\n    INNER JOIN public.\"Product\" p ON p.id = o.product_id\n    WHERE o.\"isActive\" = true\n      AND (o.channel IS NULL OR o.channel IN ('bot', 'both'))\n      AND (o.\"startDate\" IS NULL OR o.\"startDate\" <= CURRENT_DATE)\n      AND (o.\"endDate\" IS NULL OR o.\"endDate\" >= CURRENT_DATE)\n  ) as bot_offers,\n\n  -- Categories\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', cat.id,\n        'label', cat.label\n      )\n    )\n    FROM public.\"Category\" cat\n  ) as categories\n\nFROM public.\"Channel\" c\nWHERE c.name = '{{ $('Webhook').item.json.body.account.accountId }}'\nLIMIT 1;\n",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -11120,
-        3264
+        -14016,
+        -2224
       ],
-      "id": "ae8622b4-ba58-4540-afbc-30c7502ea2d2",
+      "id": "e8161f0e-9278-49fe-b170-8b1948bfaed9",
       "name": "Execute a SQL query",
       "credentials": {
         "postgres": {
@@ -2076,10 +2213,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -9904,
-        2864
+        -12800,
+        -2624
       ],
-      "id": "1122cdd9-037b-47eb-828c-79bb84a119d3",
+      "id": "66db54d7-84f2-4d69-b68b-cd8fd2b7a242",
       "name": "Supabase32",
       "retryOnFail": true,
       "credentials": {
@@ -2109,12 +2246,11 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -10448,
-        2864
+        -13344,
+        -2624
       ],
-      "id": "82bffb5c-82a8-40cf-b3ab-152065dae612",
+      "id": "a8158460-e61b-4096-ad9f-4d01642d1e1e",
       "name": "Get a row1",
-      "retryOnFail": true,
       "credentials": {
         "supabaseApi": {
           "id": "RHrj0bmwb6rI9r7s",
@@ -2131,10 +2267,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -11648,
-        2736
+        -14544,
+        -2752
       ],
-      "id": "aa98f454-00fb-4723-9dd4-2fa822ec5d22",
+      "id": "eb7f30f7-c191-4368-8ed6-c783b4c673e7",
       "name": "Execute a SQL query1",
       "credentials": {
         "postgres": {
@@ -2145,22 +2281,20 @@
     },
     {
       "parameters": {
-        "amount": 8,
-        "unit": "seconds"
+        "amount": 1
       },
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -4928,
-        3024
+        -7824,
+        -2464
       ],
-      "id": "188a5beb-51f6-4d7a-ab95-318a96201a4b",
+      "id": "1644f526-bfad-4b8c-8c87-80d92c69ec15",
       "name": "Wait",
       "webhookId": "147e1a90-39a5-440e-ab1a-2df41f786f83"
     },
     {
       "parameters": {
-        "model": "openai/gpt-5-mini",
         "options": {
           "responseFormat": "json_object"
         }
@@ -2168,10 +2302,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        -2928,
-        3296
+        -5888,
+        -2144
       ],
-      "id": "b22f90a2-e426-4706-bd40-37684b686030",
+      "id": "d8d4ec3e-e999-4e41-aae8-f44264a07ed9",
       "name": "OpenRouter Chat Model",
       "credentials": {
         "openRouterApi": {
@@ -2190,10 +2324,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        -3152,
-        3296
+        -6048,
+        -2192
       ],
-      "id": "64da2738-c1a3-42bc-b46b-1f5ba21fb629",
+      "id": "fa390e17-8dc1-40d7-8683-52e05c88d6ce",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
@@ -2209,10 +2343,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -5408,
-        2752
+        -8096,
+        -2736
       ],
-      "id": "a6849ced-4c12-4767-9a04-8ae35dde8624",
+      "id": "b224458a-33e2-4f4a-a330-64499953b06d",
       "name": "Wait1"
     },
     {
@@ -2243,10 +2377,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -5856,
-        3040
+        -8752,
+        -2448
       ],
-      "id": "7e75ef7a-45e9-4add-9270-6f9fec0ad0eb",
+      "id": "38215e6d-f674-4123-8802-b4ae7048b3ce",
       "name": "If"
     },
     {
@@ -2267,10 +2401,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -5488,
-        3328
+        -8384,
+        -2160
       ],
-      "id": "15c60269-260f-4c11-b1a5-abaf5eb59a2a",
+      "id": "8d44bf14-fbde-4e34-ab60-8aaaeeefa922",
       "name": "Supabase34",
       "retryOnFail": true,
       "waitBetweenTries": 1000,
@@ -2286,10 +2420,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -5232,
-        3328
+        -8128,
+        -2160
       ],
-      "id": "38983030-41a4-4fe6-86c3-d65163a81536",
+      "id": "4c18d6d3-750a-4dbf-81ee-c09eb135d8b3",
       "name": "No Operation, do nothing2"
     },
     {
@@ -2323,15 +2457,15 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
       "position": [
-        -2784,
-        3296
+        -5680,
+        -2192
       ],
-      "id": "393379c3-3ba3-4047-b34e-57ba3494086a",
+      "id": "7d022263-f719-438f-96a8-abb54cd53f8e",
       "name": "check_availability"
     },
     {
       "parameters": {
-        "toolDescription": "Use this tool AFTER the customer selects a branch. Pass branchId (UUID) to get all available services and their assigned specialists/staff at that branch.\n",
+        "toolDescription": "Use this tool AFTER the customer selects a branch. Pass branchId (UUID) to get all available services and their assigned specialists/staff at that branch.",
         "url": "https://salonnoon.net/api/services-with-staff",
         "sendQuery": true,
         "queryParameters": {
@@ -2342,15 +2476,16 @@
             }
           ]
         },
-        "options": {}
+        "options": {},
+        "description": "Use this tool AFTER the customer selects a branch. Pass branchId (UUID) to get all available services and their assigned specialists/staff at that branch."
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
       "position": [
-        -2592,
-        3296
+        -5488,
+        -2192
       ],
-      "id": "0b005dd7-54b3-42b7-b470-00fc1f7510f7",
+      "id": "f52fe9fc-2e31-4d7e-9eb4-59beb74989de",
       "name": "get_staff_for_service"
     },
     {
@@ -2411,7 +2546,7 @@
             },
             {
               "name": "channelType",
-              "value": "whatsapp"
+              "value": "instagram"
             },
             {
               "name": "personsCount",
@@ -2425,26 +2560,26 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
       "position": [
-        -2160,
-        3296
+        -4960,
+        -2192
       ],
-      "id": "93085219-d3d7-4f96-8444-9665a992e8fb",
+      "id": "5bf5d226-ff6d-44e5-8c50-49c5fd10e68e",
       "name": "create_booking"
     },
     {
       "parameters": {
-        "toolDescription": "Returns the list of active branches. If only ONE branch is open in the salon, automatically use it directly without asking the customer. If TWO OR MORE branches are open, ask the customer to choose their preferred branch among the open branches. NEVER offer or mention branches where all days are closed.",
         "url": "https://salonnoon.net/api/branches?active=true",
         "options": {},
+        "toolDescription": "Returns the list of active branches. If only ONE branch is open in the salon, automatically use it directly without asking the customer. If TWO OR MORE branches are open, ask the customer to choose their preferred branch among the open branches. NEVER offer or mention branches where all days are closed.",
         "description": "Returns the list of active branches. If only ONE branch is open in the salon, automatically use it directly without asking the customer. If TWO OR MORE branches are open, ask the customer to choose their preferred branch among the open branches. NEVER offer or mention branches where all days are closed."
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
       "position": [
-        -2448,
-        3296
+        -5344,
+        -2192
       ],
-      "id": "126383e3-ff08-4f18-b1dd-583bbcdf32c6",
+      "id": "aa310f27-ae2e-49d2-91c1-26ffc4677013",
       "name": "get_branches"
     },
     {
@@ -2486,10 +2621,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        48,
-        2896
+        -2848,
+        -2592
       ],
-      "id": "06c26aad-decb-4c0f-89ca-f8ff859c7052",
+      "id": "4bc1faff-e5c5-4db4-9967-8999c1f8619c",
       "name": "Supabase33",
       "retryOnFail": true,
       "credentials": {
@@ -2517,10 +2652,10 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
       "position": [
-        -2304,
-        3296
+        -5200,
+        -2192
       ],
-      "id": "fae428be-bb3c-4e92-882c-2e1828d9fa0b",
+      "id": "64add99e-e6b8-429c-a14b-d945c03c8aba",
       "name": "check_my_bookings"
     },
     {
@@ -2530,10 +2665,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1008,
-        3600
+        -3904,
+        -1888
       ],
-      "id": "f64cab03-ea86-4bfe-a63e-6d01cc60f2d0",
+      "id": "60412909-9063-477b-a858-df4d6ceb22a7",
       "name": "Code5"
     },
     {
@@ -2545,22 +2680,22 @@
           "parameters": [
             {
               "name": "=apikey",
-              "value": "={{ $('Edit Fields2').first().json.Key }}"
+              "value": "={{ $('Edit Fields').first().json.Key }}"
             }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n    \"number\": \"{{ $('Edit Fields2').first().json.SenderJid }}\",\n    \"text\": \"{{ JSON.stringify($json.response).slice(1, -1) }}\",\n    \"delay\":{{ $json.typingAnalysis.calculatedTimeMs }}\n}",
+        "jsonBody": "={\n    \"number\": \"{{ $('Edit Fields').first().json.SenderJid }}\",\n    \"text\": \"{{ JSON.stringify($json.response).slice(1, -1) }}\",\n    \"delay\":{{ $json.typingAnalysis.calculatedTimeMs }}\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2208,
-        4000
+        -4896,
+        -1488
       ],
-      "id": "0bb41295-0ee4-4d0f-9528-1a30636945e2",
+      "id": "ecda30b5-5d69-4b51-89ef-57f5cc503f5e",
       "name": "send txt5"
     },
     {
@@ -2602,10 +2737,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        528,
-        3600
+        -2368,
+        -1888
       ],
-      "id": "a6554884-d5a1-408c-8624-280baa79f2d4",
+      "id": "6f3c0825-b1e5-4c11-95b0-562ce5446492",
       "name": "Supabase35",
       "retryOnFail": true,
       "credentials": {
@@ -2636,10 +2771,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        944,
-        3600
+        -1952,
+        -1888
       ],
-      "id": "74e9a393-c2d6-4de2-9c91-137ab46c1311",
+      "id": "f4da970f-4c08-4f00-acc7-5869ba8db915",
       "name": "HTTP Request1"
     },
     {
@@ -2651,7 +2786,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer sk_dbb52d55c857d3083ac169d156a86825d7d138813939d3ef427202368fcb454d"
+              "value": "=Bearer {{ $('Execute a SQL query').item.json.credentials.evolution_api }}"
             }
           ]
         },
@@ -2673,10 +2808,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -752,
-        2704
+        -3648,
+        -2784
       ],
-      "id": "a01fb6b2-c466-4e1d-9d5d-83d08cfabf1f",
+      "id": "d13b70ec-052b-4b39-a348-a3a7fc4d1d2e",
       "name": "HTTP Request2"
     },
     {
@@ -2688,7 +2823,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer sk_dbb52d55c857d3083ac169d156a86825d7d138813939d3ef427202368fcb454d"
+              "value": "=Bearer {{ $('Execute a SQL query').item.json.credentials.evolution_api }}"
             }
           ]
         },
@@ -2710,10 +2845,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -320,
-        2912
+        -3216,
+        -2576
       ],
-      "id": "b83da5dd-1ae9-4390-92b2-73c4335decf4",
+      "id": "406ae440-fd1d-47c7-93a1-e88af47c1789",
       "name": "HTTP Request3"
     },
     {
@@ -2725,7 +2860,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer sk_dbb52d55c857d3083ac169d156a86825d7d138813939d3ef427202368fcb454d"
+              "value": "=Bearer {{ $('Execute a SQL query').item.json.credentials.evolution_api }}"
             }
           ]
         },
@@ -2747,10 +2882,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -608,
-        3600
+        -3504,
+        -1888
       ],
-      "id": "6b045fa0-f449-4022-a40e-650ef69a613a",
+      "id": "e6fcf77b-f7a3-48cf-a3f1-91149eab3bf8",
       "name": "HTTP Request4"
     },
     {
@@ -2769,10 +2904,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -352,
-        3616
+        -3248,
+        -1872
       ],
-      "id": "244ec10d-76fc-41d2-a52a-477bb594c3da",
+      "id": "a6414cac-e480-406a-bf4b-8ec1d860507f",
       "name": "Get a row",
       "credentials": {
         "supabaseApi": {
@@ -2809,10 +2944,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        144,
-        3664
+        -2752,
+        -1824
       ],
-      "id": "6e472f9a-ff68-41d4-8dd4-3a00d3ee87ea",
+      "id": "645c8a66-426f-4885-9a97-c64eebf49b44",
       "name": "If4"
     },
     {
@@ -2822,10 +2957,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -144,
-        3616
+        -3040,
+        -1872
       ],
-      "id": "151bf80e-fae4-461f-b667-240087361bf8",
+      "id": "0fcbf38e-4455-4029-9b9d-68b8afe425f0",
       "name": "Code in JavaScript5"
     },
     {
@@ -2867,10 +3002,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        528,
-        3776
+        -2368,
+        -1712
       ],
-      "id": "eff42318-2eca-4a65-8c59-7c01c18da28e",
+      "id": "a0c73bf9-ef6d-4b14-a4a3-8542a299bf4e",
       "name": "Supabase36",
       "retryOnFail": true,
       "credentials": {
@@ -2887,10 +3022,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -640,
-        4096
+        -3536,
+        -1392
       ],
-      "id": "d39f6172-9166-4014-b334-befb61fe66a9",
+      "id": "64bc914f-f498-4a6c-a975-71951380ec7a",
       "name": "Code6"
     },
     {
@@ -2932,10 +3067,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        896,
-        4096
+        -2000,
+        -1392
       ],
-      "id": "de2a8c99-4223-4b52-a3d7-36a643958ac3",
+      "id": "dc25ec61-17b8-4fda-92fd-ba75e05f9710",
       "name": "Supabase37",
       "retryOnFail": true,
       "credentials": {
@@ -2966,10 +3101,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1312,
-        4096
+        -1584,
+        -1392
       ],
-      "id": "e1f3e7a6-221c-49b1-be46-b48debd0fbc6",
+      "id": "d32b9d62-fcc9-400e-ad4b-027e2d00a4b0",
       "name": "HTTP Request7"
     },
     {
@@ -2981,7 +3116,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer sk_dbb52d55c857d3083ac169d156a86825d7d138813939d3ef427202368fcb454d"
+              "value": "=Bearer {{ $('Execute a SQL query').item.json.credentials.evolution_api }}"
             }
           ]
         },
@@ -3003,10 +3138,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -240,
-        4096
+        -3136,
+        -1392
       ],
-      "id": "7d99bef8-9724-4fee-9a98-bd31b284ced9",
+      "id": "8893ba07-b541-4b30-86fc-4653c36c8708",
       "name": "HTTP Request8"
     },
     {
@@ -3025,10 +3160,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        16,
-        4112
+        -2880,
+        -1376
       ],
-      "id": "d342e0fa-bb3e-4d8b-932f-318018a57192",
+      "id": "1b8b14a1-721c-4712-8355-0c5b26d61021",
       "name": "Get a row2",
       "credentials": {
         "supabaseApi": {
@@ -3065,10 +3200,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        512,
-        4160
+        -2384,
+        -1328
       ],
-      "id": "9b8a0f55-ccf5-48b5-aaa4-7808893737aa",
+      "id": "feff9671-d218-4807-b049-43453023040d",
       "name": "If5"
     },
     {
@@ -3078,10 +3213,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        224,
-        4112
+        -2672,
+        -1376
       ],
-      "id": "d474a7f2-324d-447d-abf7-153f7024facc",
+      "id": "ce5195f5-8318-4fdf-8569-785b4438352a",
       "name": "Code in JavaScript7"
     },
     {
@@ -3123,10 +3258,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        896,
-        4288
+        -2000,
+        -1216
       ],
-      "id": "a40277fe-3672-44da-aaef-685b6999a3bd",
+      "id": "afc3264c-59d7-4c4a-9531-2b9a6262b9af",
       "name": "Supabase38",
       "retryOnFail": true,
       "credentials": {
@@ -3143,10 +3278,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -256,
-        4576
+        -3152,
+        -912
       ],
-      "id": "0bd4d901-f083-4207-91d5-0f558cdaa942",
+      "id": "7b4a9267-e1e9-4b7a-9466-3e571513723e",
       "name": "Code7"
     },
     {
@@ -3188,10 +3323,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1280,
-        4576
+        -1616,
+        -912
       ],
-      "id": "ecf1f68c-6c4a-4e73-9260-e37f842a754b",
+      "id": "01128271-ac93-451f-91a1-5ad5dcd0a343",
       "name": "Supabase39",
       "retryOnFail": true,
       "credentials": {
@@ -3222,10 +3357,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1984,
-        4592
+        -912,
+        -896
       ],
-      "id": "f1e821a1-d697-49d8-b052-40ce0e676086",
+      "id": "7cd5a914-77d2-442c-a67e-c6c848ee45cb",
       "name": "HTTP Request9"
     },
     {
@@ -3237,7 +3372,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer sk_dbb52d55c857d3083ac169d156a86825d7d138813939d3ef427202368fcb454d"
+              "value": "=Bearer {{ $('Execute a SQL query').item.json.credentials.evolution_api }}"
             }
           ]
         },
@@ -3259,10 +3394,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        144,
-        4576
+        -2752,
+        -912
       ],
-      "id": "7eab426a-e678-4567-879c-11f53aabecb4",
+      "id": "fa5c3c6a-18a2-4f54-bffd-f31e40b53ad8",
       "name": "HTTP Request10"
     },
     {
@@ -3293,10 +3428,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        896,
-        4640
+        -2000,
+        -848
       ],
-      "id": "b342f147-3432-4bb0-987d-6af8e91fef49",
+      "id": "d48b2d5e-cc93-401f-9293-7b74347e0450",
       "name": "If6"
     },
     {
@@ -3306,10 +3441,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        608,
-        4592
+        -2288,
+        -896
       ],
-      "id": "1161c952-9755-4847-b887-473e48b486a9",
+      "id": "f99d3d3f-e733-4805-8200-3bc66d527928",
       "name": "Code in JavaScript8"
     },
     {
@@ -3351,10 +3486,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1280,
-        4752
+        -1616,
+        -736
       ],
-      "id": "1e32e916-f756-42e5-bf31-6566d5df9030",
+      "id": "09479306-7a4d-46f2-b816-137b3c1c5817",
       "name": "Supabase40",
       "retryOnFail": true,
       "credentials": {
@@ -3371,10 +3506,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -976,
-        5104
+        -3872,
+        -384
       ],
-      "id": "586813a0-2f98-4645-b100-043cf9619f0e",
+      "id": "3c220278-d739-49d5-8adf-19a9ecf1a1de",
       "name": "Code8"
     },
     {
@@ -3416,10 +3551,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -320,
-        5088
+        -3216,
+        -400
       ],
-      "id": "edff840a-61ee-4c1d-8845-6e3da2994a2c",
+      "id": "dc5fa2fe-42b5-47dd-a1b1-ed6c83059ecb",
       "name": "Supabase41",
       "retryOnFail": true,
       "credentials": {
@@ -3438,7 +3573,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer sk_dbb52d55c857d3083ac169d156a86825d7d138813939d3ef427202368fcb454d"
+              "value": "=Bearer {{ $('Execute a SQL query').item.json.credentials.evolution_api }}"
             }
           ]
         },
@@ -3460,10 +3595,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -656,
-        5088
+        -3552,
+        -400
       ],
-      "id": "13c3d280-2b8a-4de0-b6f6-7d0c45fab9f0",
+      "id": "f0e27257-832b-4117-a03a-0e2be42f237a",
       "name": "HTTP Request11"
     },
     {
@@ -3491,10 +3626,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        112,
-        5136
+        -2784,
+        -352
       ],
-      "id": "53a213c5-379f-4857-bf2b-a37c0df616f5",
+      "id": "9b2c6703-52fe-44d7-9ea1-4f6a1af67b7c",
       "name": "Update a row",
       "credentials": {
         "supabaseApi": {
@@ -3531,10 +3666,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        464,
-        5280
+        -2480,
+        -176
       ],
-      "id": "8a8874af-a2ea-4a61-9888-3eca3924bc09",
+      "id": "1a7f8d06-7d39-4967-99bb-eb7639d6d848",
       "name": "If7"
     },
     {
@@ -3622,10 +3757,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        784,
-        5632
+        -2112,
+        160
       ],
-      "id": "17cca1e7-cccd-4aa4-abc7-335ef593c041",
+      "id": "f01824bb-ed32-4802-a45f-a73bff3cd4ee",
       "name": "Switch1"
     },
     {
@@ -3645,10 +3780,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        400,
-        4592
+        -2496,
+        -896
       ],
-      "id": "6120c2f4-3247-419a-a710-15837eb5f05c",
+      "id": "2dcb7931-3bd4-424f-9faa-dd6123619c56",
       "name": "Get many rows",
       "alwaysOutputData": true,
       "credentials": {
@@ -3679,10 +3814,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1984,
-        5312
+        -912,
+        -176
       ],
-      "id": "32bdf730-3f4b-47b0-a04e-1cae2c731bfd",
+      "id": "6910642e-2486-49dd-89a4-4bb9bf366a68",
       "name": "HTTP Request14"
     },
     {
@@ -3713,10 +3848,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1680,
-        5328
+        -1216,
+        -160
       ],
-      "id": "622bd502-a7f4-4875-a796-b30370f71868",
+      "id": "2330ed6e-c542-4f76-a7d6-a5d727d00015",
       "name": "If8"
     },
     {
@@ -3726,10 +3861,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1344,
-        5344
+        -1552,
+        -144
       ],
-      "id": "e7e4fc80-1338-4194-89a4-82a9b734fbac",
+      "id": "6bcb5ef3-cf7b-4ee8-90c0-89d2d700958b",
       "name": "Code in JavaScript9"
     },
     {
@@ -3749,10 +3884,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1136,
-        5344
+        -1760,
+        -144
       ],
-      "id": "fec981d4-f44c-48e3-8a7a-fec7b47ed4dc",
+      "id": "3e6ee062-dadd-4ab3-aa81-bee70fae7127",
       "name": "Get many rows1",
       "alwaysOutputData": true,
       "credentials": {
@@ -3790,10 +3925,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1664,
-        5536
+        -1232,
+        64
       ],
-      "id": "5a32c499-abab-4278-9330-1ed8072da401",
+      "id": "fb78cb26-c71c-44e6-abdc-817270857583",
       "name": "If9"
     },
     {
@@ -3803,10 +3938,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1328,
-        5552
+        -1568,
+        80
       ],
-      "id": "a5f2d713-774b-45e7-84b1-ff31af0d30f5",
+      "id": "985d3b29-a611-4b2f-8669-e776d4efa769",
       "name": "Code in JavaScript10"
     },
     {
@@ -3826,10 +3961,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1120,
-        5552
+        -1776,
+        80
       ],
-      "id": "0e1ca075-af94-4784-b9b6-beb6d3dbbd6a",
+      "id": "a841ea9b-fab1-42f0-a9fa-1488e92c7066",
       "name": "Get many rows2",
       "alwaysOutputData": true,
       "credentials": {
@@ -3867,10 +4002,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1664,
-        5792
+        -1232,
+        320
       ],
-      "id": "24fc2463-8535-4aa3-a027-5f2eaead769a",
+      "id": "80e87467-1986-4acb-8eba-3965d9f902d4",
       "name": "If10"
     },
     {
@@ -3880,10 +4015,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1328,
-        5776
+        -1568,
+        304
       ],
-      "id": "511a955f-219f-47f2-b37b-be83f4c454eb",
+      "id": "55237493-3e51-47ca-8d07-a830be1ad0fc",
       "name": "Code in JavaScript11"
     },
     {
@@ -3903,10 +4038,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1120,
-        5776
+        -1776,
+        304
       ],
-      "id": "3c72aa14-b64a-41c4-8b91-9367073fec12",
+      "id": "c8163196-846d-4c47-ba3b-8293d1c5adf6",
       "name": "Get many rows3",
       "alwaysOutputData": true,
       "credentials": {
@@ -3937,10 +4072,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        2000,
-        5536
+        -896,
+        64
       ],
-      "id": "95602968-41aa-44c6-b32e-20f7b236f21c",
+      "id": "89a19f7b-81c3-4716-894e-5c4c2688b46a",
       "name": "HTTP Request15"
     },
     {
@@ -3964,435 +4099,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        2000,
-        5776
+        -896,
+        304
       ],
-      "id": "0a38ca3e-76c4-43d5-a913-31b20ec63493",
+      "id": "e3a8cf00-19b3-4059-8c56-0ff354661f67",
       "name": "HTTP Request16"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "49261177-d75a-47d6-90bf-2d8acc3a3ded",
-              "leftValue": "={{ $json.body.account.platform }}",
-              "rightValue": "=instagram",
-              "operator": {
-                "type": "string",
-                "operation": "equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        -12176,
-        3264
-      ],
-      "id": "d46c7789-86cb-46f8-959a-06fef8001a03",
-      "name": "If11"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "49261177-d75a-47d6-90bf-2d8acc3a3ded",
-              "leftValue": "={{ $json.body.account.platform }}",
-              "rightValue": "=instagram",
-              "operator": {
-                "type": "string",
-                "operation": "equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        -12448,
-        2896
-      ],
-      "id": "95208303-63a3-451d-94a5-1224217049e0",
-      "name": "If12"
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT \n  c.*,\n\n  -- Active Products with full details\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', p.id,\n        'name', p.name,\n        'price', p.price,\n        'images', p.images,\n        'notes', p.notes,\n        'type', p.type,\n        'availableAtHome', p.\"availableAtHome\",\n        'availableAtSalon', p.\"availableAtSalon\",\n        'durationMinutes', p.\"durationMinutes\",\n        'durationMode', p.\"durationMode\",\n        'maxSlots', p.\"maxSlots\",\n        'depositAmount', p.\"depositAmount\",\n        'branchId', p.\"branchId\",\n        'category', p.category\n      )\n    )\n    FROM public.\"Product\" p\n    WHERE p.\"isAvailable\" = true\n      AND (p.\"publishAt\" IS NULL OR p.\"publishAt\" <= NOW())\n  ) as active_products,\n\n  -- System Settings\n  (\n    SELECT json_object_agg(key, value)\n    FROM public.\"SystemSetting\"\n  ) as system_settings,\n\n  -- Active Branches\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', b.id,\n        'name', b.name,\n        'nameAr', b.\"nameAr\",\n        'address', b.address,\n        'phone', b.phone,\n        'whatsapp', b.whatsapp\n      )\n    )\n    FROM public.\"Branch\" b\n    WHERE b.\"isActive\" = true\n  ) as active_branches,\n\n  -- Active Staff\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', s.id,\n        'name', s.name,\n        'role', s.role,\n        'branchId', s.\"branchId\"\n      )\n    )\n    FROM public.\"Staff\" s\n    WHERE s.\"isActive\" = true\n  ) as active_staff,\n\n  -- Staff ↔ Service assignments\n  (\n    SELECT json_agg(\n      json_build_object(\n        'staff_id', ss.staff_id,\n        'product_id', ss.product_id\n      )\n    )\n    FROM public.\"StaffService\" ss\n    INNER JOIN public.\"Staff\" s ON s.id = ss.staff_id\n    WHERE s.\"isActive\" = true\n  ) as staff_services,\n\n  -- Bot-specific offers\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', o.id,\n        'product_id', o.product_id,\n        'discountType', o.\"discountType\",\n        'discountValue', o.\"discountValue\",\n        'channel', o.channel,\n        'productName', p.name,\n        'originalPrice', p.price\n      )\n    )\n    FROM public.\"Offer\" o\n    INNER JOIN public.\"Product\" p ON p.id = o.product_id\n    WHERE o.\"isActive\" = true\n      AND (o.channel IS NULL OR o.channel IN ('bot', 'both'))\n      AND (o.\"startDate\" IS NULL OR o.\"startDate\" <= CURRENT_DATE)\n      AND (o.\"endDate\" IS NULL OR o.\"endDate\" >= CURRENT_DATE)\n  ) as bot_offers,\n\n  -- Categories\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', cat.id,\n        'label', cat.label\n      )\n    )\n    FROM public.\"Category\" cat\n  ) as categories\n\nFROM public.\"Channel\" c\nWHERE c.name = '{{ $('Webhook').item.json.body.account.accountId }}'\nLIMIT 1;\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -11168,
-        3520
-      ],
-      "id": "0ffeb25a-6d27-4f87-b145-b9bc85abe7e2",
-      "name": "Execute a SQL query2",
-      "credentials": {
-        "postgres": {
-          "id": "rxuf9Bq2tAFgouSi",
-          "name": "salloon"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT \n  c.*,\n\n  -- Active Products with full details & branch name\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', p.id,\n        'name', p.name,\n        'price', p.price,\n        'images', p.images,\n        'notes', p.notes,\n        'type', p.type,\n        'availableAtHome', p.\"availableAtHome\",\n        'availableAtSalon', p.\"availableAtSalon\",\n        'durationMinutes', p.\"durationMinutes\",\n        'durationMode', p.\"durationMode\",\n        'maxSlots', p.\"maxSlots\",\n        'depositAmount', p.\"depositAmount\",\n        'branchId', p.\"branchId\",\n        'branchName', (SELECT TRIM(br.name) FROM public.\"Branch\" br WHERE br.id = p.\"branchId\"),\n        'category', p.category\n      )\n    )\n    FROM public.\"Product\" p\n    WHERE p.\"isAvailable\" = true\n      AND (p.\"publishAt\" IS NULL OR p.\"publishAt\" <= NOW())\n  ) as active_products,\n\n  -- System Settings\n  (\n    SELECT json_object_agg(key, value)\n    FROM public.\"SystemSetting\"\n  ) as system_settings,\n\n  -- Active Branches with Working Hours & Location\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', b.id,\n        'name', TRIM(b.name),\n        'nameAr', COALESCE(NULLIF(TRIM(b.\"nameAr\"), ''), TRIM(b.name)),\n        'address', b.address,\n        'phone', b.phone,\n        'whatsapp', b.whatsapp,\n        'googleMapsUrl', b.\"googleMapsUrl\",\n        'workingHours', COALESCE(b.\"workingHours\", '[]'::jsonb)\n      )\n    )\n    FROM public.\"Branch\" b\n    WHERE b.\"isActive\" = true\n  ) as active_branches,\n\n  -- Active Staff with branch name\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', s.id,\n        'name', s.name,\n        'role', s.role,\n        'branchId', s.\"branchId\",\n        'branchName', (SELECT TRIM(br.name) FROM public.\"Branch\" br WHERE br.id = s.\"branchId\")\n      )\n    )\n    FROM public.\"Staff\" s\n    WHERE s.\"isActive\" = true\n  ) as active_staff,\n\n  -- Staff ↔ Service assignments\n  (\n    SELECT json_agg(\n      json_build_object(\n        'staff_id', ss.staff_id,\n        'product_id', ss.product_id\n      )\n    )\n    FROM public.\"StaffService\" ss\n    INNER JOIN public.\"Staff\" s ON s.id = ss.staff_id\n    WHERE s.\"isActive\" = true\n  ) as staff_services,\n\n  -- Bot-specific offers\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', o.id,\n        'product_id', o.product_id,\n        'discountType', o.\"discountType\",\n        'discountValue', o.\"discountValue\",\n        'channel', o.channel,\n        'productName', p.name,\n        'originalPrice', p.price\n      )\n    )\n    FROM public.\"Offer\" o\n    INNER JOIN public.\"Product\" p ON p.id = o.product_id\n    WHERE o.\"isActive\" = true\n      AND (o.channel IS NULL OR o.channel IN ('bot', 'both'))\n      AND (o.\"startDate\" IS NULL OR o.\"startDate\" <= CURRENT_DATE)\n      AND (o.\"endDate\" IS NULL OR o.\"endDate\" >= CURRENT_DATE)\n  ) as bot_offers,\n\n  -- Categories\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', cat.id,\n        'label', cat.label\n      )\n    )\n    FROM public.\"Category\" cat\n  ) as categories\n\nFROM public.\"Channel\" c\nWHERE c.name = '{{ $('Webhook').item.json.body.account.accountId }}'\nLIMIT 1;\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -10608,
-        3616
-      ],
-      "id": "93a77389-182b-4f18-8926-f5baa8c1c15e",
-      "name": "Execute a SQL query5",
-      "credentials": {
-        "postgres": {
-          "id": "rxuf9Bq2tAFgouSi",
-          "name": "salloon"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "0fceb1bb-c0de-4e6c-880f-062704739f1e",
-              "name": "SenderJid",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
-              "type": "string"
-            },
-            {
-              "id": "04ac662e-9deb-4d63-ac8f-cafab77e0f7b",
-              "name": "SenderName",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderName }}",
-              "type": "string"
-            },
-            {
-              "id": "f812ad17-d60f-4c5d-b1d4-7820238fe0e3",
-              "name": "Timestamp",
-              "value": "={{ $('Code in JavaScript6').item.json.Timestamp }}",
-              "type": "string"
-            },
-            {
-              "id": "3c3fdb3c-de14-4bcc-8d9a-68cc2ed0d1c8",
-              "name": "MsgType",
-              "value": "={{ $('Code in JavaScript6').item.json.MsgType }}",
-              "type": "string"
-            },
-            {
-              "id": "e0595c23-53c7-4eb9-aea2-4de3fa76e7db",
-              "name": "Msg",
-              "value": "={{ $('Code in JavaScript6').item.json.Msg }}",
-              "type": "string"
-            },
-            {
-              "id": "5f1ca696-9ad5-4f22-accd-435a5c8c6ced",
-              "name": "Media",
-              "value": "={{ $('Code in JavaScript6').item.json.Media }}",
-              "type": "string"
-            },
-            {
-              "id": "eb5b8516-cc5f-43b3-a578-2d8b15b7b51d",
-              "name": "Instance",
-              "value": "={{ $('Code in JavaScript6').item.json.Instance }}",
-              "type": "string"
-            },
-            {
-              "id": "8c6ec75c-45c6-44de-a860-84baa4832602",
-              "name": "Key",
-              "value": "={{ $('Code in JavaScript6').item.json.Key }}",
-              "type": "string"
-            },
-            {
-              "id": "08edec4e-32c4-466d-8d66-261a8ede1abc",
-              "name": "phonenumber",
-              "value": "={{ $('Code in JavaScript6').item.json.phonenumber }}",
-              "type": "string"
-            },
-            {
-              "id": "d05f492e-26b3-49e9-b366-96947a6906bc",
-              "name": "message_platform_id",
-              "value": "={{ $('Code in JavaScript6').item.json.MessageId }}",
-              "type": "string"
-            },
-            {
-              "id": "56f0bdfb-bc93-43e9-9230-f4a24b9594b6",
-              "name": "platform",
-              "value": "whatsapp",
-              "type": "string"
-            },
-            {
-              "id": "d65150c6-4c63-4b37-b9f6-befcded648c6",
-              "name": "platform_user_id",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
-              "type": "string"
-            },
-            {
-              "id": "5d001d0f-4c7e-42de-bd22-2316d7e6b81c",
-              "name": "valrables",
-              "value": "={{ $json.variables }}",
-              "type": "object"
-            },
-            {
-              "id": "90b066dd-8ee7-4976-836f-48f44e0cb86b",
-              "name": "image_sets",
-              "value": "={{ $json.imageSets.map(set => set.name).join(', ') }}",
-              "type": "string"
-            },
-            {
-              "id": "651518d7-67d7-4d14-a53e-ebb85303b642",
-              "name": "active_products",
-              "value": "={{ $json.active_products }}",
-              "type": "array"
-            },
-            {
-              "id": "20e51a52-8afc-425d-8303-9a50777c39ff",
-              "name": "active_branches",
-              "value": "={{ JSON.stringify( $json.active_branches) }}",
-              "type": "string"
-            },
-            {
-              "id": "15a35cb5-93ae-4316-bb66-1790823f706d",
-              "name": "active_staff",
-              "value": "={{ JSON.stringify( $json.active_staff) }}",
-              "type": "string"
-            },
-            {
-              "id": "d969e061-0f0a-4eee-9d7b-74854d78512d",
-              "name": "staff_services",
-              "value": "={{ JSON.stringify( $json.staff_services) }}",
-              "type": "string"
-            },
-            {
-              "id": "31818ca5-0e28-497e-96db-1e2dcabfb755",
-              "name": "bot_offers",
-              "value": "={{ JSON.stringify( $json.bot_offers) }}",
-              "type": "string"
-            },
-            {
-              "id": "e4f6744f-5cde-4532-bd50-99a445f7fcd2",
-              "name": "categories",
-              "value": "={{ JSON.stringify( $json.categories) }}",
-              "type": "string"
-            },
-            {
-              "id": "assign-conversationid",
-              "name": "ConversationId",
-              "value": "={{ $('Code in JavaScript6').item.json.ConversationId }}",
-              "type": "string"
-            },
-            {
-              "id": "assign-accountid",
-              "name": "AccountId",
-              "value": "={{ $('Code in JavaScript6').item.json.AccountId }}",
-              "type": "string"
-            },
-            {
-              "id": "assign-messageid",
-              "name": "MessageId",
-              "value": "={{ $('Code in JavaScript6').item.json.MessageId }}",
-              "type": "string"
-            },
-            {
-              "id": "assign-platformmessageid",
-              "name": "PlatformMessageId",
-              "value": "={{ $('Code in JavaScript6').item.json.PlatformMessageId }}",
-              "type": "string"
-            },
-            {
-              "id": "assign-branch-schedules",
-              "name": "branch_schedules_text",
-              "value": "={{ $json.active_branches.map(b => b.name.trim() + ':\\n' + (b.workingHours || []).map(d => '• ' + d.dayNameAr + ': ' + (d.isOpen ? 'من ' + d.open + ' إلى ' + d.close : 'مغلق')).join('\\n')).join('\\n\\n') }}",
-              "type": "string"
-            },
-            {
-              "id": "assign-system-settings",
-              "name": "system_settings",
-              "value": "={{ $json.system_settings }}",
-              "type": "object"
-            },
-            {
-              "id": "assign-bot-services-text",
-              "name": "bot_services_text",
-              "value": "={{ $json.system_settings.bot_services_text }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -10736,
-        3280
-      ],
-      "id": "0d8281b0-ba39-4e65-bd6b-fb2e27ae585c",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "0fceb1bb-c0de-4e6c-880f-062704739f1e",
-              "name": "SenderJid",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
-              "type": "string"
-            },
-            {
-              "id": "04ac662e-9deb-4d63-ac8f-cafab77e0f7b",
-              "name": "SenderName",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderName }}",
-              "type": "string"
-            },
-            {
-              "id": "f812ad17-d60f-4c5d-b1d4-7820238fe0e3",
-              "name": "Timestamp",
-              "value": "={{ $('Code in JavaScript6').item.json.Timestamp }}",
-              "type": "string"
-            },
-            {
-              "id": "3c3fdb3c-de14-4bcc-8d9a-68cc2ed0d1c8",
-              "name": "MsgType",
-              "value": "={{ $('Code in JavaScript6').item.json.MsgType }}",
-              "type": "string"
-            },
-            {
-              "id": "e0595c23-53c7-4eb9-aea2-4de3fa76e7db",
-              "name": "Msg",
-              "value": "={{ $('Code in JavaScript6').item.json.Msg }}",
-              "type": "string"
-            },
-            {
-              "id": "5f1ca696-9ad5-4f22-accd-435a5c8c6ced",
-              "name": "Media",
-              "value": "={{ $json.body.data.message.base64 }}",
-              "type": "string"
-            },
-            {
-              "id": "eb5b8516-cc5f-43b3-a578-2d8b15b7b51d",
-              "name": "Instance",
-              "value": "={{ $('Code in JavaScript6').item.json.Instance }}",
-              "type": "string"
-            },
-            {
-              "id": "8c6ec75c-45c6-44de-a860-84baa4832602",
-              "name": "Key",
-              "value": "={{ $('Code in JavaScript6').item.json.Key }}",
-              "type": "string"
-            },
-            {
-              "id": "08edec4e-32c4-466d-8d66-261a8ede1abc",
-              "name": "phonenumber",
-              "value": "={{ $('Code in JavaScript6').item.json.phonenumber }}",
-              "type": "string"
-            },
-            {
-              "id": "d05f492e-26b3-49e9-b366-96947a6906bc",
-              "name": "message_platform_id",
-              "value": "={{ $('Code in JavaScript6').item.json.MessageId }}",
-              "type": "string"
-            },
-            {
-              "id": "56f0bdfb-bc93-43e9-9230-f4a24b9594b6",
-              "name": "platform",
-              "value": "whatsapp",
-              "type": "string"
-            },
-            {
-              "id": "d65150c6-4c63-4b37-b9f6-befcded648c6",
-              "name": "platform_user_id",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
-              "type": "string"
-            },
-            {
-              "id": "5d001d0f-4c7e-42de-bd22-2316d7e6b81c",
-              "name": "valrables",
-              "value": "={{ $json.variables }}",
-              "type": "object"
-            },
-            {
-              "id": "90b066dd-8ee7-4976-836f-48f44e0cb86b",
-              "name": "image_sets",
-              "value": "={{ $json.imageSets.map(set => set.name).join(', ') }}",
-              "type": "string"
-            },
-            {
-              "id": "651518d7-67d7-4d14-a53e-ebb85303b642",
-              "name": "active_products",
-              "value": "={{ $json.active_products }}",
-              "type": "array"
-            },
-            {
-              "id": "20e51a52-8afc-425d-8303-9a50777c39ff",
-              "name": "active_branches",
-              "value": "={{ JSON.stringify( $json.active_branches) }}",
-              "type": "string"
-            },
-            {
-              "id": "15a35cb5-93ae-4316-bb66-1790823f706d",
-              "name": "active_staff",
-              "value": "={{ JSON.stringify( $json.active_staff) }}",
-              "type": "string"
-            },
-            {
-              "id": "d969e061-0f0a-4eee-9d7b-74854d78512d",
-              "name": "staff_services",
-              "value": "={{ JSON.stringify( $json.staff_services) }}",
-              "type": "string"
-            },
-            {
-              "id": "31818ca5-0e28-497e-96db-1e2dcabfb755",
-              "name": "bot_offers",
-              "value": "={{ JSON.stringify( $json.bot_offers) }}",
-              "type": "string"
-            },
-            {
-              "id": "e4f6744f-5cde-4532-bd50-99a445f7fcd2",
-              "name": "categories",
-              "value": "={{ JSON.stringify( $json.categories) }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -10208,
-        3584
-      ],
-      "id": "7a7fc120-675a-4ca4-9883-ad1ad33a5691",
-      "name": "Edit Fields2"
     }
   ],
   "connections": {
@@ -4411,14 +4122,14 @@
       "main": [
         [
           {
-            "node": "If12",
+            "node": "Code in JavaScript",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "If11",
+            "node": "Code in JavaScript6",
             "type": "main",
             "index": 0
           }
@@ -4430,6 +4141,17 @@
         [
           {
             "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "find contact",
             "type": "main",
             "index": 0
           }
@@ -5209,11 +4931,6 @@
         ]
       ]
     },
-    "send txt5": {
-      "main": [
-        []
-      ]
-    },
     "Supabase35": {
       "main": [
         [
@@ -5485,8 +5202,7 @@
             "type": "main",
             "index": 0
           }
-        ],
-        []
+        ]
       ]
     },
     "Switch1": {
@@ -5533,8 +5249,7 @@
             "type": "main",
             "index": 0
           }
-        ],
-        []
+        ]
       ]
     },
     "Code in JavaScript9": {
@@ -5624,51 +5339,6 @@
           }
         ]
       ]
-    },
-    "If11": {
-      "main": [
-        [],
-        [
-          {
-            "node": "Code in JavaScript6",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If12": {
-      "main": [
-        [],
-        [
-          {
-            "node": "Code in JavaScript",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Execute a SQL query5": {
-      "main": [
-        []
-      ]
-    },
-    "Edit Fields": {
-      "main": [
-        [
-          {
-            "node": "find contact",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields2": {
-      "main": [
-        []
-      ]
     }
   },
   "pinData": {
@@ -5676,72 +5346,103 @@
       {
         "headers": {
           "host": "n8n.marka.giize.com",
-          "x-real-ip": "172.71.158.88",
-          "x-forwarded-for": "2a06:98c0:3600::103, 172.71.158.88",
+          "x-real-ip": "172.71.146.142",
+          "x-forwarded-for": "2a06:98c0:3600::103, 172.71.146.142",
           "x-forwarded-proto": "https",
           "connection": "Upgrade",
-          "content-length": "1347",
-          "accept-encoding": "gzip",
+          "content-length": "1058",
           "content-type": "application/json",
-          "cf-ray": "a414cf24d91aefbd-SJC",
-          "x-zernio-event-id": "db3401f6-ec88-4977-aa5d-6808e22ae6bc",
+          "cf-ray": "a234b2da6a47c4dd-SEA",
+          "x-zernio-event-id": "921f6fa3-e653-46df-aa5a-d41050b8930d",
           "x-zernio-event": "message.received",
           "user-agent": "Zernio-Webhooks/1.0",
           "x-late-event": "message.received",
-          "x-late-event-id": "db3401f6-ec88-4977-aa5d-6808e22ae6bc",
+          "x-late-event-id": "921f6fa3-e653-46df-aa5a-d41050b8930d",
           "cf-worker": "miki-palet.workers.dev",
-          "cf-visitor": "{\"scheme\":\"https\"}"
+          "cf-visitor": "{\"scheme\":\"https\"}",
+          "accept-encoding": "gzip"
         },
         "params": {},
         "query": {},
         "body": {
-          "id": "db3401f6-ec88-4977-aa5d-6808e22ae6bc",
+          "id": "921f6fa3-e653-46df-aa5a-d41050b8930d",
           "event": "message.received",
           "message": {
-            "id": "6ab8227b05713df823969ecc",
-            "conversationId": "6aa6e1767fbf31127120ee59",
-            "platform": "whatsapp",
-            "platformMessageId": "wamid.HBgMOTY2NTQyNDE0NjEyFQIAEhggQUMzRTFDRTEyODUyODQxQTk0NUNGNTNCMDdFQkM0MzEA",
+            "id": "6a6b5126df17280d93f29b3d",
+            "conversationId": "6a6b5125df17280d93f29b26",
+            "platform": "instagram",
+            "platformMessageId": "aWdfZAG1faXRlbToxOklHTWVzc2FnZAUlEOjE3ODQxNDEyMjI0NjQ3OTEzOjM0MDI4MjM2Njg0MTcxMDMwMTI0NDI2MDY2MjkzNzk0NTQ4MzI2NzozMjkzNTE0OTI4MTcwMjU0NDg1NDM3MDYxMTE0MzYzOTA0MAZDZD",
             "direction": "incoming",
-            "text": "ممكن احد صاحي يرد بدل الAi\nهدى فين مكانها الحالي؟\nفي نفس فرع السنابل القديم لان في الموقع الالكتروني مكتوب ان تم نقلها للفرع الجديد \nواذا تم نقلها ارسلولي الموقع الجديد .",
+            "text": "مساء الخير ابي احجز عرض بيان ٢٥٥ كيف الطريقة",
             "attachments": [],
             "sender": {
-              "id": "966542414612",
-              "name": ".",
-              "phoneNumber": "+966542414612",
-              "businessScopedUserId": "SA.1396533418503892",
-              "contactId": "6aa6e17659c127aa8c773fc2"
+              "id": "2100248800871716",
+              "contactId": "6a6b5126a78d12fa81d29110"
             },
-            "sentAt": "2026-09-26T19:52:25.000Z",
-            "isRead": false,
-            "sentVia": null
+            "sentAt": "2026-07-30T13:27:00.117Z",
+            "isRead": false
           },
           "conversation": {
-            "id": "6aa6e1767fbf31127120ee59",
-            "platformConversationId": "966542414612",
-            "participantId": "966542414612",
-            "participantName": ".",
-            "participantUsername": "+966542414612",
+            "id": "6a6b5125df17280d93f29b26",
+            "platformConversationId": "2100248800871716",
+            "participantId": "2100248800871716",
             "status": "active",
-            "contactId": "6aa6e17659c127aa8c773fc2"
+            "contactId": "6a6b5126a78d12fa81d29110"
           },
           "account": {
-            "id": "6a4a53109d9472faae8493e7",
-            "platform": "whatsapp",
-            "username": "+966 53 048 6002",
-            "displayName": "صالون نون",
-            "profileId": "6a373dc194d2ecce6be2c40d",
-            "accountId": "6a4a53109d9472faae8493e7"
+            "id": "6a57a5d63d50078def85d329",
+            "platform": "instagram",
+            "username": "noon_aljamal",
+            "displayName": "نـون الجمال",
+            "profileId": "6a4d477437a1a1f27bb4e76c",
+            "accountId": "6a57a5d63d50078def85d329"
           },
-          "timestamp": "2026-09-26T19:52:27.309Z"
+          "timestamp": "2026-07-30T13:27:02.989Z"
         },
-        "webhookUrl": "https://n8n.marka.giize.com/webhook/21b02ede-05b5-4e7d-9675-8b9d95d0a0c5",
+        "webhookUrl": "https://n8n.marka.giize.com/webhook/1fcaade3-3236-44c1-87cc-235e664bb2fc",
         "executionMode": "production"
+      }
+    ],
+    "HTTP Request4": [
+      {
+        "success": true,
+        "data": {
+          "messageId": "wamid.HBgMOTcxNTA0Nzk4NzU5FQIAERgUQ0VGQ0QxQTM1NzI0RTYxN0MzQzIA",
+          "conversationId": "6a4a5dd618eebb5f27753c56"
+        }
+      }
+    ],
+    "Get a row": [
+      {
+        "id": "ceac790f-7284-4d8e-816d-04c35aa0e5d0",
+        "type": "customer_service",
+        "title": "طلب تواصل مع موظف 🧑‍💻",
+        "body": "العميلة Dr Mostafa Alaa تطلب التحدث مع خدمة العملاء. رقم الهاتف: 971504798759",
+        "client_id": "59ce30e6-e06d-4de7-9833-4ba84b77921a",
+        "isRead": false,
+        "createdAt": "2026-07-07T12:56:52.549604+00:00"
+      },
+      {
+        "id": "71eacaed-3970-4cd8-8c10-fa6f862238cf",
+        "type": "customer_service",
+        "title": "طلب تواصل مع موظف 🧑‍💻",
+        "body": "العميلة Dr Mostafa Alaa تطلب التحدث مع خدمة العملاء. رقم الهاتف: 971504798759",
+        "client_id": "59ce30e6-e06d-4de7-9833-4ba84b77921a",
+        "isRead": false,
+        "createdAt": "2026-07-07T12:57:47.450064+00:00"
+      },
+      {
+        "id": "874f0fa9-ed79-4565-87a9-b3da51d2baf5",
+        "type": "customer_service",
+        "title": "طلب تواصل مع موظف 🧑‍💻",
+        "body": "العميلة Dr Mostafa Alaa تطلب التحدث مع خدمة العملاء. رقم الهاتف: 971504798759",
+        "client_id": "59ce30e6-e06d-4de7-9833-4ba84b77921a",
+        "isRead": false,
+        "createdAt": "2026-07-07T12:59:28.966763+00:00"
       }
     ]
   },
   "meta": {
-    "templateCredsSetupCompleted": true,
     "instanceId": "1f93206801c7ceb58ccb70936720a5e2fe4da9557a148f95a36bf8c902fa3d27"
   }
 }
