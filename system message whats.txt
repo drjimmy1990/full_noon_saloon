@@ -19,10 +19,55 @@ You are "نون" (Noon), the virtual assistant for Noon Salon (صالون نون
 - Salon Address: {{ $('Execute a SQL query').first().json.system_settings.salon_address }}
 - Active Branches: {{ $('Edit Fields').first().json.active_branches }}
 - Open Branches List (الفروع المفتوحة للحجز):
-{{ $('Execute a SQL query').first().json.active_branches.filter(b => (b.workingHours || []).some(d => d.isOpen)).map(b => 'فرع ' + b.name.trim() + ' (هاتف: ' + b.phone + ')').join('، ') }}
-- Open Branches Count: {{ $('Execute a SQL query').first().json.active_branches.filter(b => (b.workingHours || []).some(d => d.isOpen)).length }}
+{{ (() => {
+  const sql = $('Execute a SQL query').first().json;
+  let bHours = {};
+  try {
+    bHours = typeof sql.system_settings?.branch_working_hours === 'string'
+      ? JSON.parse(sql.system_settings.branch_working_hours || '{}')
+      : (sql.system_settings?.branch_working_hours || {});
+  } catch (e) { bHours = {}; }
+  const openBranches = (sql.active_branches || []).filter(b => {
+    const hours = b.workingHours || bHours[b.id] || [];
+    return hours.length === 0 || hours.some(d => d.isOpen);
+  });
+  return openBranches.map(b => 'فرع ' + (b.nameAr || b.name).trim() + ' (هاتف: ' + (b.phone || '') + ')').join('، ');
+})() }}
+- Open Branches Count: {{ (() => {
+  const sql = $('Execute a SQL query').first().json;
+  let bHours = {};
+  try {
+    bHours = typeof sql.system_settings?.branch_working_hours === 'string'
+      ? JSON.parse(sql.system_settings.branch_working_hours || '{}')
+      : (sql.system_settings?.branch_working_hours || {});
+  } catch (e) { bHours = {}; }
+  return (sql.active_branches || []).filter(b => {
+    const hours = b.workingHours || bHours[b.id] || [];
+    return hours.length === 0 || hours.some(d => d.isOpen);
+  }).length;
+})() }}
 - Branch Schedules & Working Hours (الفروع المفتوحة فقط - أي فرع جميع أيامه مغلقة لا يذكر نهائياً):
-{{ $('Execute a SQL query').first().json.active_branches.filter(b => (b.workingHours || []).some(d => d.isOpen)).map(b => 'فرع ' + b.name.trim() + ' (هاتف: ' + b.phone + '):\n' + (b.workingHours || []).filter(d => d.isOpen).map(d => '  - ' + d.dayNameAr + ': من ' + d.open + ' إلى ' + d.close).join('\n')).join('\n\n') }}
+{{ (() => {
+  const sql = $('Execute a SQL query').first().json;
+  let bHours = {};
+  try {
+    bHours = typeof sql.system_settings?.branch_working_hours === 'string'
+      ? JSON.parse(sql.system_settings.branch_working_hours || '{}')
+      : (sql.system_settings?.branch_working_hours || {});
+  } catch (e) { bHours = {}; }
+  const openBranches = (sql.active_branches || []).filter(b => {
+    const hours = b.workingHours || bHours[b.id] || [];
+    return hours.length === 0 || hours.some(d => d.isOpen);
+  });
+  return openBranches.map(b => {
+    const hours = b.workingHours || bHours[b.id] || [];
+    const openDays = hours.filter(d => d.isOpen);
+    return 'فرع ' + (b.nameAr || b.name).trim() + ' (هاتف: ' + (b.phone || '') + '):\n' +
+      (openDays.length > 0 
+        ? openDays.map(d => '  - ' + d.dayNameAr + ': من ' + d.open + ' إلى ' + d.close).join('\n')
+        : '  - مفتوح لجميع الأيام');
+  }).join('\n\n');
+})() }}
 - Bot Offers: {{ $('Edit Fields').first().json.bot_offers }}
 - Bot Services Text: {{ $('Execute a SQL query').first().json.system_settings.bot_services_text }}
 
