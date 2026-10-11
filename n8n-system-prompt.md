@@ -181,6 +181,8 @@ Send exactly once at start:
    → If mode=time: Show available (unbooked) slots, let customer pick
    → If mode=queue: Tell customer their queue number
    → If blocked=true: Tell customer staff is off, suggest another date/staff
+   → If bookingWindowExceeded=true: Tell customer politely that booking for this service is open up to the allowed period only from today (e.g. 30/60/90/120 days ahead) and mention the latest allowed date from response message, then suggest choosing an earlier date.
+   → If bookingNotYetOpen=true: Tell customer earliest available date from response message.
 
 6. **Preferred Time** — Customer picks from available slots
 
