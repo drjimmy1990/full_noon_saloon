@@ -1687,8 +1687,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -1776,
-        3536
+        -1712,
+        3360
       ],
       "id": "f856ab19-0fbd-4531-9df5-6709187e1e05",
       "name": "Switch2"
@@ -1762,7 +1762,8 @@
         2976
       ],
       "id": "fd84bf74-e042-4d0d-b13d-4cf9617cda0c",
-      "name": "AI Agent1"
+      "name": "AI Agent1",
+      "retryOnFail": true
     },
     {
       "parameters": {
@@ -2145,8 +2146,7 @@
     },
     {
       "parameters": {
-        "amount": 8,
-        "unit": "seconds"
+        "amount": 13
       },
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -2184,7 +2184,7 @@
       "parameters": {
         "sessionIdType": "customKey",
         "sessionKey": "={{ $('Edit Fields').item.json.SenderJid }}",
-        "tableName": "LAST1",
+        "tableName": "LAST3",
         "contextWindowLength": 20
       },
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
@@ -2294,7 +2294,7 @@
     },
     {
       "parameters": {
-        "toolDescription": "Use this tool to check available time slots for a service with a specific staff member on a given date. Returns an array of slots {time, booked}, queue status (mode: \"queue\"), or if blocked: true. For multi-person bookings, all persons must be with the same specialist; call this tool for that specialist to see all available slots for the day, allowing the customer to pick preferred times (whether consecutive or separated). CRITICAL: You must ONLY show and offer slots where booked=false. Slots where booked=true are ALREADY TAKEN and MUST NEVER be offered. NEVER tell the customer a time is available before running this tool.",
+        "toolDescription": "Use this tool to check available time slots for a service with a specific staff member on a given date. Returns an array of slots {time, booked}, queue status (mode: \"queue\"), or if blocked: true. For multi-person bookings, all persons must be with the same specialist; call this tool for that specialist to see all available slots for the day, allowing the customer to pick preferred times (whether consecutive or separated). CRITICAL: You must ONLY show and offer slots where booked=false. Slots where booked=true are ALREADY TAKEN and MUST NEVER be offered. NEVER tell the customer a time is available before running this tool.\n",
         "url": "https://salonnoon.net/api/availability",
         "sendQuery": true,
         "queryParameters": {
@@ -2317,8 +2317,7 @@
             }
           ]
         },
-        "options": {},
-        "description": "Use this tool to check available time slots for a service with a specific staff member on a given date. Returns an array of slots {time, booked}, queue status (mode: \"queue\"), or if blocked: true. For multi-person bookings, all persons must be with the same specialist; call this tool for that specialist to see all available slots for the day, allowing the customer to pick preferred times (whether consecutive or separated). CRITICAL: You must ONLY show and offer slots where booked=false. Slots where booked=true are ALREADY TAKEN and MUST NEVER be offered. NEVER tell the customer a time is available before running this tool."
+        "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
@@ -2342,8 +2341,7 @@
             }
           ]
         },
-        "options": {},
-        "description": "Use this tool AFTER the customer selects a branch. Pass branchId (UUID) to get all available services and their assigned specialists/staff at that branch."
+        "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
@@ -2356,7 +2354,7 @@
     },
     {
       "parameters": {
-        "toolDescription": "Use this tool to create a booking ONLY after ALL booking fields are collected AND the customer explicitly confirmed. This validates availability and blocked dates automatically. If it returns an error (409), tell the customer the issue and ask them to pick another time/date. Parameters: serviceId (UUID), branchId (UUID), staffId (UUID), date (YYYY-MM-DD), time (HH:mm, or comma-separated times for multiple persons e.g. \"16:30, 19:00\"), name (customer name), phone (customer phone), durationMode (\"time\" or \"queue\"), durationMinutes (number), paymentMethod (\"cash\"), notes (optional), personsCount (number, default 1: for multi-person bookings with the same specialist, pass the number of persons and their selected times; the system creates discrete slots for each person and returns ONE combined payment link for the total deposit).",
+        "toolDescription": "Use this tool to create a booking ONLY after ALL booking fields are collected AND the customer explicitly confirmed. This validates availability and blocked dates automatically. If it returns an error (409), tell the customer the issue and ask them to pick another time/date. Parameters: serviceId (UUID), branchId (UUID), staffId (UUID), date (YYYY-MM-DD), time (HH:mm, or comma-separated times for multiple persons e.g. \"16:30, 19:00\"), name (customer name), phone (customer phone), durationMode (\"time\" or \"queue\"), durationMinutes (number), paymentMethod (\"cash\"), notes (optional), personsCount (number, default 1: for multi-person bookings with the same specialist, pass the number of persons and their selected times; the system creates discrete slots for each person and returns ONE combined payment link for the total deposit).\n",
         "method": "POST",
         "url": "https://salonnoon.net/api/booking",
         "sendBody": true,
@@ -2395,7 +2393,7 @@
               "value": "={{ $fromAI('durationMode', '', 'string') }}"
             },
             {
-              "name": "durationMinutes",
+              "name": "=durationMinutes",
               "value": "={{ $fromAI('durationMinutes', '', 'string') }}"
             },
             {
@@ -2424,8 +2422,7 @@
             }
           ]
         },
-        "options": {},
-        "description": "Use this tool to create a booking ONLY after ALL booking fields are collected AND the customer explicitly confirmed. This validates availability and blocked dates automatically. If it returns an error (409), tell the customer the issue and ask them to pick another time/date. Parameters: serviceId (UUID), branchId (UUID), staffId (UUID), date (YYYY-MM-DD), time (HH:mm, or comma-separated times for multiple persons e.g. \"16:30, 19:00\"), name (customer name), phone (customer phone), durationMode (\"time\" or \"queue\"), durationMinutes (number), paymentMethod (\"cash\"), notes (optional), personsCount (number, default 1: for multi-person bookings with the same specialist, pass the number of persons and their selected times; the system creates discrete slots for each person and returns ONE combined payment link for the total deposit)."
+        "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
@@ -2438,10 +2435,9 @@
     },
     {
       "parameters": {
-        "toolDescription": "Returns the list of active branches. If only ONE branch is open in the salon, automatically use it directly without asking the customer. If TWO OR MORE branches are open, ask the customer to choose their preferred branch among the open branches. NEVER offer or mention branches where all days are closed.",
+        "toolDescription": "Returns the list of active branches. If only ONE branch is open in the salon, automatically use it directly without asking the customer. If TWO OR MORE branches are open, ask the customer to choose their preferred branch among the open branches. NEVER offer or mention branches where all days are closed.\n",
         "url": "https://salonnoon.net/api/branches?active=true",
-        "options": {},
-        "description": "Returns the list of active branches. If only ONE branch is open in the salon, automatically use it directly without asking the customer. If TWO OR MORE branches are open, ask the customer to choose their preferred branch among the open branches. NEVER offer or mention branches where all days are closed."
+        "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
@@ -2506,7 +2502,7 @@
     },
     {
       "parameters": {
-        "toolDescription": "Use this tool when a customer asks about their existing bookings, booking status, or booking code. Pass the customer's phone number. Returns a list of their active bookings with codes, dates, and statuses.",
+        "toolDescription": "Use this tool to check or verify an existing reservation for a customer by passing their phone number. Returns the list of active bookings with booking code, service name, staff name, branch, date, time, and status.\n",
         "url": "https://salonnoon.net/api/booking/lookup",
         "sendQuery": true,
         "queryParameters": {
@@ -2517,8 +2513,7 @@
             }
           ]
         },
-        "options": {},
-        "description": "Use this tool to check or verify an existing reservation for a customer by passing their phone number. Returns the list of active bookings with booking code, service name, staff name, branch, date, time, and status."
+        "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.3,
@@ -2761,6 +2756,22 @@
     },
     {
       "parameters": {
+        "httpMethod": "POST",
+        "path": "saloon-payment",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -12640,
+        4368
+      ],
+      "id": "173420bc-c5fb-4c46-a046-3ba9e47011a7",
+      "name": "Webhook1",
+      "webhookId": "e1e52657-4fc7-4241-aec6-14ba166a2058"
+    },
+    {
+      "parameters": {
         "operation": "get",
         "tableId": "Notification",
         "filters": {
@@ -2780,6 +2791,7 @@
       ],
       "id": "244ec10d-76fc-41d2-a52a-477bb594c3da",
       "name": "Get a row",
+      "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
           "id": "RHrj0bmwb6rI9r7s",
@@ -4044,18 +4056,68 @@
     },
     {
       "parameters": {
+        "method": "POST",
+        "url": "=https://zernio.com/api/v1/inbox/conversations/{{ $('Webhook').item.json.body.conversation.id }}/messages ",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk_dbb52d55c857d3083ac169d156a86825d7d138813939d3ef427202368fcb454d"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=accountId",
+              "value": "={{ $('Webhook').item.json.body.account.accountId }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $('Switch2').item.json.response }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -10752,
+        4448
+      ],
+      "id": "75c0ef2a-9e7c-4861-8d3b-a73fb5aa5245",
+      "name": "HTTP Request18"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json;\nconst transaction = body.obj || body;\n\nconst merchantOrderId = transaction?.order?.merchant_order_id || transaction?.special_reference || '';\nconst isBooking = merchantOrderId.startsWith('BOOKING-');\nconst bookingId = isBooking ? merchantOrderId.replace('BOOKING-', '').trim() : '';\nconst success = transaction?.success === true || transaction?.success === 'true';\nconst txnId = String(transaction?.id || '');\nconst amountCents = Number(transaction?.amount_cents || 0);\n\n// المبلغ الفعلي المدفوع بالريال (مثلاً 15000 هللة = 150 ريال)\nconst paidAmount = Math.round(amountCents / 100);\n\nreturn [{\n  json: {\n    success,\n    isBooking,\n    bookingId,\n    txnId,\n    amountCents,\n    paidAmount,\n    merchantOrderId\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -11728,
+        4160
+      ],
+      "id": "370ae9ab-3257-4b35-adb6-8f0b6152a06a",
+      "name": "Code in JavaScript13"
+    },
+    {
+      "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n  c.*,\n\n  -- Active Products with full details\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', p.id,\n        'name', p.name,\n        'price', p.price,\n        'images', p.images,\n        'notes', p.notes,\n        'type', p.type,\n        'availableAtHome', p.\"availableAtHome\",\n        'availableAtSalon', p.\"availableAtSalon\",\n        'durationMinutes', p.\"durationMinutes\",\n        'durationMode', p.\"durationMode\",\n        'maxSlots', p.\"maxSlots\",\n        'depositAmount', p.\"depositAmount\",\n        'branchId', p.\"branchId\",\n        'category', p.category\n      )\n    )\n    FROM public.\"Product\" p\n    WHERE p.\"isAvailable\" = true\n      AND (p.\"publishAt\" IS NULL OR p.\"publishAt\" <= NOW())\n  ) as active_products,\n\n  -- System Settings\n  (\n    SELECT json_object_agg(key, value)\n    FROM public.\"SystemSetting\"\n  ) as system_settings,\n\n  -- Active Branches\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', b.id,\n        'name', b.name,\n        'nameAr', b.\"nameAr\",\n        'address', b.address,\n        'phone', b.phone,\n        'whatsapp', b.whatsapp,\n        'workingHours', b.\"workingHours\"\n      )\n    )\n    FROM public.\"Branch\" b\n    WHERE b.\"isActive\" = true\n  ) as active_branches,\n\n  -- Active Staff\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', s.id,\n        'name', s.name,\n        'role', s.role,\n        'branchId', s.\"branchId\"\n      )\n    )\n    FROM public.\"Staff\" s\n    WHERE s.\"isActive\" = true\n  ) as active_staff,\n\n  -- Staff ↔ Service assignments\n  (\n    SELECT json_agg(\n      json_build_object(\n        'staff_id', ss.staff_id,\n        'product_id', ss.product_id\n      )\n    )\n    FROM public.\"StaffService\" ss\n    INNER JOIN public.\"Staff\" s ON s.id = ss.staff_id\n    WHERE s.\"isActive\" = true\n  ) as staff_services,\n\n  -- Bot-specific offers\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', o.id,\n        'product_id', o.product_id,\n        'discountType', o.\"discountType\",\n        'discountValue', o.\"discountValue\",\n        'channel', o.channel,\n        'productName', p.name,\n        'originalPrice', p.price\n      )\n    )\n    FROM public.\"Offer\" o\n    INNER JOIN public.\"Product\" p ON p.id = o.product_id\n    WHERE o.\"isActive\" = true\n      AND (o.channel IS NULL OR o.channel IN ('bot', 'both'))\n      AND (o.\"startDate\" IS NULL OR o.\"startDate\" <= CURRENT_DATE)\n      AND (o.\"endDate\" IS NULL OR o.\"endDate\" >= CURRENT_DATE)\n  ) as bot_offers,\n\n  -- Categories\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', cat.id,\n        'label', cat.label\n      )\n    )\n    FROM public.\"Category\" cat\n  ) as categories\n\nFROM public.\"Channel\" c\nWHERE c.name = '{{ $('Webhook').item.json.body.account.accountId }}'\nLIMIT 1;\n",
+        "query": "SELECT \n  b.id,\n  b.id AS booking_id,\n  b.client_id,\n  COALESCE(b.staff_id, b.\"staffId\") AS staff_id,\n  b.\"bookingCode\" AS booking_code,\n  b.\"bookingDate\" AS booking_date,\n  COALESCE(b.\"bookingTime\", TO_CHAR(b.\"bookingDate\" AT TIME ZONE 'UTC', 'HH12:MI AM')) AS booking_time,\n  b.\"depositAmount\" AS deposit_amount,\n  b.\"depositStatus\" AS deposit_status,\n  b.status AS booking_status,\n  b.\"paymobIntentionId\" AS paymob_intention_id,\n  b.\"serviceSummary\" AS service_summary,\n  TRIM(c.phone) AS client_phone,\n  COALESCE(NULLIF(TRIM(c.name), ''), 'عميلتنا العزيزة') AS client_name,\n  COALESCE(NULLIF(TRIM(br.\"nameAr\"), ''), TRIM(br.name), 'فرع السنابل – جدة') AS branch_name,\n  COALESCE(TRIM(p.name), b.\"serviceSummary\") AS service_name,\n  COALESCE(p.price::text, b.\"depositAmount\"::text, '0') AS service_price,\n  COALESCE(p.\"depositAmount\", b.\"depositAmount\", 50) AS unit_deposit,\n  CASE \n    WHEN TRIM(st.name) LIKE '%عرض%' THEN 'أخصائية صالون نون'\n    ELSE COALESCE(NULLIF(TRIM(st.name), ''), 'أخصائية صالون نون')\n  END AS staff_name\nFROM \"Booking\" b\nLEFT JOIN \"Client\" c ON b.client_id = c.id\nLEFT JOIN \"Branch\" br ON b.\"branchId\" = br.id\nLEFT JOIN \"Product\" p ON b.\"serviceId\" = p.id\nLEFT JOIN \"Staff\" st ON COALESCE(b.staff_id, b.\"staffId\") = st.id\nWHERE b.id = '{{ $('Code in JavaScript13').first().json.bookingId }}'\n   OR (\n     b.\"paymobIntentionId\" IS NOT NULL \n     AND b.\"paymobIntentionId\" = (SELECT \"paymobIntentionId\" FROM \"Booking\" WHERE id = '{{ $('Code in JavaScript13').first().json.bookingId }}')\n   )\nORDER BY b.\"bookingDate\" ASC\nLIMIT 10;\n",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -11168,
-        3520
+        -10736,
+        4080
       ],
-      "id": "0ffeb25a-6d27-4f87-b145-b9bc85abe7e2",
-      "name": "Execute a SQL query2",
+      "id": "829e5189-ff9e-4860-bb92-7bf4b420ff02",
+      "name": "Execute a SQL query7",
       "credentials": {
         "postgres": {
           "id": "rxuf9Bq2tAFgouSi",
@@ -4065,24 +4127,231 @@
     },
     {
       "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT \n  c.*,\n\n  -- Active Products with full details & branch name\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', p.id,\n        'name', p.name,\n        'price', p.price,\n        'images', p.images,\n        'notes', p.notes,\n        'type', p.type,\n        'availableAtHome', p.\"availableAtHome\",\n        'availableAtSalon', p.\"availableAtSalon\",\n        'durationMinutes', p.\"durationMinutes\",\n        'durationMode', p.\"durationMode\",\n        'maxSlots', p.\"maxSlots\",\n        'depositAmount', p.\"depositAmount\",\n        'branchId', p.\"branchId\",\n        'branchName', (SELECT TRIM(br.name) FROM public.\"Branch\" br WHERE br.id = p.\"branchId\"),\n        'category', p.category\n      )\n    )\n    FROM public.\"Product\" p\n    WHERE p.\"isAvailable\" = true\n      AND (p.\"publishAt\" IS NULL OR p.\"publishAt\" <= NOW())\n  ) as active_products,\n\n  -- System Settings\n  (\n    SELECT json_object_agg(key, value)\n    FROM public.\"SystemSetting\"\n  ) as system_settings,\n\n  -- Active Branches with Working Hours & Location\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', b.id,\n        'name', TRIM(b.name),\n        'nameAr', COALESCE(NULLIF(TRIM(b.\"nameAr\"), ''), TRIM(b.name)),\n        'address', b.address,\n        'phone', b.phone,\n        'whatsapp', b.whatsapp,\n        'googleMapsUrl', b.\"googleMapsUrl\",\n        'workingHours', COALESCE(b.\"workingHours\", '[]'::jsonb)\n      )\n    )\n    FROM public.\"Branch\" b\n    WHERE b.\"isActive\" = true\n  ) as active_branches,\n\n  -- Active Staff with branch name\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', s.id,\n        'name', s.name,\n        'role', s.role,\n        'branchId', s.\"branchId\",\n        'branchName', (SELECT TRIM(br.name) FROM public.\"Branch\" br WHERE br.id = s.\"branchId\")\n      )\n    )\n    FROM public.\"Staff\" s\n    WHERE s.\"isActive\" = true\n  ) as active_staff,\n\n  -- Staff ↔ Service assignments\n  (\n    SELECT json_agg(\n      json_build_object(\n        'staff_id', ss.staff_id,\n        'product_id', ss.product_id\n      )\n    )\n    FROM public.\"StaffService\" ss\n    INNER JOIN public.\"Staff\" s ON s.id = ss.staff_id\n    WHERE s.\"isActive\" = true\n  ) as staff_services,\n\n  -- Bot-specific offers\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', o.id,\n        'product_id', o.product_id,\n        'discountType', o.\"discountType\",\n        'discountValue', o.\"discountValue\",\n        'channel', o.channel,\n        'productName', p.name,\n        'originalPrice', p.price\n      )\n    )\n    FROM public.\"Offer\" o\n    INNER JOIN public.\"Product\" p ON p.id = o.product_id\n    WHERE o.\"isActive\" = true\n      AND (o.channel IS NULL OR o.channel IN ('bot', 'both'))\n      AND (o.\"startDate\" IS NULL OR o.\"startDate\" <= CURRENT_DATE)\n      AND (o.\"endDate\" IS NULL OR o.\"endDate\" >= CURRENT_DATE)\n  ) as bot_offers,\n\n  -- Categories\n  (\n    SELECT json_agg(\n      json_build_object(\n        'id', cat.id,\n        'label', cat.label\n      )\n    )\n    FROM public.\"Category\" cat\n  ) as categories\n\nFROM public.\"Channel\" c\nWHERE c.name = '{{ $('Webhook').item.json.body.account.accountId }}'\nLIMIT 1;\n",
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "509cc2e8-6374-4b2b-89b8-39f33e96e8dc",
+              "leftValue": "={{ $json.success }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "c6e5a67a-adad-438c-a0e3-7ff58a273ac4",
+              "leftValue": "={{ $json.isBooking }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "f3bbec53-1eb7-468f-a022-7e605921d842",
+              "leftValue": "={{ $json.bookingId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
         "options": {}
       },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
       "position": [
-        -10608,
-        3616
+        -11280,
+        4208
       ],
-      "id": "93a77389-182b-4f18-8926-f5baa8c1c15e",
-      "name": "Execute a SQL query5",
+      "id": "30198356-4ee0-4fc3-9c90-34ab9488f0f5",
+      "name": "If16"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Booking",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "depositStatus",
+              "fieldValue": "paid"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "confirmed"
+            },
+            {
+              "fieldId": "paymobTxnId",
+              "fieldValue": "={{ $('Code in JavaScript13').item.json.txnId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -10160,
+        4064
+      ],
+      "id": "a15d8e26-f6ce-43b3-b24c-c0c7d9192c8a",
+      "name": "Update a row6",
       "credentials": {
-        "postgres": {
-          "id": "rxuf9Bq2tAFgouSi",
-          "name": "salloon"
+        "supabaseApi": {
+          "id": "RHrj0bmwb6rI9r7s",
+          "name": "saloon"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "Client",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "keyValue": "={{ $json.client_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -9872,
+        4064
+      ],
+      "id": "3e1a0703-2ea3-4f47-8e13-1dd1099b99f1",
+      "name": "Get a row5",
+      "credentials": {
+        "supabaseApi": {
+          "id": "RHrj0bmwb6rI9r7s",
+          "name": "saloon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://zernio.com/api/v1/inbox/conversations/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{\n  (() => {\n    let p = $('Execute a SQL query7').first().json.client_phone + '';\n    p = p.replace(/[\\s\\-\\(\\)\\+]/g, '');\n    if (p.startsWith('00')) p = p.slice(2);\n    if (p.startsWith('966')) return p;\n    if (p.startsWith('5')) return '966' + p;\n    if (p.startsWith('05')) return '966' + p.slice(1);\n    return p;\n  })()\n}}\n"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk_dbb52d55c857d3083ac169d156a86825d7d138813939d3ef427202368fcb454d"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -9616,
+        4080
+      ],
+      "id": "66aff572-d269-4c34-a6ab-5053bf5184f9",
+      "name": "HTTP Request23",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2c074082-2584-4fc2-9b38-064b5078de97",
+              "name": "phone number",
+              "value": "={{\n  (() => {\n    let p = $('Execute a SQL query7').first().json.client_phone + '';\n    p = p.replace(/[\\s\\-\\(\\)\\+]/g, '');\n    if (p.startsWith('00')) p = p.slice(2);\n    if (p.startsWith('966')) return p;\n    if (p.startsWith('5')) return '966' + p;\n    if (p.startsWith('05')) return '966' + p.slice(1);\n    return p;\n  })()\n}}",
+              "type": "string"
+            },
+            {
+              "id": "5700bd32-cad8-474a-96f3-a384d1c1df4a",
+              "name": "mesg",
+              "value": "={{\n  (() => {\n    const bookings = $('Execute a SQL query7').all().map(item => item.json);\n    const payment = $('Code in JavaScript13').first().json;\n    const first = bookings[0] || {};\n    \n    // المبلغ المدفوع من Paymob بالريال\n    const paidAmount = Number(payment.paidAmount) || 0;\n    // عربون الفرد من جدول الخدمات أو الحجز\n    const unitDeposit = Number(first.unit_deposit) || Number(first.deposit_amount) || 50;\n    const bookingsCount = bookings.length;\n    const paidBookingsCount = Math.floor(paidAmount / unitDeposit);\n    \n    // تنسيق التاريخ\n    const dateFormatted = first.booking_date \n      ? new Date(first.booking_date).toLocaleDateString('ar-SA', { timeZone: 'UTC', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })\n      : '';\n      \n    // دالة مساعدة لتنسيق الوقت من booking_date المخزن\n    const formatSlotTime = (dateStr, fallbackTime) => {\n      if (!dateStr) return fallbackTime || '';\n      const d = new Date(dateStr);\n      const h = d.getUTCHours();\n      const m = d.getUTCMinutes().toString().padStart(2, '0');\n      const period = h >= 12 ? 'مساءً' : 'صباحاً';\n      const h12 = (h % 12 || 12).toString().padStart(2, '0');\n      return `${h12}:${m} ${period}`;\n    };\n\n    // تجميع أوقات وأكواد كل شخص في المجموعة\n    const slotsDetails = bookings.map((b, idx) => {\n      const timeText = formatSlotTime(b.booking_date, b.booking_time);\n      const label = bookingsCount > 1 ? `• شخص ${idx + 1}: ` : '• الموعد: ';\n      return `${label}${timeText} (كود الحجز: ${b.booking_code})`;\n    }).join('\\n');\n    \n    if (bookingsCount > 1) {\n      return `أهلاً بكِ ${first.client_name} 🌸\\nتم تأكيد حجزكم بنجاح في صالون نون ✨\\n\\n` +\n        `💇 الخدمة: ${first.service_name}\\n` +\n        `👩🎨 الأخصائية: ${first.staff_name}\\n` +\n        `🏢 الفرع: ${first.branch_name}\\n` +\n        `📅 التاريخ: ${dateFormatted}\\n` +\n        `👥 عدد الأشخاص: ${bookingsCount}\\n` +\n        `💰 العربون المدفوع: ${paidAmount} ريال (تم سداد ${paidBookingsCount} حجز)\\n\\n` +\n        `📋 تفاصيل المواعيد والأكواد:\\n${slotsDetails}\\n\\n` +\n        `ننتظر تشريفكم لنا ونتمنى لكم تجربة مميزة 💖`;\n    } else {\n      const singleTime = formatSlotTime(first.booking_date, first.booking_time);\n      return `✅ تم تأكيد حجزكِ بنجاح يا ${first.client_name} 💄✨\\n\\n` +\n        `💄 الخدمة: ${first.service_name}\\n` +\n        `👩🎨 الأخصائية: ${first.staff_name}\\n` +\n        `🏢 الفرع: ${first.branch_name}\\n` +\n        `📅 التاريخ: ${dateFormatted}\\n` +\n        `⏰ الوقت: ${singleTime}\\n` +\n        `💰 إجمالي السعر: ${first.service_price} ريال\\n` +\n        `💵 العربون المدفوع: ${paidAmount} ريال\\n\\n` +\n        `🎟️ كود الحجز: ${first.booking_code}\\n\\n` +\n        `شكرًا لاختياركِ لنا 🤍\\nنتمنى لكِ تجربة جميلة ومميزة ✨`;\n    }\n  })()\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -9264,
+        4080
+      ],
+      "id": "3982bbde-2311-4a9f-906b-d62ffc8f0b13",
+      "name": "Edit Fields6",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://zernio.com/api/v1/inbox/conversations/{{ $json[\"phone number\"] }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk_dbb52d55c857d3083ac169d156a86825d7d138813939d3ef427202368fcb454d"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "accountId",
+              "value": "6a4a53109d9472faae8493e7"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.mesg }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -8864,
+        4080
+      ],
+      "id": "84222c09-b379-4c32-8cab-b5f416083cc9",
+      "name": "HTTP Request24"
     },
     {
       "parameters": {
@@ -4265,140 +4534,106 @@
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
+        "promptType": "define",
+        "text": "={{ $json.body }}",
+        "options": {
+          "systemMessage": "=## 1. Identity & Persona\n\nYou are \"نون\" (Noon), the virtual assistant for Noon Salon (صالون نون). You communicate in polite, concise, professional Arabic.\n\n### Core Communication Rules:\n1. ZERO EMOJIS: Do NOT use any emojis in any response under any circumstance.\n2. CONCISE RESPONSES: Keep answers short, direct, and to the point. Avoid lengthy pleasantries, repetitive greetings, or unnecessary text.\n3. NO PROMISE OF AVAILABILITY BEFORE CHECKING: NEVER say or imply that booking is available (\"الحجز متاح\" or \"ممكن نحجز لك\" or \"أكيد متاح\" or \"متاح الموعد\") before executing the check_availability tool and verifying open slots.\n4. NO SALON EXIT TIMES: NEVER calculate, estimate, or give salon exit/finish/departure times to customers. Duration varies and there is an internal waiting window.\n5. NO CLOSED BRANCHES: Any branch that is marked inactive or where ALL days are closed currently MUST NEVER be mentioned as an option or offered for booking.\n6. DYNAMIC BRANCH SELECTION: Branch handling is fully dynamic based on Open Branches Count:\n   - If ONLY ONE open branch exists (Open Branches Count = 1): NEVER ask the customer which branch they want; automatically assign that single open branch directly.\n   - If TWO OR MORE open branches exist (Open Branches Count > 1): Ask the customer to choose their preferred branch from the open branches list only.\n\n### Context Variables (Pre-loaded)\n- Current Date/Time: {{ $now.setZone('Etc/GMT-3').toISO() }}\n- Customer Name: {{ $('Edit Fields').first().json.SenderName }}\n- Customer Mobile number: {{ $('Edit Fields').first().json.phonenumber }}\n- Salon Address: {{ $('Execute a SQL query').first().json.system_settings.salon_address }}\n- Active Branches: {{ $('Edit Fields').first().json.active_branches }}\n- Open Branches List (الفروع المفتوحة للحجز):\n{{ $('Execute a SQL query').first().json.active_branches.filter(b => (b.workingHours || []).some(d => d.isOpen)).map(b => 'فرع ' + b.name.trim() + ' (هاتف: ' + b.phone + ')').join('، ') }}\n- Open Branches Count: {{ $('Execute a SQL query').first().json.active_branches.filter(b => (b.workingHours || []).some(d => d.isOpen)).length }}\n- Branch Schedules & Working Hours (الفروع المفتوحة فقط - أي فرع جميع أيامه مغلقة لا يذكر نهائياً):\n{{ $('Execute a SQL query').first().json.active_branches.filter(b => (b.workingHours || []).some(d => d.isOpen)).map(b => 'فرع ' + b.name.trim() + ' (هاتف: ' + b.phone + '):\\n' + (b.workingHours || []).filter(d => d.isOpen).map(d => '  - ' + d.dayNameAr + ': من ' + d.open + ' إلى ' + d.close).join('\\n')).join('\\n\\n') }}\n- Bot Offers: {{ $('Edit Fields').first().json.bot_offers }}\n- Bot Services Text: {{ $('Execute a SQL query').first().json.system_settings.bot_services_text }}\n\nCRITICAL BRANCH RULES (قواعد الفروع الديناميكية):\n1. DYNAMIC BRANCH SELECTION LOGIC (قاعدة اختيار الفرع التلقائية أو بالاختيار):\n   - Check \"Open Branches Count\" dynamically:\n     * If Open Branches Count = 1 (Currently only فرع السنابل):\n       You MUST NEVER ask: \"في أي فرع تحبين؟\" or \"عايز تحجز في انهي فرع؟\".\n       Automatically assign that single open branch for all bookings and proceed directly to asking for the specialist and date at that branch.\n     * If Open Branches Count > 1 (e.g. When a new branch is added or a closed branch is opened in the dashboard):\n       Present the list of open branches and ask the customer to choose their preferred branch.\n2. BRANCHES WITH ALL DAYS CLOSED (الفروع المقفولة بالكامل):\n   - Any branch where all days are closed or isActive=false currently must NEVER be offered or suggested for booking.\n   - If a customer explicitly asks about a closed branch: inform them directly that this branch is currently closed, and services are available at the open branch(es).\n\n---\n\n## 2. JSON Output & Intents\n\nCRITICAL: Your final output to the user MUST be a raw JSON object. First character = {, last character = }.\nFORBIDDEN: ```json, ```, markdown wrappers, or any text before or after the JSON.\n\nEvery final response must follow this structure:\n{\n  \"intent\": \"...\",\n  \"response\": \"Your concise Arabic message without any emojis.\",\n  \"customer_name\": \"...\",\n  \"secondary_intent\": \"...\"\n}\n\nField Rules:\n- Omit empty or non-applicable fields entirely (never send null or empty string).\n- customer_name: ONLY include when intent = \"name\". Contains the customer's real extracted name.\n- secondary_intent: ONLY include when intent = \"name\" AND the message also triggers bridal_inquiry, customer_service, or job_request.\n- intent: One of the 6 allowed intents below.\n\nAllowed Intents:\n| Intent | When to Use |\n|---|---|\n| conversation | DEFAULT. Inquiries, service questions, booking flow steps, availability checking, general chat. |\n| create booking | ONLY when create_booking tool is executed and returns bookingCode / paymentUrl. |\n| name | Customer provides their real name. |\n| customer_service | Customer requests human support, receptionist, or manager. |\n| job_request | Inquiries about employment, vacancies, or jobs. |\n| bridal_inquiry | First-time inquiry about bridal packages (بكجات العرائس). Silent intent. |\n\n---\n\n## 3. Available Tools & Usage Rules\n\nYou have 5 specialized tools:\n\n1. get_branches:\n   - Returns active branches.\n   - If only ONE branch is open in the salon: automatically use its branchId without asking the customer.\n   - If MULTIPLE branches are open: let the customer choose among the open branches, then use the selected branchId.\n   - Never offer branches where all days are closed.\n\n2. get_staff_for_service:\n   - Parameters: branchId (UUID).\n   - Returns available services and assigned specialists (staffId, serviceId).\n\n3. check_availability:\n   - Parameters: staffId (UUID), serviceId (UUID), date (YYYY-MM-DD), personsCount (number, default: 1).\n   - MANDATORY: Call this tool before offering or confirming any appointment time.\n   - For multi-person bookings: always pass personsCount (e.g. 2 or 3). The tool will automatically return ONLY slots that have enough consecutive hours to fit all persons.\n   - NEVER tell the customer a time is available before running this tool.\n   - Filter and offer ONLY slots where booked=false. Slots where booked=true must NEVER be offered.\n   - If bookingNotYetOpen=true: Inform customer that this service requires advance booking and provide the earliest available date (availabilityStartDate).\n   - If blocked=true or no slots: Specialist or slots are unavailable on this date.\n\n4. create_booking:\n   - Parameters: serviceId, branchId, staffId, date, time, name, phone, durationMode, durationMinutes, paymentMethod: \"cash\", serviceSummary, notes, channelType: \"whatsapp\", personsCount (number, default: 1).\n   - Call ONLY after ALL booking details are collected AND explicitly confirmed by customer.\n   - For multi-person bookings: pass the number of persons in personsCount (e.g. 2 or 3). The system will automatically multiply the deposit amount and block the needed time slots.\n\n5. check_my_bookings:\n   - Parameters: phone. Call when customer asks to verify an existing reservation.\n\n---\n\n## 4. Intent Decision Tree\n\nPRE-NAME (Name not yet captured):\n0. First message OR customer has not yet been asked for their name:\n   Greet politely and ask for their name only. Do not answer questions yet. Set intent = conversation.\n1. Customer was asked for name, but ignores it and asks a question / requests booking:\n   Answer directly or start booking flow without repeating the name question. Set intent = conversation. Do NOT use intent = name.\n2. Customer provides their name:\n   Extract name, set intent = name, include customer_name. Answer their question or continue booking. If it triggers a special intent, add secondary_intent.\n\nPOST-NAME (Normal Flow):\n3. Customer wants human support / manager:\n   Set intent = customer_service.\n4. Asking about jobs or vacancies:\n   Set intent = job_request.\n5. Customer asks about bridal packages for the FIRST TIME:\n   Present packages from bot_services_text, set intent = bridal_inquiry. Follow-ups use conversation.\n6. Customer asks to check an existing booking:\n   Call check_my_bookings tool.\n7. Customer asks for makeup artists / portfolios:\n   Send list of artists, prices, and Instagram highlight links from bot_services_text. Always note: الأسعار غير شاملة الرموش ولا التركيب.\n8. Customer asks about service pricing:\n   Answer accurately from bot_services_text. If makeup, always clarify: السعر غير شامل الرموش ولا التركيب.\n   If non-makeup (pedicure, hair, etc.), clarify that it is walk-in without prior booking.\n9. Customer wants to book an appointment:\n   - Advance booking is EXCLUSIVELY FOR MAKEUP (الحجز للمكياج فقط).\n   - Non-makeup services (pedicure, hair, waxing, etc.) are walk-in only without advance booking.\n   - Dynamic branch check: If Open Branches Count = 1, assign that branch automatically without asking. If > 1, ask customer to choose.\n   - NEVER say booking is available before checking. Proceed to Interactive Booking Flow.\n10. Customer explicitly confirms booking details:\n    Call create_booking, return booking code and payment link (if any) with all 4 conditions, set intent = create booking.\n11. Everything else:\n    Set intent = conversation.\n\n---\n\n## 5. Interactive Booking Flow\n\nAdvance booking is EXCLUSIVELY for makeup services (مكياج فقط) during evening hours.\n\n### Step 1: Dynamic Branch Handling (التعامل مع الفرع)\n- Check Open Branches Count:\n  * If Open Branches Count = 1 (Currently فرع السنابل):\n    NEVER ask the customer which branch they want. Automatically assign that branch, and immediately proceed to Step 2 to ask for the specialist and date.\n  * If Open Branches Count > 1:\n    Ask customer to choose from the open branches list: \"في أي فرع تحبين يكون موعدك؟\" with the open branches only.\n  * Never mention or offer any branch where all days are closed.\n\n### Step 2: Service & Specialist Selection\n- Verify service is makeup. (If pedicure/hair, explain that it is walk-in only).\n- Match requested specialist or list available specialists via get_staff_for_service.\n\n### Step 3: Date & Availability Check\n- Ask for preferred date (YYYY-MM-DD).\n- NEVER say or imply booking is available before running check_availability.\n- Call check_availability(staffId, serviceId, date).\n- Present unbooked evening slots (booked=false) in 12-hour format (e.g. 05:30 مساء).\n- If bookingNotYetOpen=true: Inform customer that service requires advance booking and state earliest available date (availabilityStartDate).\n- If blocked=true or no slots: State that slots are unavailable on this date and offer alternative dates.\n\n### Step 4: Time Slot Selection\n- Customer selects preferred evening slot.\n\n### Step 5: Summary & Explicit Confirmation\n- Summarize details concisely:\n  - الخدمة: [الخدمة] (السعر غير شامل الرموش ولا التركيب)\n  - الأخصائية: [الأخصائية]\n  - الفرع: [اسم الفرع المحدد]\n  - التاريخ: [التاريخ]\n  - الوقت: [الوقت] مساء\n  - العربون: [المبلغ] ريال\n- Ask: \"هل البيانات صحيحة لتثبيت الحجز؟\"\n\n### Step 6: Booking Creation & Delivery with Mandatory Conditions\n- When customer explicitly confirms: call create_booking.\n- If paymentUrl returned (deposit required), send the confirmation, booking code, payment link (10 minutes expiry), AND ALL 4 CONDITIONS in the SAME message:\n\n\"تم تسجيل حجزك المبدئي.\nكود الحجز: [bookingCode]\nلتأكيد الحجز، يرجى سداد العربون ([depositAmount] ريال) عبر الرابط التالي خلال 10 دقائق:\n[paymentUrl]\n\nشروط الحجز:\n1. يجب الحضور قبل الموعد بـ 15 دقيقة.\n2. في حال التأخر أكثر من 5 دقائق سيتم إلغاء الحجز.\n3. العربون غير قابل للاسترداد في حال عدم الحضور.\n4. فترة انتظار من 15 إلى 45 دقيقة.\"\n\n- If NO deposit required:\n\"تم تأكيد حجزك بنجاح.\nكود الحجز: [bookingCode]\nالموعد: [التاريخ] الساعة [الوقت] مساء في [الفرع].\n\nشروط الحجز:\n1. يجب الحضور قبل الموعد بـ 15 دقيقة.\n2. في حال التأخر أكثر من 5 دقائق سيتم إلغاء الحجز.\n3. فترة انتظار من 15 إلى 45 دقيقة.\"\n\n### Multi-Person & Group Bookings (الحجوزات لأكثر من شخص):\n- When a customer wants to book for multiple persons (e.g. \"حجز لـ 3 أشخاص\", \"أنا وأختي\", \"أنا واثنين معايا\"):\n  1. Determine the number of persons (personsCount). If not stated, ask politely: \"كم عدد الأشخاص المطلوب حجزهم؟\".\n  2. In Step 5 (Summary), calculate and display the total deposit clearly:\n     - الخدمة: [الخدمة] (عدد الأشخاص: [personsCount]) (السعر غير شامل الرموش ولا التركيب)\n     - الأخصائية: [الأخصائية]\n     - الفرع: [اسم الفرع المحدد]\n     - التاريخ: [التاريخ]\n     - الوقت: [الوقت] مساء\n     - العربون الإجمالي: [المبلغ الإجمالي] ريال ([عربون الفرد] ريال × [عدد الأشخاص] أشخاص)\n     - Ask: \"هل البيانات صحيحة لتثبيت الحجز؟\"\n  3. In Step 6: Call create_booking with personsCount = [عدد الأشخاص].\n  4. The system will automatically multiply the deposit and block the needed time slots, returning ONE combined payment link for the total deposit.\n  5. Send the confirmation message specifying the number of persons:\n\"تم تسجيل حجزك المبدئي لـ [personsCount] أشخاص.\nكود الحجز: [bookingCode]\nلتأكيد الحجز، يرجى سداد العربون ([depositAmount] ريال) عبر الرابط التالي خلال 10 دقائق:\n[paymentUrl]\n\nشروط الحجز:\n1. يجب الحضور قبل الموعد بـ 15 دقيقة.\n2. في حال التأخر أكثر من 5 دقائق سيتم إلغاء الحجز.\n3. العربون غير قابل للاسترداد في حال عدم الحضور.\n4. فترة انتظار من 15 إلى 45 دقيقة.\"\n\n### Distinct Appointments on Different Dates (حجز مواعيد في أيام مختلفة):\n- If the customer wants to book separate appointments on different days/dates (e.g. Saturday and next Thursday):\n  - Do NOT combine different dates into one booking.\n  - Complete, confirm, and send the payment link for the first appointment first, then proceed to book the next appointment.\n\n---\n\n## 6. Checking Existing Bookings Flow (check_my_bookings)\n\nWhen customer asks to verify an existing reservation:\n1. Call check_my_bookings with phone number.\n2. If bookings found:\n   Present booking details concisely: كود الحجز, الخدمة, الأخصائية, الفرع, التاريخ والوقت, حالة الحجز.\n3. If no bookings found:\n   \"لا يوجد حجز مسجل بهذا الرقم. لحجز موعد جديد أو الاستفسار يمكنك التواصل مع الصالون عبر الجوال المعتمد.\"\n\n---\n\n## 7. Makeup Artists & Portfolio Links\n\nWhen customer asks about makeup specialists, portfolios, or examples of work:\n- Retrieve list of specialists, prices, and Instagram highlight links from bot_services_text.\n- Provide links without modification.\n- Always include lashes notice: \"ملاحظة: الأسعار غير شاملة الرموش ولا تركيب الرموش.\"\n\n---\n\n## 8. Job Request Flow\n\nWhen someone inquires about employment, vacancies, or working at the salon:\n1. Set intent = \"job_request\".\n2. Respond:\n   \"شكراً لاهتمامك بالانضمام إلى فريق صالون نون. تم تحويل طلبك إلى الإدارة وسيتم التواصل معك في حال توفر شواغر مناسبة.\"\n\n---\n\n## 9. Service Pricing, Policies & Special Inquiries\n\n### 9.1. Makeup Pricing & Lashes Policy\n- Whenever quoting any makeup price, ALWAYS state:\n  \"ملاحظة: السعر غير شامل الرموش ولا تركيب الرموش.\"\n\n### 9.2. Non-Makeup Services (Walk-in Only)\n- Pedicure, manicure, hair, styling, treatments, waxing are walk-in only:\n  \"الحجز المسبق متاح حصريا لخدمات المكياج. أما البديكير وبقية خدمات الصالون فبدون حجز مسبق، وتسعدنا خدمتك بالحضور المباشر للصالون.\"\n\n### 9.3. Bridal Packages (bridal_inquiry)\n- When asked about bridal packages for the first time:\n  Present packages and prices from bot_services_text concisely.\n  Set intent = \"bridal_inquiry\".\n  Subsequent bridal questions revert to intent = \"conversation\".\n\n### 9.4. Offer 255 Specialist Inquiry\n- When asked who provides the 255 offer:\n  \"الخدمة في عرض 255 تقدم من فريق نون المميز.\"\n\n### 9.5. Staff Attendance Inquiry\n- When asked about the attendance or schedule of a specific staff member today:\n  \"لمعرفة جدول وتواجد الموظفة اليوم، يرجى التواصل على جوال الصالون فرع السنابل: 0530486002.\"\n\n### 9.6. Rescheduling Policy\n- When asked about changing or rescheduling an appointment:\n  \"يسمح بتعديل الموعد قبل المناسبة بـ 48 ساعة وللراغبين التواصل على رقم الصالون فرع السنابل: 0530486002. مع العلم أن العربون لا يرد ولا يستبدل.\"\n\n### 9.7. Cancellation Policy\n- When asked about cancelling an appointment:\n  \"العربون لا يرد ولا يستبدل. وللمزيد يرجى الاتصال بالفرع على الرقم: 0530486002.\"\n\n### 9.8. Salon Exit / Departure Time\n- STRICT RULE: NEVER promise, calculate, estimate, or give an exit or finish time to any customer.\n- If asked \"متى أخلص؟\", \"الساعة كم أطلع؟\", \"كم تجلس الجلسة؟\":\n  \"مدة الخدمة تعتمد على تفاصيل العمل وتوجد فترة انتظار داخل الصالون من 15 إلى 45 دقيقة، لذلك لا يمكن تحديد وقت للخروج.\"\n\n### 9.9. Closed Branches Inquiry (الفروع المغلقة)\n- If asked about any branch that is currently closed:\n  \"فرع [اسم الفرع] مغلق حالياً، وجميع خدماتنا متاحة في [أسماء الفروع المفتوحة من قائمة الفروع].\"\n\n---\n\n## 10. Name Collection Flow (Soft Gate)\n\n1. First Contact:\n   Greet politely and ask for name: \"أهلاً بك في صالون نون. ممكن الاسم الكريم؟\"\n   Do not answer service questions in turn 1. Intent = \"conversation\".\n2. Customer Ignores Name:\n   If customer asks about services/booking in turn 2 without giving name, do NOT repeat name request. Answer directly.\n3. Customer Gives Name:\n   Set intent = \"name\", customer_name = \"[name]\".\n4. Conflict Handling:\n   If customer gives name AND asks about bridal/job/support:\n   intent = \"name\", customer_name = \"[name]\", secondary_intent = \"bridal_inquiry\" | \"job_request\" | \"customer_service\".\n\n---\n\n## 11. Personality & Communication Standards\n\n- Tone: Professional, courteous, concise, Saudi business etiquette.\n- ZERO EMOJIS: Never include emojis.\n- Brevity: Keep messages direct, avoiding repetitive or excessive pleasantries.\n- Language: Natural Arabic, accommodating dialects and typos.\n- Customer Name: Use WhatsApp profile name only after explicit customer confirmation.\n\n---\n\n## 12. Strict Rules Checklist\n\n### DO:\n- Dynamically check the number of open branches (Open Branches Count).\n- Automatically assign the open branch when only ONE branch is open, without asking the customer.\n- Ask the customer to choose a branch ONLY if two or more branches are open.\n- Always check availability via check_availability before offering times.\n- Offer only slots where booked=false.\n- Restrict advance booking to makeup services only.\n- Direct non-makeup services to walk-in at open branches.\n- Always include lashes notice with makeup prices.\n- Always attach the 4 booking conditions with the payment link in the same message.\n- Always summarize booking details before calling create_booking.\n- Suggest evening hours only (afternoon/evening).\n- Use check_my_bookings when asked to look up reservations.\n\n### DO NOT:\n- NEVER use any emojis.\n- NEVER ask the customer to choose a branch when only ONE branch is open.\n- NEVER mention or offer any branch where all days are closed.\n- NEVER say \"الحجز متاح\" or \"ممكن نحجز لك\" before calling check_availability.\n- NEVER offer slots with booked=true.\n- NEVER give or estimate salon exit/finish times.\n- NEVER ask if customer prefers morning or evening (morning hours do not exist).\n- NEVER accept booking for pedicure, manicure, hair, or waxing.\n- NEVER confirm booking without calling create_booking.\n- NEVER send markdown code fences (```json) or text outside JSON.\n\n---\n\n## 13. Few-Shot Examples (Concise & Zero Emojis)\n\n### Example 1: Customer asks to book makeup (When 1 branch is open -> Auto-assigned directly)\n- Context: Open Branches Count = 1 (فرع السنابل).\n- Customer: \"أبي أحجز موعد مكياج\"\n- Your Thought: Customer wants to book makeup. Do not say booking is available until availability is checked. Only 1 branch is open (فرع السنابل), so do NOT ask which branch. Proceed directly to asking for specialist and date for فرع السنابل.\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"أهلاً بك في صالون نون. لحجز موعد مكياج في فرع السنابل، يرجى تحديد الأخصائية المفضلة واليوم المطلوب للتحقق من المواعيد المتاحة.\"\n}\n\n### Example 1b: Customer asks to book makeup (When MULTIPLE branches are open)\n- Context: Open Branches Count = 2 (فرع السنابل، فرع جديد).\n- Customer: \"أبي أحجز موعد مكياج\"\n- Your Thought: Customer wants to book makeup. Multiple branches are open. Ask customer to choose from open branches.\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"أهلاً بك في صالون نون. يسعدنا خدمتك، في أي فرع تفضلين حجز موعدك؟\\n1. فرع السنابل\\n2. فرع [الفرع المفتوح الثاني]\"\n}\n\n### Example 2: Checking availability and showing slots\n- Context: Specialist = هدى, Date = 2026-05-16. check_availability returns [\"16:00\", \"17:30\", \"19:00\"].\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"المواعيد المسائية المتاحة مع الأخصائية هدى يوم السبت في فرع السنابل:\\n- 04:00 مساء\\n- 05:30 مساء\\n- 07:00 مساء\\n\\nأي وقت يناسبك؟\"\n}\n\n### Example 3: Summary before confirmation (with Lashes note)\n- Customer: \"يناسبني الساعة 5:30 مساء\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"تفاصيل حجزك:\\n- الخدمة: مكياج كامل (السعر غير شامل الرموش ولا التركيب)\\n- الأخصائية: هدى\\n- الفرع: فرع السنابل\\n- التاريخ: السبت 2026-05-16\\n- الوقت: 05:30 مساء\\n- العربون: 50 ريال\\n\\nهل البيانات صحيحة لتثبيت الحجز؟\"\n}\n\n### Example 4: Booking creation with link and all 4 conditions\n- Customer: \"نعم صحيحة أكدي الحجز\"\n- Output:\n{\n  \"intent\": \"create booking\",\n  \"response\": \"تم تسجيل حجزك المبدئي.\\nكود الحجز: NOON-7842\\nلتأكيد الحجز، يرجى سداد العربون (50 ريال) عبر الرابط التالي خلال 10 دقائق:\\nhttps://ksa.paymob.com/unifiedcheckout/?payment_token=xxx\\n\\nشروط الحجز:\\n1. يجب الحضور قبل الموعد بـ 15 دقيقة.\\n2. في حال التأخر أكثر من 5 دقائق سيتم إلغاء الحجز.\\n3. العربون غير قابل للاسترداد في حال عدم الحضور.\\n4. فترة انتظار من 15 إلى 45 دقيقة.\"\n}\n\n### Example 5: Booking creation with zero deposit (conditions attached)\n- Context: create_booking returns zero deposit.\n- Output:\n{\n  \"intent\": \"create booking\",\n  \"response\": \"تم تأكيد حجزك بنجاح.\\nكود الحجز: NOON-3120\\nالموعد: السبت 2026-05-16 الساعة 05:30 مساء في فرع السنابل.\\n\\nشروط الحجز:\\n1. يجب الحضور قبل الموعد بـ 15 دقيقة.\\n2. في حال التأخر أكثر من 5 دقائق سيتم إلغاء الحجز.\\n3. فترة انتظار من 15 إلى 45 دقيقة.\"\n}\n\n### Example 6: Rescheduling inquiry\n- Customer: \"أقدر أغير موعد حجزي؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"يسمح بتعديل الموعد قبل المناسبة بـ 48 ساعة وللراغبين التواصل على رقم الصالون فرع السنابل: 0530486002. مع العلم أن العربون لا يرد ولا يستبدل.\"\n}\n\n### Example 7: Cancellation inquiry\n- Customer: \"أبي ألغي الحجز وأسترجع العربون\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"العربون لا يرد ولا يستبدل. وللمزيد يرجى الاتصال بالفرع على الرقم: 0530486002.\"\n}\n\n### Example 8: Staff attendance today inquiry\n- Customer: \"هل هدى موجودة اليوم بالصالون؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"لمعرفة جدول وتواجد الموظفة اليوم، يرجى التواصل على جوال الصالون فرع السنابل: 0530486002.\"\n}\n\n### Example 9: Offer 255 specialist inquiry\n- Customer: \"عرض 255 مين الموظفة اللي تسويه؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"الخدمة في عرض 255 تقدم من فريق نون المميز.\"\n}\n\n### Example 10: Salon exit time inquiry\n- Customer: \"لو حجزت الساعة 5 متى أطلع من الصالون؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"مدة الخدمة تعتمد على تفاصيل العمل وتوجد فترة انتظار داخل الصالون من 15 إلى 45 دقيقة، لذلك لا يمكن تحديد وقت للخروج.\"\n}\n\n### Example 11: Customer asks to book pedicure\n- Customer: \"أبي أحجز بديكير بكره\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"الحجز المسبق متاح حصريا لخدمات المكياج. أما البديكير وبقية خدمات الصالون فبدون حجز مسبق، وتسعدنا خدمتك بالحضور المباشر للصالون في فرع السنابل.\"\n}\n\n### Example 12: Customer asks about makeup price (lashes disclaimer)\n- Customer: \"كم سعر المكياج عندكم؟\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"سعر المكياج يبدأ من [السعر] ريال.\\nملاحظة: السعر غير شامل الرموش ولا تركيب الرموش.\"\n}\n\n### Example 13: Customer asks to check existing booking (check_my_bookings)\n- Customer: \"أبي أتأكد من حجزي اليوم\"\n- Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"حجزك مؤكد:\\n- كود الحجز: NOON-7842\\n- الخدمة: مكياج كامل\\n- الأخصائية: هدى\\n- الفرع: فرع السنابل\\n- الموعد: اليوم الساعة 05:30 مساء\"\n}\n\n### Example 14: First message name gate & second turn ignore\n- Turn 1 Customer: \"السلام عليكم، كم سعر المكياج؟\"\n- Turn 1 Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"وعليكم السلام ورحمة الله وبركاته. أهلاً بك في صالون نون. ممكن الاسم الكريم؟\"\n}\n- Turn 2 Customer: \"كم سعر الاستشوار؟\"\n- Turn 2 Output:\n{\n  \"intent\": \"conversation\",\n  \"response\": \"سعر الاستشوار يبدأ من [السعر] ريال. خدمات الشعر وبقية خدمات الصالون متاحة بزيارتك المباشرة دون الحاجة لحجز مسبق.\"\n}\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -2416,
+        2016
+      ],
+      "id": "a917e009-c628-4044-b69f-17440bc90ff8",
+      "name": "AI Agent11"
+    },
+    {
+      "parameters": {
+        "tableId": "Message",
+        "fieldsUi": {
+          "fieldValues": [
             {
-              "id": "0fceb1bb-c0de-4e6c-880f-062704739f1e",
-              "name": "SenderJid",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
-              "type": "string"
+              "fieldId": "channel_id",
+              "fieldValue": "={{ $('Get a row5').item.json.channel_id }}"
             },
             {
-              "id": "04ac662e-9deb-4d63-ac8f-cafab77e0f7b",
-              "name": "SenderName",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderName }}",
-              "type": "string"
+              "fieldId": "sender_type",
+              "fieldValue": "bot"
             },
             {
-              "id": "f812ad17-d60f-4c5d-b1d4-7820238fe0e3",
-              "name": "Timestamp",
-              "value": "={{ $('Code in JavaScript6').item.json.Timestamp }}",
-              "type": "string"
+              "fieldId": "content_type",
+              "fieldValue": "=text"
             },
             {
-              "id": "3c3fdb3c-de14-4bcc-8d9a-68cc2ed0d1c8",
-              "name": "MsgType",
-              "value": "={{ $('Code in JavaScript6').item.json.MsgType }}",
-              "type": "string"
+              "fieldId": "platform_timestamp",
+              "fieldValue": "={{ $now.toISO() }}"
             },
             {
-              "id": "e0595c23-53c7-4eb9-aea2-4de3fa76e7db",
-              "name": "Msg",
-              "value": "={{ $('Code in JavaScript6').item.json.Msg }}",
-              "type": "string"
+              "fieldId": "text_content",
+              "fieldValue": "={{ $('Edit Fields6').item.json.mesg }}"
             },
             {
-              "id": "5f1ca696-9ad5-4f22-accd-435a5c8c6ced",
-              "name": "Media",
-              "value": "={{ $json.body.data.message.base64 }}",
-              "type": "string"
+              "fieldId": "client_id",
+              "fieldValue": "={{ $('Update a row6').item.json.client_id }}"
             },
             {
-              "id": "eb5b8516-cc5f-43b3-a578-2d8b15b7b51d",
-              "name": "Instance",
-              "value": "={{ $('Code in JavaScript6').item.json.Instance }}",
-              "type": "string"
-            },
-            {
-              "id": "8c6ec75c-45c6-44de-a860-84baa4832602",
-              "name": "Key",
-              "value": "={{ $('Code in JavaScript6').item.json.Key }}",
-              "type": "string"
-            },
-            {
-              "id": "08edec4e-32c4-466d-8d66-261a8ede1abc",
-              "name": "phonenumber",
-              "value": "={{ $('Code in JavaScript6').item.json.phonenumber }}",
-              "type": "string"
-            },
-            {
-              "id": "d05f492e-26b3-49e9-b366-96947a6906bc",
-              "name": "message_platform_id",
-              "value": "={{ $('Code in JavaScript6').item.json.MessageId }}",
-              "type": "string"
-            },
-            {
-              "id": "56f0bdfb-bc93-43e9-9230-f4a24b9594b6",
-              "name": "platform",
-              "value": "whatsapp",
-              "type": "string"
-            },
-            {
-              "id": "d65150c6-4c63-4b37-b9f6-befcded648c6",
-              "name": "platform_user_id",
-              "value": "={{ $('Code in JavaScript6').item.json.SenderJid }}",
-              "type": "string"
-            },
-            {
-              "id": "5d001d0f-4c7e-42de-bd22-2316d7e6b81c",
-              "name": "valrables",
-              "value": "={{ $json.variables }}",
-              "type": "object"
-            },
-            {
-              "id": "90b066dd-8ee7-4976-836f-48f44e0cb86b",
-              "name": "image_sets",
-              "value": "={{ $json.imageSets.map(set => set.name).join(', ') }}",
-              "type": "string"
-            },
-            {
-              "id": "651518d7-67d7-4d14-a53e-ebb85303b642",
-              "name": "active_products",
-              "value": "={{ $json.active_products }}",
-              "type": "array"
-            },
-            {
-              "id": "20e51a52-8afc-425d-8303-9a50777c39ff",
-              "name": "active_branches",
-              "value": "={{ JSON.stringify( $json.active_branches) }}",
-              "type": "string"
-            },
-            {
-              "id": "15a35cb5-93ae-4316-bb66-1790823f706d",
-              "name": "active_staff",
-              "value": "={{ JSON.stringify( $json.active_staff) }}",
-              "type": "string"
-            },
-            {
-              "id": "d969e061-0f0a-4eee-9d7b-74854d78512d",
-              "name": "staff_services",
-              "value": "={{ JSON.stringify( $json.staff_services) }}",
-              "type": "string"
-            },
-            {
-              "id": "31818ca5-0e28-497e-96db-1e2dcabfb755",
-              "name": "bot_offers",
-              "value": "={{ JSON.stringify( $json.bot_offers) }}",
-              "type": "string"
-            },
-            {
-              "id": "e4f6744f-5cde-4532-bd50-99a445f7fcd2",
-              "name": "categories",
-              "value": "={{ JSON.stringify( $json.categories) }}",
-              "type": "string"
+              "fieldId": "message_platform_id",
+              "fieldValue": "={{ $json.data.messageId }}"
             }
           ]
-        },
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -8384,
+        4080
+      ],
+      "id": "6894e682-a073-4b3a-97d9-23f983e23758",
+      "name": "Supabase42",
+      "retryOnFail": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "RHrj0bmwb6rI9r7s",
+          "name": "saloon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -10096,
+        4528
+      ],
+      "id": "b0bbcde5-57b3-4681-8bf7-4f2465e1881b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://salonnoon.net/api/booking/expire",
         "options": {}
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
       "position": [
-        -10208,
-        3584
+        -9696,
+        4528
       ],
-      "id": "7a7fc120-675a-4ca4-9883-ad1ad33a5691",
-      "name": "Edit Fields2"
+      "id": "76da6850-4ffb-4c8f-a876-d02d092be20a",
+      "name": "HTTP Request20"
     }
   ],
   "connections": {
@@ -5264,6 +5499,17 @@
         ]
       ]
     },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Get a row": {
       "main": [
         [
@@ -5655,9 +5901,99 @@
         ]
       ]
     },
-    "Execute a SQL query5": {
+    "Code in JavaScript13": {
       "main": [
-        []
+        [
+          {
+            "node": "If16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query7": {
+      "main": [
+        [
+          {
+            "node": "Update a row6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If16": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query7",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request18",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a row6": {
+      "main": [
+        [
+          {
+            "node": "Get a row5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row5": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request23",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request23": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request24",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request24": {
+      "main": [
+        [
+          {
+            "node": "Supabase42",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Edit Fields": {
@@ -5671,9 +6007,15 @@
         ]
       ]
     },
-    "Edit Fields2": {
+    "Schedule Trigger": {
       "main": [
-        []
+        [
+          {
+            "node": "HTTP Request20",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -5682,54 +6024,54 @@
       {
         "headers": {
           "host": "n8n.marka.giize.com",
-          "x-real-ip": "172.71.158.88",
-          "x-forwarded-for": "2a06:98c0:3600::103, 172.71.158.88",
+          "x-real-ip": "108.162.246.167",
+          "x-forwarded-for": "2a06:98c0:3600::103, 108.162.246.167",
           "x-forwarded-proto": "https",
           "connection": "Upgrade",
-          "content-length": "1347",
+          "content-length": "1284",
           "accept-encoding": "gzip",
           "content-type": "application/json",
-          "cf-ray": "a414cf24d91aefbd-SJC",
-          "x-zernio-event-id": "db3401f6-ec88-4977-aa5d-6808e22ae6bc",
+          "cf-ray": "a43c955f4d7230bc-SEA",
+          "x-zernio-event-id": "f05551f6-fe8d-43ab-b744-5fecdb1142ae",
           "x-zernio-event": "message.received",
           "user-agent": "Zernio-Webhooks/1.0",
           "x-late-event": "message.received",
-          "x-late-event-id": "db3401f6-ec88-4977-aa5d-6808e22ae6bc",
+          "x-late-event-id": "f05551f6-fe8d-43ab-b744-5fecdb1142ae",
           "cf-worker": "miki-palet.workers.dev",
           "cf-visitor": "{\"scheme\":\"https\"}"
         },
         "params": {},
         "query": {},
         "body": {
-          "id": "db3401f6-ec88-4977-aa5d-6808e22ae6bc",
+          "id": "f05551f6-fe8d-43ab-b744-5fecdb1142ae",
           "event": "message.received",
           "message": {
-            "id": "6ab8227b05713df823969ecc",
-            "conversationId": "6aa6e1767fbf31127120ee59",
+            "id": "6abe7fa20ef2f72067894df5",
+            "conversationId": "6abe1ae74fc0655bd10a7b80",
             "platform": "whatsapp",
-            "platformMessageId": "wamid.HBgMOTY2NTQyNDE0NjEyFQIAEhggQUMzRTFDRTEyODUyODQxQTk0NUNGNTNCMDdFQkM0MzEA",
+            "platformMessageId": "wamid.HBgMOTY2NTk5OTIyMTUxFQIAEhgUMkFERDFGRTk3MTdBNDU0MzIxNkMA",
             "direction": "incoming",
-            "text": "ممكن احد صاحي يرد بدل الAi\nهدى فين مكانها الحالي؟\nفي نفس فرع السنابل القديم لان في الموقع الالكتروني مكتوب ان تم نقلها للفرع الجديد \nواذا تم نقلها ارسلولي الموقع الجديد .",
+            "text": "تاكيد الحجز",
             "attachments": [],
             "sender": {
-              "id": "966542414612",
-              "name": ".",
-              "phoneNumber": "+966542414612",
-              "businessScopedUserId": "SA.1396533418503892",
-              "contactId": "6aa6e17659c127aa8c773fc2"
+              "id": "966599922151",
+              "name": "A~",
+              "phoneNumber": "+966599922151",
+              "businessScopedUserId": "SA.1607969017637047",
+              "contactId": "6abe1ae7d66163fe807dbade"
             },
-            "sentAt": "2026-09-26T19:52:25.000Z",
+            "sentAt": "2026-10-01T15:43:29.000Z",
             "isRead": false,
             "sentVia": null
           },
           "conversation": {
-            "id": "6aa6e1767fbf31127120ee59",
-            "platformConversationId": "966542414612",
-            "participantId": "966542414612",
-            "participantName": ".",
-            "participantUsername": "+966542414612",
+            "id": "6abe1ae74fc0655bd10a7b80",
+            "platformConversationId": "966599922151",
+            "participantId": "966599922151",
+            "participantName": "A~",
+            "participantUsername": "+966599922151",
             "status": "active",
-            "contactId": "6aa6e17659c127aa8c773fc2"
+            "contactId": "6abe1ae7d66163fe807dbade"
           },
           "account": {
             "id": "6a4a53109d9472faae8493e7",
@@ -5739,10 +6081,306 @@
             "profileId": "6a373dc194d2ecce6be2c40d",
             "accountId": "6a4a53109d9472faae8493e7"
           },
-          "timestamp": "2026-09-26T19:52:27.309Z"
+          "metadata": {
+            "quotedMessageId": "wamid.HBgMOTY2NTk5OTIyMTUxFQIAERgUQ0VFQ0NFOUJEOTRBRTg1ODBEOUUA",
+            "quotedMessage": {
+              "messageId": "6abe712d9a0920f7e62abcdd",
+              "platformMessageId": "wamid.HBgMOTY2NTk5OTIyMTUxFQIAERgUQ0VFQ0NFOUJEOTRBRTg1ODBEOUUA"
+            }
+          },
+          "timestamp": "2026-10-01T15:43:30.645Z"
         },
         "webhookUrl": "https://n8n.marka.giize.com/webhook/21b02ede-05b5-4e7d-9675-8b9d95d0a0c5",
         "executionMode": "production"
+      }
+    ],
+    "Code5": [
+      {
+        "intent": "customer_service",
+        "response": "حاضر، أطلب الآن من فرع السنابل الاتصال بك وإرسال رابط السداد مرة واحدة إلى رقمك المسجل. إن لم يصلك خلال 10 دقائق تواصلي مباشرة على 0530486002. هل أساعدك بشيء آخر؟",
+        "typingAnalysis": {
+          "characterCount": 162,
+          "calculatedTimeMs": 7321,
+          "originalMessage": "حاضر، أطلب الآن من فرع السنابل الاتصال بك وإرسال رابط السداد مرة واحدة إلى رقمك المسجل. إن لم يصلك خلال 10 دقائق تواصلي مباشرة على 0530486002. هل أساعدك بشيء آخر؟"
+        }
+      }
+    ],
+    "Webhook1": [
+      {
+        "headers": {
+          "host": "n8n.marka.giize.com",
+          "x-real-ip": "150.230.246.207",
+          "x-forwarded-for": "150.230.246.207",
+          "x-forwarded-proto": "https",
+          "connection": "Upgrade",
+          "content-length": "5428",
+          "user-agent": "python-requests/2.28.1",
+          "accept-encoding": "gzip, deflate",
+          "accept": "*/*",
+          "content-type": "application/json"
+        },
+        "params": {},
+        "query": {
+          "hmac": "508cdeb35b328c52926e0c4d2736293ac3e308ea3b63d2968f813e7e4fd85a597cb8492682b2932039fa4407a094b05f663a34c35ee09520ac0b618489eecd22"
+        },
+        "body": {
+          "type": "TRANSACTION",
+          "obj": {
+            "id": 10490279,
+            "pending": false,
+            "amount_cents": 5000,
+            "success": true,
+            "is_auth": false,
+            "is_capture": false,
+            "is_standalone_payment": true,
+            "is_voided": false,
+            "is_refunded": false,
+            "is_3d_secure": false,
+            "integration_id": 21178,
+            "profile_id": 12822,
+            "has_parent_transaction": false,
+            "order": {
+              "id": 9101792,
+              "created_at": "2026-10-01T18:05:38.373454+03:00",
+              "delivery_needed": false,
+              "merchant": {
+                "id": 12822,
+                "created_at": "2025-11-01T13:40:40.941748+03:00",
+                "phones": [
+                  "+966504624646"
+                ],
+                "company_emails": [
+                  "fofokasm30@gmail.com"
+                ],
+                "company_name": "salon noon",
+                "state": "",
+                "country": "SAU",
+                "city": "Jeddah",
+                "postal_code": "",
+                "street": "jeddah"
+              },
+              "collector": null,
+              "amount_cents": 5000,
+              "shipping_data": {
+                "id": 7790198,
+                "first_name": "فاطمه",
+                "last_name": "تركي القرني",
+                "street": "NA",
+                "building": "NA",
+                "floor": "NA",
+                "apartment": "NA",
+                "city": "NA",
+                "state": "NA",
+                "country": "NA",
+                "email": "booking@salonnoon.net",
+                "phone_number": "966502865756",
+                "postal_code": "NA",
+                "extra_description": "",
+                "shipping_method": "UNK",
+                "order_id": 9101792,
+                "emirate": null,
+                "province": null,
+                "address_line_1": null,
+                "address_line_2": null,
+                "name": null,
+                "order": 9101792
+              },
+              "currency": "SAR",
+              "is_payment_locked": false,
+              "is_return": false,
+              "is_cancel": false,
+              "is_returned": false,
+              "is_canceled": false,
+              "merchant_order_id": "BOOKING-5309f2c3-daee-4648-b994-c25f3e75452d",
+              "wallet_notification": null,
+              "paid_amount_cents": 5000,
+              "notify_user_with_email": false,
+              "items": [],
+              "order_url": "NA",
+              "commission_fees": 0,
+              "delivery_fees_cents": 0,
+              "delivery_vat_cents": 0,
+              "payment_method": "tbc",
+              "merchant_staff_tag": null,
+              "api_source": "OTHER",
+              "data": {},
+              "payment_status": "PAID",
+              "terminal_version": null,
+              "payme_details": null
+            },
+            "created_at": "2026-10-01T18:08:26.823678+03:00",
+            "transaction_processed_callback_responses": [],
+            "currency": "SAR",
+            "source_data": {
+              "type": "apple pay",
+              "sub_type": "APPLE_PAY",
+              "pan": "2928"
+            },
+            "api_source": "OTHER",
+            "terminal_id": null,
+            "merchant_commission": 0,
+            "accept_fees": 0,
+            "installment": null,
+            "discount_details": [],
+            "amount_cents_bigint": 5000,
+            "is_void": false,
+            "is_refund": false,
+            "data": {
+              "gateway_integration_pk": 21178,
+              "klass": "MigsPayment",
+              "created_at": "2026-10-01T15:08:29.212286",
+              "amount": 5000,
+              "currency": "SAR",
+              "migs_order": {
+                "amount": 50,
+                "authenticationStatus": "AUTHENTICATION_NOT_IN_EFFECT",
+                "chargeback": {
+                  "amount": 0,
+                  "currency": "SAR"
+                },
+                "creationTime": "2026-10-01T15:08:28.337Z",
+                "currency": "SAR",
+                "id": "aa9101792",
+                "lastUpdatedTime": "2026-10-01T15:08:29.082Z",
+                "merchantAmount": 50,
+                "merchantCategoryCode": "7372",
+                "merchantCurrency": "SAR",
+                "status": "CAPTURED",
+                "totalAuthorizedAmount": 50,
+                "totalCapturedAmount": 50,
+                "totalDisbursedAmount": 0,
+                "totalRefundedAmount": 0,
+                "walletProvider": "APPLE_PAY"
+              },
+              "merchant": "601108800",
+              "migs_result": "SUCCESS",
+              "migs_transaction": {
+                "acquirer": {
+                  "batch": 20261002,
+                  "date": "1002",
+                  "id": "MADA_NCB_ALLTXNS",
+                  "merchantId": "601108800",
+                  "settlementDate": "2026-10-02",
+                  "timeZone": "+0300",
+                  "transactionId": "1SRGJX"
+                },
+                "amount": 50,
+                "authenticationStatus": "AUTHENTICATION_NOT_IN_EFFECT",
+                "authorizationCode": "370351",
+                "currency": "SAR",
+                "id": "10490279",
+                "receipt": "627415040663",
+                "source": "INTERNET",
+                "stan": "40663",
+                "terminal": "NCBS2I05",
+                "type": "PAYMENT"
+              },
+              "txn_response_code": "APPROVED",
+              "acq_response_code": "00",
+              "message": "Approved",
+              "merchant_txn_ref": "10490279",
+              "order_info": "aa9101792",
+              "receipt_no": "627415040663",
+              "transaction_no": "1SRGJX",
+              "batch_no": 20261002,
+              "authorize_id": "370351",
+              "card_type": "VISA",
+              "card_num": "xxxxxxxxxxxxxxxx",
+              "secure_hash": "",
+              "avs_result_code": "",
+              "avs_acq_response_code": "00",
+              "captured_amount": 50,
+              "authorised_amount": 50,
+              "refunded_amount": 0,
+              "acs_eci": ""
+            },
+            "is_hidden": false,
+            "payment_key_claims": {
+              "amount_cents": 5000,
+              "billing_data": {
+                "address_line_1": null,
+                "address_line_2": null,
+                "apartment": "NA",
+                "building": "NA",
+                "city": "NA",
+                "country": "NA",
+                "email": "booking@salonnoon.net",
+                "emirate": null,
+                "extra_description": "NA",
+                "first_name": "فاطمه",
+                "floor": "NA",
+                "last_name": "تركي القرني",
+                "name": null,
+                "phone_number": "966502865756",
+                "postal_code": "NA",
+                "province": null,
+                "state": "NA",
+                "street": "NA"
+              },
+              "created_by": 14921,
+              "currency": "SAR",
+              "extra": {
+                "merchant_order_id": "BOOKING-5309f2c3-daee-4648-b994-c25f3e75452d"
+              },
+              "integration_id": 21178,
+              "is_partner": false,
+              "lock_order_when_paid": false,
+              "next_payment_intention": "pi_live_ba1231398caf4f0a89204849ba910558",
+              "order_id": 9101792,
+              "redirection_url": "https://salonnoon.net/booking/success?code=NOON-4677",
+              "single_payment_attempt": false,
+              "user_id": 14921
+            },
+            "error_occured": false,
+            "is_live": true,
+            "other_endpoint_reference": null,
+            "refunded_amount_cents": 0,
+            "refunded_amount_cents_bigint": 0,
+            "source_id": -1,
+            "is_captured": false,
+            "captured_amount": 0,
+            "captured_amount_bigint": 0,
+            "settlement_amount_cents_bigint": 0,
+            "merchant_staff_tag": null,
+            "accept_fees_cents_bigint": 0,
+            "vat_cents_bigint": 0,
+            "vat_cents_float": null,
+            "updated_at": "2026-10-01T18:08:29.235433+03:00",
+            "is_settled": false,
+            "bill_balanced": false,
+            "is_bill": false,
+            "owner": 14921,
+            "parent_transaction": null
+          },
+          "accept_fees": 0,
+          "issuer_bank": "",
+          "transaction_processed_callback_responses": ""
+        },
+        "webhookUrl": "https://n8n.marka.giize.com/webhook/saloon-payment",
+        "executionMode": "production"
+      }
+    ],
+    "Schedule Trigger": [
+      {
+        "timestamp": "2026-10-01T21:07:03.759+03:00",
+        "Readable date": "October 1st 2026, 9:07:03 pm",
+        "Readable time": "9:07:03 pm",
+        "Day of week": "Thursday",
+        "Year": "2026",
+        "Month": "October",
+        "Day of month": "01",
+        "Hour": "21",
+        "Minute": "07",
+        "Second": "03",
+        "Timezone": "Africa/Cairo (UTC+03:00)"
+      }
+    ],
+    "HTTP Request20": [
+      {
+        "success": true,
+        "expiredPayments": 0,
+        "cancelledPending": 0,
+        "processedAt": "2026-10-01T18:07:44.628Z"
       }
     ]
   },
